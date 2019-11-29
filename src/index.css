@@ -1,0 +1,13 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  /* from create react app */
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* END from create react app */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
