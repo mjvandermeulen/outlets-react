@@ -1,5 +1,20 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Web Remote Control Interface for Radio Frequency outlets.
+
+Creates a webpage to control the radio frequency controlled outlets, controlled by the RPi.
+
+## NOTES
+
+- At first this is run on the Mac
+- For true functioning of the outlets this page:
+  - Run on the Raspberry Pi
+  - Use Python code to turn the outlets on or off
+
+See details on how to run this project below.
+
+# Bootstrapped `README.md`
+
 ## Available Scripts
 
 In the project directory, you can run:
