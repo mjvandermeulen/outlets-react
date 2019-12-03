@@ -4,6 +4,8 @@ interface GroupSetting {
   enabled: boolean
 }
 
+export type Mode = 'on' | 'off' | 'unknown'
+
 // LEARN ***
 export interface GroupsSettings {
   [key: string]: GroupSetting
