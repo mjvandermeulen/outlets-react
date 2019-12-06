@@ -92,14 +92,24 @@ class OutletGroups extends React.Component<
 
   private handleOnOffClick(group: string, mode: Mode) {
     const socketData: SocketSwitchData = {
-      group: 'officelight',
-      mode: mode,
+      group,
+      mode,
       timer: -1,
       sync: false,
     }
     if (this.socket) {
       this.socket.emit('light', socketData)
     }
+    this.setState({
+      ...this.state,
+      outletsState: {
+        ...this.state.outletsState,
+        [group]: {
+          mode,
+          timer: this.state.outletsState[group].timer,
+        },
+      },
+    })
     console.log(`Button clicked: ${group} - ${mode}`)
   }
 
@@ -112,7 +122,8 @@ class OutletGroups extends React.Component<
             key={group}
             groupName={group}
             displayName={groupsSettings[group].displayName}
-            defaultTimer={1000}
+            mode={this.state.outletsState[group].mode}
+            defaultTimer={this.state.outletsState[group].timer}
             handleOnOffClick={(group: string, mode: Mode) =>
               this.handleOnOffClick(group, mode)
             }

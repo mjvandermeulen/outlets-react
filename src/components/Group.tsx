@@ -5,6 +5,7 @@ import { Mode } from '../settings/group-settings'
 export interface GroupProps {
   groupName: string
   displayName: string
+  mode: boolean
   defaultTimer: number // in milliseconds
   handleOnOffClick: (group: string, mode: Mode) => void
 }
@@ -13,20 +14,28 @@ export class Group extends React.Component<GroupProps, {}> {
   render() {
     return (
       <div>
-        <div>
-          Group with a name of {this.props.groupName}, displayName:{' '}
-          {this.props.displayName} and timer set to {this.props.defaultTimer}
-        </div>
+        <h3>{this.props.displayName}</h3>
         <div>
           <RemoteControlButton
-            size="medium"
+            active={this.props.mode}
             handleClick={event =>
               this.props.handleOnOffClick(this.props.groupName, true)
             }
+            size="medium"
           >
             On
           </RemoteControlButton>
+          <RemoteControlButton
+            active={!this.props.mode}
+            handleClick={event =>
+              this.props.handleOnOffClick(this.props.groupName, false)
+            }
+            size="medium"
+          >
+            Off
+          </RemoteControlButton>
         </div>
+        <div>default Timer: {this.props.defaultTimer}</div>
       </div>
     )
   }

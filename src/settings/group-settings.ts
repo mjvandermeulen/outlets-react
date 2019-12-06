@@ -40,6 +40,6 @@ export const groupsSettings: GroupsSettings = {
   redlight: {
     displayName: 'Guest Night Light',
     defaultTimer: 0,
-    enabled: false,
+    enabled: true,
   },
 }
