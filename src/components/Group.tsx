@@ -21,7 +21,7 @@ export class Group extends React.Component<GroupProps, {}> {
           <RemoteControlButton
             size="medium"
             handleClick={event =>
-              this.props.handleOnOffClick(this.props.groupName, 'on')
+              this.props.handleOnOffClick(this.props.groupName, true)
             }
           >
             On

@@ -4,7 +4,7 @@ interface GroupSetting {
   enabled: boolean
 }
 
-export type Mode = 'on' | 'off' | 'unknown'
+export type Mode = boolean // 'on' | 'off' | 'unknown' TODO maybe?
 
 // LEARN ***
 export interface GroupsSettings {
