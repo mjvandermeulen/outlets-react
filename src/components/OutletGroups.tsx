@@ -3,7 +3,7 @@ import * as React from 'react'
 import io from 'socket.io-client'
 
 import { Group } from './Group'
-import { groupsSettings, Mode } from '../settings/group-settings'
+import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
 
 interface OutletSwitchData {
   group: string
@@ -74,14 +74,14 @@ class OutletGroups extends React.Component<
   private setModeState(outletSwitchData: OutletSwitchData) {
     const newOutletsGroupsData: OutletGroupsData = this.state.outletGroupsData.map(
       outletData => {
-        if (outletData.group == outletSwitchData.group) {
+        if (outletData.group === outletSwitchData.group) {
           outletData.mode = outletSwitchData.mode
         }
         return outletData
       }
     )
     this.setState({
-      ...this.state, // future proofing
+      ...this.state, // added for future proofing
       outletGroupsData: newOutletsGroupsData,
     })
   }
@@ -99,13 +99,19 @@ class OutletGroups extends React.Component<
   }
 
   render() {
-    const groups = groupsSettings.map(groupSetting => {
-      if (groupSetting.enabled) {
-        // alternative: in the contructor copy the group-settings to the state
-        // then loop over the state here.
+    const groups = groupsSettings
+      .filter(groupSetting => groupSetting.enabled)
+      .map((groupSetting: GroupSetting): any => {
+        // find the group in the state.outeletGroupsData array that matches the
+        // current group.
+        //      alternative I: in the contructor copy the group-settings to the state
+        //      then loop over the state here.
+        //      alternative II: turn state.outletGroupsData back into an object
+        //      with groups as keys. (PREFERENCE dec 8 2019 mjvandermeulen,
+        //      state as an array is not cool)
         const outletState: OutletData = this.state.outletGroupsData.filter(
           data => {
-            return data.group == groupSetting.group
+            return data.group === groupSetting.group
           }
         )[0]
         return (
@@ -120,10 +126,7 @@ class OutletGroups extends React.Component<
             }
           />
         )
-      }
-    })
-    {
-    }
+      })
     return groups
   }
 }

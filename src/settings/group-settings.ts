@@ -1,4 +1,4 @@
-interface GroupSetting {
+export interface GroupSetting {
   group: string
   displayName: string
   defaultTimer: number
