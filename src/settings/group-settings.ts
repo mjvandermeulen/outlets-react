@@ -1,4 +1,5 @@
 interface GroupSetting {
+  group: string
   displayName: string
   defaultTimer: number
   enabled: boolean
@@ -7,39 +8,40 @@ interface GroupSetting {
 export type Mode = boolean // 'on' | 'off' | 'unknown' TODO maybe?
 
 // LEARN ***
-export interface GroupsSettings {
-  [key: string]: GroupSetting
-}
+// export interface GroupsSettings extends Array<GroupSetting> {}
+// OR
+export type GroupsSettings = GroupSetting[]
 
-export const groupsSettings: GroupsSettings = {
-  livingroom: {
+export const groupsSettings: GroupsSettings = [
+  {
+    group: 'livingroom',
     displayName: 'Living Room',
     defaultTimer: 0,
     enabled: false,
   },
-  officelight: {
+  {
+    group: 'officelight',
     displayName: 'Office Light',
     defaultTimer: 0,
     enabled: true,
   },
-  coffee: {
+  {
+    group: 'coffee',
     displayName: 'Coffee',
     defaultTimer: 45 * 60 * 1000,
     enabled: true,
   },
-  fan: {
-    displayName: 'Office Fan',
-    defaultTimer: 0,
-    enabled: false,
-  },
-  guestlight: {
+  { group: 'fan', displayName: 'Office Fan', defaultTimer: 0, enabled: false },
+  {
+    group: 'guestlight',
     displayName: 'Guest Light',
     defaultTimer: 0,
     enabled: false,
   },
-  redlight: {
+  {
+    group: 'redlight',
     displayName: 'Guest Night Light',
     defaultTimer: 0,
     enabled: true,
   },
-}
+]
