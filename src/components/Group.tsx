@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { RemoteControlButton } from './RemoteControlButton'
-import { Mode } from '../settings/group-settings'
+import { Mode, TimerButtonAction } from '../settings/group-settings'
 
 export interface GroupProps {
-  groupName: string
   displayName: string
   mode: boolean
   defaultTimer: number // in milliseconds
-  handleOnOffClick: (group: string, mode: Mode) => void
+  handleOnOffClick: (mode: Mode) => void
+  handleTimerClick: (action: TimerButtonAction) => void
 }
 
 export class Group extends React.Component<GroupProps, {}> {
@@ -18,21 +18,26 @@ export class Group extends React.Component<GroupProps, {}> {
         <div>
           <RemoteControlButton
             active={this.props.mode}
-            handleClick={event =>
-              this.props.handleOnOffClick(this.props.groupName, true)
-            }
+            handleClick={event => this.props.handleOnOffClick(true)}
             size="medium"
           >
             On
           </RemoteControlButton>
           <RemoteControlButton
             active={!this.props.mode}
-            handleClick={event =>
-              this.props.handleOnOffClick(this.props.groupName, false)
-            }
+            handleClick={event => this.props.handleOnOffClick(false)}
             size="medium"
           >
             Off
+          </RemoteControlButton>
+        </div>
+        <div>
+          <RemoteControlButton
+            active={false}
+            handleClick={event => this.props.handleTimerClick('minusminus')}
+            size="medium"
+          >
+            --
           </RemoteControlButton>
         </div>
         <div>default Timer: {this.props.defaultTimer}</div>

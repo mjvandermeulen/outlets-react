@@ -6,6 +6,14 @@ export interface GroupSetting {
 }
 
 export type Mode = boolean // 'on' | 'off' | 'unknown' TODO maybe?
+export type TimerButtonAction =
+  | 'plus'
+  | 'plusplus'
+  | 'minus'
+  | 'minusminus'
+  | 'startPause'
+  | 'cancel'
+  | 'toggleDisplay'
 
 // LEARN ***
 // export interface GroupsSettings extends Array<GroupSetting> {}
