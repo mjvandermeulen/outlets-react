@@ -5,96 +5,100 @@ import io from 'socket.io-client'
 import { Group } from './Group'
 import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
 
-interface OutletSwitchData {
-  group: string
+const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
+
+interface SwitchDataValues {
   mode: boolean
 }
 
-interface OutletTimerData {
-  group: string
+// The switch data can have multiple outletgroups
+interface SwitchData {
+  [group: string]: SwitchDataValues
+}
+
+// The timer data can have multiple outletgroups
+interface TimerDataValues {
   time: number
   isTimerRunning: boolean
 }
 
-type OutletData = OutletSwitchData & OutletTimerData // ***** LEARN
+type OutletDataValues = SwitchDataValues & TimerDataValues // ***** LEARN
 
 // https://stackoverflow.com/questions/44983560/how-to-exclude-a-key-from-an-interface-in-typescript
-// LEARN *****
+// LEARN ****
 // type OmitGroup<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 // type SocketData = OmitGroup<GroupSocketData, 'group'>
 
 // https://www.educba.com/typescript-type-vs-interface/
 // type used here, because it's easier to read than interface
-// interface OutletGroupsData extends Array<OutletData> {}
-type OutletGroupsData = OutletData[]
-// for testing:
-// const OGD: OutletGroupsData = [
-//   { group: 'bogus', mode: false, isTimerRunning: false, time: 42 },
-// ]
+// interface OutletData extends Array<OutletDataValues> {}
+type OutletData = {
+  [group: string]: OutletDataValues
+}
 
 interface OutletGroupsProps {}
 
-interface OutletGroupState {
-  outletGroupsData: OutletGroupsData
+interface OutletGroupsState {
+  OutletData: OutletData
 }
 
 class OutletGroups extends React.Component<
   OutletGroupsProps,
-  OutletGroupState
+  OutletGroupsState
 > {
   private socket: SocketIOClient.Socket | null
   constructor(props: OutletGroupsProps) {
     super(props)
     this.handleOnOffClick = this.handleOnOffClick.bind(this)
+    this.setModeState = this.setModeState.bind(this) // (I don't think this is needed **** check)
     this.socket = null
-    const outletGroupsData: OutletGroupsData = []
+    const OutletData: OutletData = {}
     groupsSettings.forEach((element, index) => {
       if (element.enabled) {
-        outletGroupsData.push({
-          group: element.group,
+        OutletData[element.group] = {
           mode: false,
           time: element.defaultTimer,
           isTimerRunning: false, // TODO
-        })
+        }
       }
     })
-    this.state = { outletGroupsData }
+    this.state = { OutletData }
   }
 
   public componentDidMount() {
     // TODO: Move socket/io('htt..... out of component: always have this connection?
     // then pass it into the props...?  ****
     this.socket = io('http://localhost:3000') // TODO stop hardcoding.
-    this.socket.on('light', (outletSwitchData: OutletSwitchData) => {
-      console.log(`Received: ${outletSwitchData}`)
-      this.setModeState(outletSwitchData)
+    this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
+      this.setModeState(switchData)
     })
   }
 
-  private setModeState(outletSwitchData: OutletSwitchData) {
-    const newOutletsGroupsData: OutletGroupsData = this.state.outletGroupsData.map(
-      outletData => {
-        if (outletData.group === outletSwitchData.group) {
-          outletData.mode = outletSwitchData.mode
-        }
-        return outletData
+  private setModeState(switchData: SwitchData) {
+    const mergedOutletGoupsData: OutletData = {}
+    for (const group in switchData) {
+      mergedOutletGoupsData[group] = {
+        ...this.state.OutletData[group],
+        mode: switchData[group].mode,
       }
-    )
+    }
     this.setState({
       ...this.state, // added for future proofing
-      outletGroupsData: newOutletsGroupsData,
+      OutletData: {
+        ...this.state.OutletData,
+        ...mergedOutletGoupsData,
+      },
     })
   }
 
   private handleOnOffClick(group: string, mode: Mode) {
-    const outletSwitchData: OutletSwitchData = {
-      group,
-      mode,
+    const switchData: SwitchData = {
+      [group]: { mode },
     }
     if (this.socket) {
-      this.socket.emit('light', outletSwitchData)
+      this.socket.emit('OUTLET_SWITCH_CHANNEL', switchData)
     }
-    this.setModeState(outletSwitchData)
+    this.setModeState(switchData)
     console.log(`Button clicked: ${group} - ${mode}`)
   }
 
@@ -102,25 +106,13 @@ class OutletGroups extends React.Component<
     const groups = groupsSettings
       .filter(groupSetting => groupSetting.enabled)
       .map((groupSetting: GroupSetting): any => {
-        // find the group in the state.outeletGroupsData array that matches the
-        // current group.
-        //      alternative I: in the contructor copy the group-settings to the state
-        //      then loop over the state here.
-        //      alternative II: turn state.outletGroupsData back into an object
-        //      with groups as keys. (PREFERENCE dec 8 2019 mjvandermeulen,
-        //      state as an array is not cool)
-        const outletState: OutletData = this.state.outletGroupsData.filter(
-          data => {
-            return data.group === groupSetting.group
-          }
-        )[0]
         return (
           <Group
             key={groupSetting.group}
             groupName={groupSetting.group}
             displayName={groupSetting.displayName}
-            mode={outletState.mode}
-            defaultTimer={outletState.time}
+            mode={this.state.OutletData[groupSetting.group].mode}
+            defaultTimer={this.state.OutletData[groupSetting.group].time}
             handleOnOffClick={(group: string, mode: Mode) =>
               this.handleOnOffClick(group, mode)
             }
