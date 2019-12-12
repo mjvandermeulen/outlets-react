@@ -3,12 +3,17 @@ import * as React from 'react'
 import io from 'socket.io-client'
 
 import { Group } from './Group'
+import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
 import {
-  groupsSettings,
-  GroupSetting,
-  Mode,
   TimerButtonAction,
-} from '../settings/group-settings'
+  MINUSMINUS,
+  PLUSPLUS,
+  PLUS,
+  MINUS,
+  STARTPAUSE,
+  CANCEL,
+  TOGGLEDISPLAY,
+} from '../settings/timer-settings'
 
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
 
@@ -110,6 +115,32 @@ class OutletGroups extends React.Component<
   private handleTimerClick(group: string, action: TimerButtonAction) {
     console.log('TODO ***** IMPLEMENT HANDLING THE TIMER CLICK')
     console.log(`group: ${group} action: ${action}`)
+    switch (action) {
+      case MINUSMINUS:
+        console.log(`IMPLEMENT ${MINUSMINUS}`)
+        break
+      case PLUSPLUS:
+        console.log(`IMPLEMENT ${PLUSPLUS}`)
+        break
+      case PLUS:
+        console.log(`IMPLEMENT ${PLUS}`)
+        break
+      case MINUS:
+        console.log(`IMPLEMENT ${MINUS}`)
+        break
+      case STARTPAUSE:
+        console.log(`IMPLEMENT ${STARTPAUSE}`)
+        break
+      case CANCEL:
+        console.log(`IMPLEMENT ${CANCEL}`)
+        break
+      case TOGGLEDISPLAY:
+        console.log(`IMPLEMENT ${TOGGLEDISPLAY}`)
+        break
+
+      default:
+        break
+    }
   }
 
   render() {

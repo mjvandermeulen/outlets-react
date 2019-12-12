@@ -7,6 +7,27 @@ body {
   /* END from create react app */
 }
 
+button {
+  background-color: white;
+  border-radius: 20px;
+  border: 2px solid #e7e7e7;
+  color: black;
+  cursor: pointer;
+  font-size: 0.8em;
+  margin: 6px 6px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* avoid Chrome blue box around focussed buttons */
+/* but add a background color for keyboard navigation (e.g.: tabbing */
+button:focus {
+  outline: none;
+  background-color: #fef4f4;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
