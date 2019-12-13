@@ -13,9 +13,12 @@ import {
   STARTPAUSE,
   CANCEL,
   TOGGLEDISPLAY,
+  timerAdjustments,
 } from '../settings/timer-settings'
+import { TimerDisplayProps } from './TimerDisplay'
 
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
+const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
 
 interface SwitchDataValues {
   mode: boolean
@@ -30,6 +33,10 @@ interface SwitchData {
 interface TimerDataValues {
   time: number
   isTimerRunning: boolean
+}
+
+interface TimerData {
+  [group: string]: TimerDataValues
 }
 
 type OutletDataValues = SwitchDataValues & TimerDataValues // ***** LEARN
@@ -49,7 +56,10 @@ type OutletData = {
 interface OutletGroupsProps {}
 
 interface OutletGroupsState {
-  OutletData: OutletData
+  outletData: OutletData
+  userSettings: {
+    showTimer: boolean
+  }
 }
 
 class OutletGroups extends React.Component<
@@ -62,17 +72,22 @@ class OutletGroups extends React.Component<
     this.handleOnOffClick = this.handleOnOffClick.bind(this)
     this.setModeState = this.setModeState.bind(this) // (I don't think this is needed **** check)
     this.socket = null
-    const OutletData: OutletData = {}
+    const outletData: OutletData = {}
     groupsSettings.forEach((element, index) => {
       if (element.enabled) {
-        OutletData[element.group] = {
+        outletData[element.group] = {
           mode: false,
           time: element.defaultTimer,
           isTimerRunning: false, // TODO
         }
       }
     })
-    this.state = { OutletData }
+    this.state = {
+      outletData,
+      userSettings: {
+        showTimer: true,
+      },
+    }
   }
 
   public componentDidMount() {
@@ -82,20 +97,24 @@ class OutletGroups extends React.Component<
     this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
       this.setModeState(switchData)
     })
+    this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
+      this.setTimerState(timerData)
+      console.log('here')
+    })
   }
 
   private setModeState(switchData: SwitchData) {
     const mergedOutletGoupsData: OutletData = {}
     for (const group in switchData) {
       mergedOutletGoupsData[group] = {
-        ...this.state.OutletData[group],
+        ...this.state.outletData[group],
         mode: switchData[group].mode,
       }
     }
     this.setState({
       ...this.state, // added for future proofing
-      OutletData: {
-        ...this.state.OutletData,
+      outletData: {
+        ...this.state.outletData,
         ...mergedOutletGoupsData,
       },
     })
@@ -106,27 +125,68 @@ class OutletGroups extends React.Component<
       [group]: { mode },
     }
     if (this.socket) {
-      this.socket.emit('OUTLET_SWITCH_CHANNEL', switchData)
+      this.socket.emit(OUTLET_SWITCH_CHANNEL, switchData) // or broadcast?
     }
     this.setModeState(switchData)
     console.log(`Button clicked: ${group} - ${mode}`)
   }
 
+  private broadcastTimer(timerData: TimerData) {
+    console.log(`broadcast timerData: JSON: ${JSON.stringify(timerData)}`)
+    if (this.socket) {
+      this.socket.emit(OUTLET_TIMER_CHANNEL, timerData)
+    }
+  }
+
+  private setTimerState(timerData: TimerData) {
+    const mergedOutletGoupsData: OutletData = {}
+    for (const group in timerData) {
+      mergedOutletGoupsData[group] = {
+        ...this.state.outletData[group],
+        time: timerData[group].time,
+        isTimerRunning: timerData[group].isTimerRunning,
+      }
+    }
+    this.setState({
+      ...this.state, // added for future proofing
+      outletData: {
+        ...this.state.outletData,
+        ...mergedOutletGoupsData,
+      },
+    })
+  }
+  private changeTimer(group: string, milliseconds: number) {
+    let time = this.state.outletData[group].time
+    if (time == 0) {
+      time = Date.now()
+    }
+    time += milliseconds
+    const timerData: TimerData = {
+      [group]: {
+        isTimerRunning: this.state.outletData[group].isTimerRunning,
+        time,
+      },
+    }
+    this.broadcastTimer(timerData)
+    this.setTimerState(timerData)
+  }
+
   private handleTimerClick(group: string, action: TimerButtonAction) {
-    console.log('TODO ***** IMPLEMENT HANDLING THE TIMER CLICK')
-    console.log(`group: ${group} action: ${action}`)
+    // console.log('TODO ***** IMPLEMENT HANDLING THE TIMER CLICK')
+    // console.log(`group: ${group} action: ${action}`)
     switch (action) {
       case MINUSMINUS:
         console.log(`IMPLEMENT ${MINUSMINUS}`)
         break
-      case PLUSPLUS:
-        console.log(`IMPLEMENT ${PLUSPLUS}`)
+      case MINUS:
+        console.log(`IMPLEMENT ${MINUS}`)
         break
       case PLUS:
         console.log(`IMPLEMENT ${PLUS}`)
+        this.changeTimer(group, timerAdjustments.plus)
         break
-      case MINUS:
-        console.log(`IMPLEMENT ${MINUS}`)
+      case PLUSPLUS:
+        console.log(`IMPLEMENT ${PLUSPLUS}`)
         break
       case STARTPAUSE:
         console.log(`IMPLEMENT ${STARTPAUSE}`)
@@ -151,11 +211,12 @@ class OutletGroups extends React.Component<
           <Group
             key={groupSetting.group}
             displayName={groupSetting.displayName}
-            mode={this.state.OutletData[groupSetting.group].mode}
-            defaultTimer={this.state.OutletData[groupSetting.group].time}
+            mode={this.state.outletData[groupSetting.group].mode}
+            defaultTimer={this.state.outletData[groupSetting.group].time}
             handleOnOffClick={(mode: Mode) =>
               this.handleOnOffClick(groupSetting.group, mode)
             }
+            time={this.state.outletData[groupSetting.group].time}
             handleTimerClick={(action: TimerButtonAction) =>
               this.handleTimerClick(groupSetting.group, action)
             }

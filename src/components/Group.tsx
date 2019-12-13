@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { TimerDisplay } from './TimerDisplay'
 import { RemoteControlButton } from './RemoteControlButton'
 import { Mode } from '../settings/group-settings'
 import {
@@ -17,9 +18,11 @@ export interface GroupProps {
   mode: boolean
   defaultTimer: number // in milliseconds
   handleOnOffClick: (mode: Mode) => void
+  time: number
   handleTimerClick: (action: TimerButtonAction) => void
 }
 
+// TODO: why not change to functional component?
 export class Group extends React.Component<GroupProps, {}> {
   render() {
     return (
@@ -56,6 +59,7 @@ export class Group extends React.Component<GroupProps, {}> {
           >
             -
           </RemoteControlButton>
+          <TimerDisplay time={this.props.time} />
           <RemoteControlButton
             active={false}
             handleClick={event => this.props.handleTimerClick(PLUS)}

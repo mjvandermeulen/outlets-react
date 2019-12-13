@@ -1,6 +1,6 @@
 const smallAdjustment: number = 5 * 60 * 1000
 const largeAdjustment: number = 30 * 60 * 1000
-export const timeAdjustments: { [key: string]: number } = {
+export const timerAdjustments: { [key: string]: number } = {
   plus: smallAdjustment,
   plusplus: largeAdjustment,
   minus: -smallAdjustment,
