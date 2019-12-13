@@ -99,7 +99,7 @@ export class Group extends React.Component<GroupProps, {}> {
             handleClick={event => this.props.handleTimerClick(TOGGLEDISPLAY)}
             size="medium"
           >
-            {'show set time'}
+            {this.props.showTimer ? 'show set time' : 'show timer'}
           </RemoteControlButton>
         </div>
         <div>default Timer: {this.props.defaultTimer}</div>

@@ -175,6 +175,16 @@ class OutletGroups extends React.Component<
     this.setTimerState(timerData)
   }
 
+  private toggleTimerDisplay(group: string) {
+    const currentShowTimer: boolean = this.state.userSettings[group].showTimer
+    this.setState({
+      ...this.state,
+      userSettings: {
+        ...this.state.userSettings,
+        [group]: { showTimer: !currentShowTimer },
+      },
+    })
+  }
   private handleTimerClick(group: string, action: TimerButtonAction) {
     // console.log('TODO ***** IMPLEMENT HANDLING THE TIMER CLICK')
     // console.log(`group: ${group} action: ${action}`)
@@ -198,6 +208,7 @@ class OutletGroups extends React.Component<
         console.log(`IMPLEMENT ${CANCEL}`)
         break
       case TOGGLEDISPLAY:
+        this.toggleTimerDisplay(group)
         console.log(`IMPLEMENT ${TOGGLEDISPLAY}`)
         break
 
