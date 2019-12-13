@@ -55,11 +55,13 @@ type OutletData = {
 
 interface OutletGroupsProps {}
 
+interface UserSettings {
+  [group: string]: { showTimer: boolean }
+}
+
 interface OutletGroupsState {
   outletData: OutletData
-  userSettings: {
-    showTimer: boolean
-  }
+  userSettings: UserSettings
 }
 
 class OutletGroups extends React.Component<
@@ -73,6 +75,7 @@ class OutletGroups extends React.Component<
     this.setModeState = this.setModeState.bind(this) // (I don't think this is needed **** check)
     this.socket = null
     const outletData: OutletData = {}
+    const userSettings: UserSettings = {}
     groupsSettings.forEach((element, index) => {
       if (element.enabled) {
         outletData[element.group] = {
@@ -80,13 +83,14 @@ class OutletGroups extends React.Component<
           time: element.defaultTimer,
           isTimerRunning: false, // TODO
         }
+        userSettings[element.group] = {
+          showTimer: true,
+        }
       }
     })
     this.state = {
       outletData,
-      userSettings: {
-        showTimer: true,
-      },
+      userSettings,
     }
   }
 
@@ -176,17 +180,16 @@ class OutletGroups extends React.Component<
     // console.log(`group: ${group} action: ${action}`)
     switch (action) {
       case MINUSMINUS:
-        console.log(`IMPLEMENT ${MINUSMINUS}`)
+        this.changeTimer(group, timerAdjustments.minusminus)
         break
       case MINUS:
-        console.log(`IMPLEMENT ${MINUS}`)
+        this.changeTimer(group, timerAdjustments.minus)
         break
       case PLUS:
-        console.log(`IMPLEMENT ${PLUS}`)
         this.changeTimer(group, timerAdjustments.plus)
         break
       case PLUSPLUS:
-        console.log(`IMPLEMENT ${PLUSPLUS}`)
+        this.changeTimer(group, timerAdjustments.plusplus)
         break
       case STARTPAUSE:
         console.log(`IMPLEMENT ${STARTPAUSE}`)
@@ -217,6 +220,7 @@ class OutletGroups extends React.Component<
               this.handleOnOffClick(groupSetting.group, mode)
             }
             time={this.state.outletData[groupSetting.group].time}
+            showTimer={this.state.userSettings[groupSetting.group].showTimer}
             handleTimerClick={(action: TimerButtonAction) =>
               this.handleTimerClick(groupSetting.group, action)
             }

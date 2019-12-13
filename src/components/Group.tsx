@@ -19,6 +19,7 @@ export interface GroupProps {
   defaultTimer: number // in milliseconds
   handleOnOffClick: (mode: Mode) => void
   time: number
+  showTimer: boolean
   handleTimerClick: (action: TimerButtonAction) => void
 }
 
@@ -59,7 +60,10 @@ export class Group extends React.Component<GroupProps, {}> {
           >
             -
           </RemoteControlButton>
-          <TimerDisplay time={this.props.time} />
+          <TimerDisplay
+            time={this.props.time}
+            showTimer={this.props.showTimer}
+          />
           <RemoteControlButton
             active={false}
             handleClick={event => this.props.handleTimerClick(PLUS)}

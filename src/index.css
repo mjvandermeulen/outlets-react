@@ -28,6 +28,11 @@ button:focus {
   background-color: #fef4f4;
 }
 
+/* THOUGHTS: moved here from the react component ! */
+.onoffbutton {
+  padding: 15px 30px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
