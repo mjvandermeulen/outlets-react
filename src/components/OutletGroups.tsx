@@ -15,7 +15,6 @@ import {
   TOGGLEDISPLAY,
   timerAdjustments,
 } from '../settings/timer-settings'
-import { TimerDisplayProps } from './TimerDisplay'
 
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
 const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
@@ -39,7 +38,7 @@ interface TimerData {
   [group: string]: TimerDataValues
 }
 
-type OutletDataValues = SwitchDataValues & TimerDataValues // ***** LEARN
+type OutletDataValues = SwitchDataValues & TimerDataValues // **** LEARN
 
 // https://stackoverflow.com/questions/44983560/how-to-exclude-a-key-from-an-interface-in-typescript
 // LEARN ****
@@ -76,14 +75,14 @@ class OutletGroups extends React.Component<
     this.socket = null
     const outletData: OutletData = {}
     const userSettings: UserSettings = {}
-    groupsSettings.forEach((element, index) => {
-      if (element.enabled) {
-        outletData[element.group] = {
+    groupsSettings.forEach((groupSetting, index) => {
+      if (groupSetting.enabled) {
+        outletData[groupSetting.group] = {
           mode: false,
-          time: element.defaultTimer,
+          time: groupSetting.defaultTimer,
           isTimerRunning: false, // TODO
         }
-        userSettings[element.group] = {
+        userSettings[groupSetting.group] = {
           showTimer: true,
         }
       }
@@ -103,7 +102,6 @@ class OutletGroups extends React.Component<
     })
     this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
       this.setTimerState(timerData)
-      console.log('here')
     })
   }
 
@@ -158,23 +156,25 @@ class OutletGroups extends React.Component<
         ...mergedOutletGoupsData,
       },
     })
+    console.log(`setTimerState END JSON state: ${JSON.stringify(this.state)}`)
   }
   private changeTimer(group: string, milliseconds: number) {
     let time = this.state.outletData[group].time
-    if (time == 0) {
-      time = Date.now()
+    let newTime = time + milliseconds
+    if (newTime < 0) {
+      newTime = 0
     }
-    time += milliseconds
     const timerData: TimerData = {
       [group]: {
+        time: time + milliseconds,
         isTimerRunning: this.state.outletData[group].isTimerRunning,
-        time,
       },
     }
     this.broadcastTimer(timerData)
     this.setTimerState(timerData)
   }
 
+  // TODO: MOVE DOWN to just above render
   private toggleTimerDisplay(group: string) {
     const currentShowTimer: boolean = this.state.userSettings[group].showTimer
     this.setState({
@@ -185,9 +185,40 @@ class OutletGroups extends React.Component<
       },
     })
   }
+  private toggleStartPauseTimer(group: string) {
+    const outletData: OutletDataValues = this.state.outletData[group]
+    let timerData: TimerData
+    if (!outletData.isTimerRunning) {
+      timerData = {
+        [group]: {
+          time: Date.now() + outletData.time,
+          isTimerRunning: true,
+        },
+      }
+    } else {
+      timerData = {
+        [group]: {
+          time: outletData.time - Date.now(), // time left
+          isTimerRunning: false,
+        },
+      }
+    }
+    this.broadcastTimer(timerData)
+    this.setTimerState(timerData)
+  }
+
+  private cancelTimer(group: string) {
+    const timerData: TimerData = {
+      [group]: {
+        time: 0, // TODO *** change to default.
+        isTimerRunning: false,
+      },
+    }
+    this.broadcastTimer(timerData)
+    this.setTimerState(timerData)
+  }
+
   private handleTimerClick(group: string, action: TimerButtonAction) {
-    // console.log('TODO ***** IMPLEMENT HANDLING THE TIMER CLICK')
-    // console.log(`group: ${group} action: ${action}`)
     switch (action) {
       case MINUSMINUS:
         this.changeTimer(group, timerAdjustments.minusminus)
@@ -202,14 +233,13 @@ class OutletGroups extends React.Component<
         this.changeTimer(group, timerAdjustments.plusplus)
         break
       case STARTPAUSE:
-        console.log(`IMPLEMENT ${STARTPAUSE}`)
+        this.toggleStartPauseTimer(group)
         break
       case CANCEL:
-        console.log(`IMPLEMENT ${CANCEL}`)
+        this.cancelTimer(group)
         break
       case TOGGLEDISPLAY:
         this.toggleTimerDisplay(group)
-        console.log(`IMPLEMENT ${TOGGLEDISPLAY}`)
         break
 
       default:
@@ -221,16 +251,20 @@ class OutletGroups extends React.Component<
     const groups = groupsSettings
       .filter(groupSetting => groupSetting.enabled)
       .map((groupSetting: GroupSetting): any => {
+        const outletData: OutletDataValues = this.state.outletData[
+          groupSetting.group
+        ]
         return (
           <Group
             key={groupSetting.group}
             displayName={groupSetting.displayName}
-            mode={this.state.outletData[groupSetting.group].mode}
-            defaultTimer={this.state.outletData[groupSetting.group].time}
+            mode={outletData.mode}
+            defaultTimer={outletData.time}
             handleOnOffClick={(mode: Mode) =>
               this.handleOnOffClick(groupSetting.group, mode)
             }
-            time={this.state.outletData[groupSetting.group].time}
+            time={outletData.time}
+            isTimerRunning={outletData.isTimerRunning}
             showTimer={this.state.userSettings[groupSetting.group].showTimer}
             handleTimerClick={(action: TimerButtonAction) =>
               this.handleTimerClick(groupSetting.group, action)

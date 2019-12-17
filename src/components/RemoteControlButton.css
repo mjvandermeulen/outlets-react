@@ -2,3 +2,7 @@
 .activeButton {
   border: 2px solid #f44336;
 }
+
+.disabledButton {
+  color: #bfbfbf;
+}

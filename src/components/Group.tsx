@@ -19,6 +19,7 @@ export interface GroupProps {
   defaultTimer: number // in milliseconds
   handleOnOffClick: (mode: Mode) => void
   time: number
+  isTimerRunning: boolean
   showTimer: boolean
   handleTimerClick: (action: TimerButtonAction) => void
 }
@@ -31,6 +32,7 @@ export class Group extends React.Component<GroupProps, {}> {
         <h3>{this.props.displayName}</h3>
         <div>
           <RemoteControlButton
+            enabled={true}
             active={this.props.mode}
             handleClick={event => this.props.handleOnOffClick(true)}
             size="medium"
@@ -38,6 +40,7 @@ export class Group extends React.Component<GroupProps, {}> {
             On
           </RemoteControlButton>
           <RemoteControlButton
+            enabled={true}
             active={!this.props.mode}
             handleClick={event => this.props.handleOnOffClick(false)}
             size="medium"
@@ -47,6 +50,7 @@ export class Group extends React.Component<GroupProps, {}> {
         </div>
         <div>
           <RemoteControlButton
+            enabled={this.props.time > 0}
             active={false}
             handleClick={event => this.props.handleTimerClick(MINUSMINUS)}
             size="medium"
@@ -54,6 +58,7 @@ export class Group extends React.Component<GroupProps, {}> {
             --
           </RemoteControlButton>
           <RemoteControlButton
+            enabled={this.props.time > 0}
             active={false}
             handleClick={event => this.props.handleTimerClick(MINUS)}
             size="medium"
@@ -62,9 +67,11 @@ export class Group extends React.Component<GroupProps, {}> {
           </RemoteControlButton>
           <TimerDisplay
             time={this.props.time}
+            isTimerRunning={this.props.isTimerRunning}
             showTimer={this.props.showTimer}
           />
           <RemoteControlButton
+            enabled={true}
             active={false}
             handleClick={event => this.props.handleTimerClick(PLUS)}
             size="medium"
@@ -72,6 +79,7 @@ export class Group extends React.Component<GroupProps, {}> {
             +
           </RemoteControlButton>
           <RemoteControlButton
+            enabled={true}
             active={false}
             handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
             size="medium"
@@ -81,13 +89,15 @@ export class Group extends React.Component<GroupProps, {}> {
         </div>
         <div>
           <RemoteControlButton
+            enabled={this.props.isTimerRunning || this.props.time > 0}
             active={false}
             handleClick={event => this.props.handleTimerClick(STARTPAUSE)}
             size="medium"
           >
-            {'start'}
+            {this.props.isTimerRunning ? 'pause' : 'start'}
           </RemoteControlButton>
           <RemoteControlButton
+            enabled={this.props.time !== 0}
             active={false}
             handleClick={event => this.props.handleTimerClick(CANCEL)}
             size="medium"
@@ -95,6 +105,7 @@ export class Group extends React.Component<GroupProps, {}> {
             cancel
           </RemoteControlButton>
           <RemoteControlButton
+            enabled={true}
             active={false}
             handleClick={event => this.props.handleTimerClick(TOGGLEDISPLAY)}
             size="medium"
@@ -102,7 +113,6 @@ export class Group extends React.Component<GroupProps, {}> {
             {this.props.showTimer ? 'show set time' : 'show timer'}
           </RemoteControlButton>
         </div>
-        <div>default Timer: {this.props.defaultTimer}</div>
       </div>
     )
   }
