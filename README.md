@@ -7,9 +7,15 @@ Creates a webpage to control the radio frequency controlled outlets, controlled 
 ## NOTES
 
 - At first this is run on the Mac
-- For true functioning of the outlets this page:
-  - Run on the Raspberry Pi
-  - Use Python code to turn the outlets on or off
+- The websockets are served (Cross Origin) from the Raspberry Pi. To avoid cross origin issues, a create react app built in proxy is used to direct socket requests from localhost to the RPi. See package.JSON: (top level entry):
+
+```javascript
+{
+    ...
+    "proxy": "http://192.168.0.200:3000",
+    ...
+}
+```
 
 See details on how to run this project below.
 
