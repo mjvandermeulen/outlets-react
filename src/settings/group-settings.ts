@@ -47,7 +47,7 @@ export const groupsSettings: GroupsSettings = [
     group: 'coffee',
     displayName: 'Coffee',
     defaultTimer: 45 * 60 * 1000,
-    enabled: true,
+    enabled: false,
   },
   {
     group: 'fan',
@@ -65,6 +65,6 @@ export const groupsSettings: GroupsSettings = [
     group: 'redlight',
     displayName: 'Guest Night Light',
     defaultTimer: 0,
-    enabled: true,
+    enabled: false,
   },
 ]

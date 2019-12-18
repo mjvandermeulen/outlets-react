@@ -55,32 +55,45 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
       }
     }
     const hours = Math.floor(milliSecondsLeft / (60 * 60 * 1000))
-    milliSecondsLeft = milliSecondsLeft % (60 * 60 * 1000)
+    milliSecondsLeft -= hours * 60 * 60 * 1000
     const minutes = Math.floor(milliSecondsLeft / (60 * 1000))
-    milliSecondsLeft %= 60 * 1000
+    milliSecondsLeft -= minutes * 60 * 1000
     const secondsLeft = Math.floor(milliSecondsLeft / 1000)
     const blinker = secondsLeft % 2 === 0 ? ':' : ' '
-    if (minutes < 10) {
+    if (hours * 60 + minutes < 10) {
       return `${two(minutes)}:${two(secondsLeft)}`
     } else {
       return `${two(hours)}${blinker}${two(minutes)}`
     }
   }
 
+  private readableSetTime(time: number, isTimerRunning: boolean): string {
+    let displayTime = time
+    if (!isTimerRunning) {
+      if (time <= 0) {
+        return 'timer not set'
+      } else {
+        displayTime += Date.now()
+      }
+    } else {
+      if (time <= Date.now()) {
+        return 'timer not set'
+      }
+    }
+    return moment(displayTime).format('ddd hh:mm:ss a')
+  }
+
   render() {
     let display = ''
     if (this.props.showTimer) {
+      // Show timer
       display = this.readableTimeRemaining(
         this.props.time,
         this.props.isTimerRunning
       )
     } else {
       // Show set time
-      let time = this.props.time
-      if (!this.props.isTimerRunning) {
-        time += Date.now()
-      }
-      display = moment(time).format('ddd hh:mm:ss a')
+      display = this.readableSetTime(this.props.time, this.props.isTimerRunning)
     }
     return <span className="timer">{display}</span>
   }

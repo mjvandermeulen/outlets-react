@@ -13,7 +13,7 @@ export const RemoteControlButton: React.FunctionComponent<RemoteControlButtonPro
     handleClick = props.handleClick
   } else {
     handleClick = () => {
-      console.log('button disabled')
+      // console.log('button disabled')
     }
   }
   let btnClass = 'medium-button'

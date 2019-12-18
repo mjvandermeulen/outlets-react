@@ -135,11 +135,11 @@ class OutletGroups extends React.Component<
       this.socket.emit(OUTLET_SWITCH_CHANNEL, switchData) // or broadcast?
     }
     this.setModeState(switchData)
-    console.log(`Button clicked: ${group} - ${mode}`)
+    // console.log(`Button clicked: ${group} - ${mode}`)
   }
 
   private broadcastTimer(timerData: TimerData) {
-    console.log(`broadcast timerData: JSON: ${JSON.stringify(timerData)}`)
+    // console.log(`broadcast timerData: JSON: ${JSON.stringify(timerData)}`)
     if (this.socket) {
       this.socket.emit(OUTLET_TIMER_CHANNEL, timerData)
     }
@@ -161,18 +161,47 @@ class OutletGroups extends React.Component<
         ...mergedOutletGoupsData,
       },
     })
-    console.log(`setTimerState END JSON state: ${JSON.stringify(this.state)}`)
+    // console.log(`setTimerState END JSON state: ${JSON.stringify(this.state)}`)
   }
   private changeTimer(group: string, milliseconds: number) {
-    let time = this.state.outletData[group].time
-    let newTime = time + milliseconds
-    if (!this.state.outletData[group].isTimerRunning && newTime < 0) {
+    let newTime = this.state.outletData[group].time + milliseconds
+    const isTimerRunning = this.state.outletData[group].isTimerRunning
+    const showTimer = this.state.userSettings[group].showTimer
+    const increment = timerAdjustments.plus
+
+    if (!isTimerRunning && newTime < 0) {
       newTime = 0
     }
+    // BEFORE ROUNDING
+    // running AND showTimer => SUBTRACT Date.now()
+    // running AND !showTimer => nothing
+    // !running AND showTimer => nothing
+    // ! running AND !showTimer => ADD Date.now()
+
+    if (isTimerRunning && showTimer) {
+      newTime -= Date.now()
+    } else if (!isTimerRunning && !showTimer) {
+      newTime += Date.now()
+    }
+    if (milliseconds > 0) {
+      newTime = Math.floor(newTime / increment) * increment
+    } else {
+      newTime = Math.ceil((newTime - 999) / increment) * increment
+    }
+    if (isTimerRunning && showTimer) {
+      newTime += Date.now()
+    } else if (!isTimerRunning && !showTimer) {
+      newTime -= Date.now()
+    }
+    if (showTimer) {
+      // Time for user to mentally process what just happened
+      newTime += 999
+    }
+
     const timerData: TimerData = {
       [group]: {
-        time: time + milliseconds,
-        isTimerRunning: this.state.outletData[group].isTimerRunning,
+        time: newTime,
+        isTimerRunning,
       },
     }
     this.broadcastTimer(timerData)
