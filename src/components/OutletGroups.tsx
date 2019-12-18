@@ -3,7 +3,12 @@ import * as React from 'react'
 import io from 'socket.io-client'
 
 import { Group } from './Group'
-import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
+import {
+  groupsSettings,
+  GroupSetting,
+  Mode,
+  getGroupSettingValues,
+} from '../settings/group-settings'
 import {
   TimerButtonAction,
   MINUSMINUS,
@@ -161,7 +166,7 @@ class OutletGroups extends React.Component<
   private changeTimer(group: string, milliseconds: number) {
     let time = this.state.outletData[group].time
     let newTime = time + milliseconds
-    if (newTime < 0) {
+    if (!this.state.outletData[group].isTimerRunning && newTime < 0) {
       newTime = 0
     }
     const timerData: TimerData = {
@@ -208,9 +213,14 @@ class OutletGroups extends React.Component<
   }
 
   private cancelTimer(group: string) {
+    let defaultTimer: number = 0
+    const values = getGroupSettingValues(group)
+    if (values) {
+      defaultTimer = values.defaultTimer
+    }
     const timerData: TimerData = {
       [group]: {
-        time: 0, // TODO *** change to default.
+        time: defaultTimer,
         isTimerRunning: false,
       },
     }

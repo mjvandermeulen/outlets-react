@@ -1,8 +1,11 @@
-export interface GroupSetting {
-  group: string
+export interface GroupSettingValues {
   displayName: string
   defaultTimer: number
   enabled: boolean
+}
+
+export type GroupSetting = GroupSettingValues & {
+  group: string
 }
 
 export type Mode = boolean // 'on' | 'off' | 'unknown' TODO maybe?
@@ -11,6 +14,21 @@ export type Mode = boolean // 'on' | 'off' | 'unknown' TODO maybe?
 // export interface GroupsSettings extends Array<GroupSetting> {}
 // OR
 export type GroupsSettings = GroupSetting[]
+
+export function getGroupSettingValues(
+  group: string
+): GroupSettingValues | null {
+  for (const groupSetting of groupsSettings) {
+    if (groupSetting.enabled && groupSetting.group === group) {
+      return {
+        displayName: groupSetting.displayName,
+        defaultTimer: groupSetting.defaultTimer,
+        enabled: groupSetting.enabled,
+      }
+    }
+  }
+  return null
+}
 
 export const groupsSettings: GroupsSettings = [
   {
@@ -31,7 +49,12 @@ export const groupsSettings: GroupsSettings = [
     defaultTimer: 45 * 60 * 1000,
     enabled: true,
   },
-  { group: 'fan', displayName: 'Office Fan', defaultTimer: 0, enabled: false },
+  {
+    group: 'fan',
+    displayName: 'Office Fan',
+    defaultTimer: 0,
+    enabled: false,
+  },
   {
     group: 'guestlight',
     displayName: 'Guest Light',

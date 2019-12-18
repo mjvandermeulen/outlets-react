@@ -1,5 +1,5 @@
-const smallAdjustment: number = 3 * 1000 //TODO **** 5 * 60 * 1000
-const largeAdjustment: number = 1 * 60 * 1000 // TODO **** 30 * 60 * 1000
+const smallAdjustment: number = 5 * 60 * 1000
+const largeAdjustment: number = 30 * 60 * 1000
 export const timerAdjustments: { [key: string]: number } = {
   plus: smallAdjustment,
   plusplus: largeAdjustment,
