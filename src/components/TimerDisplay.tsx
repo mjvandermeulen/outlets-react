@@ -9,30 +9,28 @@ export interface TimerDisplayProps {
 }
 
 export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
-  private displayTimeOut: NodeJS.Timeout | null
+  private displayInterval: NodeJS.Timeout | null
 
   constructor(props: TimerDisplayProps) {
     super(props)
-    this.displayTimeOut = null
+    this.displayInterval = null
   }
 
-  componentDidUpdate() {
-    const itr = this.props.isTimerRunning
-    const st = this.props.showTimer
-    if (this.displayTimeOut) {
-      clearTimeout(this.displayTimeOut)
-      this.displayTimeOut = null
+  componentDidMount() {
+    function exclusiveOr(a: boolean, b: boolean): boolean {
+      return (a && !b) || (!a && b)
     }
-    if ((itr && st) || (!itr && !st)) {
-      this.displayTimeOut = setTimeout(() => {
+
+    this.displayInterval = setInterval(() => {
+      if (exclusiveOr(!this.props.isTimerRunning, this.props.showTimer)) {
         this.forceUpdate()
-      }, 1000)
-    }
+      }
+    }, 1000)
   }
 
   componentWillUnmount() {
-    if (this.displayTimeOut) {
-      clearTimeout(this.displayTimeOut)
+    if (this.displayInterval) {
+      clearInterval(this.displayInterval)
     }
   }
 
