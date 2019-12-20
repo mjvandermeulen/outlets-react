@@ -21,8 +21,10 @@ import {
   timerAdjustments,
 } from '../settings/timer-settings'
 
+// TODO *** move
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
 const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
+const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'
 
 interface SwitchDataValues {
   mode: boolean
@@ -43,10 +45,12 @@ interface TimerData {
   [group: string]: TimerDataValues
 }
 
-type OutletDataValues = SwitchDataValues & TimerDataValues // **** LEARN
+type SyncRequestData = string[] // array of groups
+
+type OutletDataValues = SwitchDataValues & TimerDataValues // *** LEARN
 
 // https://stackoverflow.com/questions/44983560/how-to-exclude-a-key-from-an-interface-in-typescript
-// LEARN ****
+// LEARN ***
 // type OmitGroup<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 // type SocketData = OmitGroup<GroupSocketData, 'group'>
 
@@ -76,7 +80,7 @@ class OutletGroups extends React.Component<
   constructor(props: OutletGroupsProps) {
     super(props)
     this.handleOnOffClick = this.handleOnOffClick.bind(this)
-    this.setModeState = this.setModeState.bind(this) // (I don't think this is needed **** check)
+    // this.setModeState = this.setModeState.bind(this) // (I don't think this is needed ***** check)
     this.socket = null
     const outletData: OutletData = {}
     const userSettings: UserSettings = {}
@@ -108,18 +112,46 @@ class OutletGroups extends React.Component<
     this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
       this.setTimerState(timerData)
     })
+    this.socket.on(OUTLET_SYNC_CHANNEL, (syncData: OutletData) => {
+      console.log(`OUTLET_SYNC_CHANNEL ${JSON.stringify(syncData)}`)
+      this.syncTimerState(syncData)
+    })
+
+    let groups: SyncRequestData = []
+    for (const group in this.state.outletData) {
+      groups.push(group)
+    }
+    this.socket.emit(OUTLET_SYNC_CHANNEL, groups)
   }
 
-  private setModeState(switchData: SwitchData) {
-    const mergedOutletGoupsData: OutletData = {}
-    for (const group in switchData) {
-      mergedOutletGoupsData[group] = {
-        ...this.state.outletData[group],
-        mode: switchData[group].mode,
+  private syncTimerState(syncData: OutletData): void {
+    const newOutletData: OutletData = this.state.outletData
+
+    // only sync the groups that are currently in the state
+    for (const stateGroup in this.state.outletData) {
+      // *** optional chaining would be sweet here:
+      if (stateGroup in syncData) {
+        newOutletData[stateGroup] = syncData[stateGroup]
       }
     }
     this.setState({
-      ...this.state, // added for future proofing
+      ...this.state,
+      outletData: newOutletData,
+    })
+  }
+
+  private setModeState(switchData: SwitchData): void {
+    const mergedOutletGoupsData: OutletData = {}
+    for (const group in switchData) {
+      if (group in this.state.outletData) {
+        mergedOutletGoupsData[group] = {
+          ...this.state.outletData[group],
+          mode: switchData[group].mode,
+        }
+      }
+    }
+    this.setState({
+      ...this.state, // for other keys (e.g.: userSettings)
       outletData: {
         ...this.state.outletData,
         ...mergedOutletGoupsData,
@@ -148,14 +180,16 @@ class OutletGroups extends React.Component<
   private setTimerState(timerData: TimerData) {
     const mergedOutletGoupsData: OutletData = {}
     for (const group in timerData) {
-      mergedOutletGoupsData[group] = {
-        ...this.state.outletData[group],
-        time: timerData[group].time,
-        isTimerRunning: timerData[group].isTimerRunning,
+      if (group in this.state.outletData) {
+        mergedOutletGoupsData[group] = {
+          ...this.state.outletData[group],
+          time: timerData[group].time,
+          isTimerRunning: timerData[group].isTimerRunning,
+        }
       }
     }
     this.setState({
-      ...this.state, // added for future proofing
+      ...this.state, // for other keys (e.g.: userSettings)
       outletData: {
         ...this.state.outletData,
         ...mergedOutletGoupsData,
