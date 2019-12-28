@@ -11,23 +11,31 @@
 }
 
 .accordion-item > .accordion-item__inner {
+  transform: rotate(0deg);
+  transform-origin: top left;
   max-height: 25rem;
+  transition-timing-function: ease-in;
+  transition-duration: 0.3s;
+  transition-property: max-height transform;
   position: relative;
+  overflow: hidden;
 }
 
 .accordion-item--closed > .accordion-item__inner {
-  max-height: 0;
-  overflow: hidden;
+  transform: rotate(-90deg);
+  transform-origin: top left;
+  max-height: 0rem;
   /* transition-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22); ORIG from https://codepen.io/sedlukha/pen/WPeemb?editors=0100 */
-  transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75); /* FUN BOUNCE */
+  /* transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75); FUN BOUNCE */
   /* transition-timing-function: cubic-bezier(-0.11, 1.56, 0.33, 0.754); WHY NOT WORKING?
   ****/
   /* ***Abscissas must be in the [0, 1] range or 
    the curve is not a function of time. */
 
-  transition-duration: 1s;
-  transition-property: max-height;
-  position: relative; /* not needed ... TEST **** see unmodified __inner */
+  /* transition-timing-function: cubic-bezier(0, 1.15, 0, 0.95); */
+  transition-timing-function: ease-out;
+  transition-duration: 0.3s;
+  transition-property: max-height transform;
 }
 
 .accordion-item > .accordion-item__line {
