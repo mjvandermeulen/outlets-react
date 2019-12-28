@@ -21,6 +21,8 @@ import {
   timerAdjustments,
 } from '../settings/timer-settings'
 
+import '../css/accordion.css' // TODO **** Move to Sass @use rule
+
 // TODO *** move
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
 const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
@@ -64,7 +66,10 @@ type OutletData = {
 interface OutletGroupsProps {}
 
 interface UserSettings {
-  [group: string]: { showTimer: boolean }
+  [group: string]: {
+    expandGroup: boolean
+    showTimer: boolean
+  }
 }
 
 interface OutletGroupsState {
@@ -84,6 +89,7 @@ class OutletGroups extends React.Component<
     this.socket = null
     const outletData: OutletData = {}
     const userSettings: UserSettings = {}
+    let firstGroup = true
     groupsSettings.forEach((groupSetting, index) => {
       if (groupSetting.enabled) {
         outletData[groupSetting.group] = {
@@ -92,8 +98,10 @@ class OutletGroups extends React.Component<
           isTimerRunning: false, // TODO
         }
         userSettings[groupSetting.group] = {
+          expandGroup: firstGroup,
           showTimer: true,
         }
+        firstGroup = false
       }
     })
     this.state = {
@@ -159,7 +167,13 @@ class OutletGroups extends React.Component<
     })
   }
 
-  private handleOnOffClick(group: string, mode: Mode) {
+  private handleOnOffClick(
+    event: React.MouseEvent, //*** LEARN used to be .....seEvent<HTMLButtonElement>,
+    group: string,
+    mode: Mode
+  ) {
+    console.log('clicked')
+    event.stopPropagation()
     const switchData: SwitchData = {
       [group]: { mode },
     }
@@ -246,10 +260,13 @@ class OutletGroups extends React.Component<
   private toggleTimerDisplay(group: string) {
     const currentShowTimer: boolean = this.state.userSettings[group].showTimer
     this.setState({
-      ...this.state,
+      ...this.state, // **** TODO test if this is needed or not. clean other code up as well!
       userSettings: {
         ...this.state.userSettings,
-        [group]: { showTimer: !currentShowTimer },
+        [group]: {
+          ...this.state.userSettings[group],
+          showTimer: !currentShowTimer,
+        },
       },
     })
   }
@@ -289,6 +306,22 @@ class OutletGroups extends React.Component<
     }
     this.broadcastTimer(timerData)
     this.setTimerState(timerData)
+  }
+
+  private handleExpandGroup(group: string) {
+    console.log('expanding')
+    const currentExpandGroup: boolean = this.state.userSettings[group]
+      .expandGroup
+    this.setState({
+      ...this.state, // **** TODO test if this is needed or not. clean other code up as well!
+      userSettings: {
+        ...this.state.userSettings,
+        [group]: {
+          ...this.state.userSettings[group],
+          expandGroup: !currentExpandGroup,
+        },
+      },
+    })
   }
 
   private handleTimerClick(group: string, action: TimerButtonAction) {
@@ -333,10 +366,14 @@ class OutletGroups extends React.Component<
             displayName={groupSetting.displayName}
             mode={outletData.mode}
             defaultTimer={outletData.time}
-            handleOnOffClick={(mode: Mode) =>
-              this.handleOnOffClick(groupSetting.group, mode)
+            handleOnOffClick={(event: React.MouseEvent, mode: Mode) =>
+              this.handleOnOffClick(event, groupSetting.group, mode)
             }
             time={outletData.time}
+            expandGroup={
+              this.state.userSettings[groupSetting.group].expandGroup
+            }
+            handleExpandGroup={() => this.handleExpandGroup(groupSetting.group)}
             isTimerRunning={outletData.isTimerRunning}
             showTimer={this.state.userSettings[groupSetting.group].showTimer}
             handleTimerClick={(action: TimerButtonAction) =>
@@ -345,7 +382,11 @@ class OutletGroups extends React.Component<
           />
         )
       })
-    return groups
+    return (
+      <div className="wrapper">
+        <ul className="accordion-list">{groups}</ul>
+      </div>
+    )
   }
 }
 

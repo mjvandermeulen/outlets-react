@@ -1,0 +1,35 @@
+.accordion-list {
+  list-style: none;
+}
+
+.accordion-list > .accordion-list__item {
+  /* border-top: 1px solid grey; */
+  background-color: white;
+  border-radius: 20px;
+  border: 2px solid #e7e7e7;
+  color: black;
+}
+
+.accordion-item > .accordion-item__inner {
+  max-height: 25rem;
+  position: relative;
+}
+
+.accordion-item--closed > .accordion-item__inner {
+  max-height: 0;
+  overflow: hidden;
+  /* transition-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22); ORIG from https://codepen.io/sedlukha/pen/WPeemb?editors=0100 */
+  transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75); /* FUN BOUNCE */
+  /* transition-timing-function: cubic-bezier(-0.11, 1.56, 0.33, 0.754); WHY NOT WORKING?
+  ****/
+  /* ***Abscissas must be in the [0, 1] range or 
+   the curve is not a function of time. */
+
+  transition-duration: 1s;
+  transition-property: max-height;
+  position: relative; /* not needed ... TEST **** see unmodified __inner */
+}
+
+.accordion-item > .accordion-item__line {
+  cursor: pointer;
+}

@@ -47,7 +47,7 @@ export const groupsSettings: GroupsSettings = [
     group: 'coffee',
     displayName: 'Coffee',
     defaultTimer: 45 * 60 * 1000,
-    enabled: false,
+    enabled: true,
   },
   {
     group: 'fan',
