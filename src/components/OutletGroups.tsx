@@ -49,7 +49,9 @@ interface TimerData {
 
 type SyncRequestData = string[] // array of groups
 
-type OutletDataValues = SwitchDataValues & TimerDataValues // *** LEARN
+interface OutletDataValues extends SwitchDataValues, TimerDataValues {}
+// OR
+// type OutletDataValues = SwitchDataValues & TimerDataValues // **** LEARN
 
 // https://stackoverflow.com/questions/44983560/how-to-exclude-a-key-from-an-interface-in-typescript
 // LEARN ***
