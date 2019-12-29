@@ -5,7 +5,7 @@
   padding: 10px;
 }
 
-.accordion-list > .accordion-list__item {
+.accordion-list .accordion-list__item {
   background-color: white;
   color: black;
   border-radius: 20px;
@@ -14,7 +14,7 @@
   padding: 10px;
 }
 
-.accordion-item > .accordion-item__inner {
+.accordion-item .accordion-item__inner {
   transform-origin: top left;
   max-height: 25rem;
   transition-timing-function: ease-in;

@@ -13,6 +13,8 @@ import {
   TOGGLEDISPLAY,
 } from '../settings/timer-settings'
 
+import './Group.css'
+
 export interface GroupProps {
   displayName: string
   mode: boolean
@@ -39,36 +41,42 @@ export class Group extends React.Component<GroupProps, {}> {
             className="accordion-item__line"
             onClick={this.props.handleExpandGroup}
           >
-            <h3 className="accordion-item__title">{this.props.displayName}</h3>
+            <div className="accordion-item__line-content">
+              <div className="accordion-item__title">
+                {this.props.displayName}
+              </div>
+              <div className="accordion-item__line-buttons">
+                <span>
+                  <RemoteControlButton
+                    enabled={true}
+                    active={this.props.mode}
+                    handleClick={event =>
+                      this.props.handleOnOffClick(event, true)
+                    }
+                    size="medium"
+                  >
+                    On
+                  </RemoteControlButton>
+                  <RemoteControlButton
+                    enabled={true}
+                    active={!this.props.mode}
+                    handleClick={event =>
+                      this.props.handleOnOffClick(event, false)
+                    }
+                    // TODO ******* see one above
+                    size="medium"
+                  >
+                    Off
+                  </RemoteControlButton>
+                </span>
+              </div>
+            </div>
           </div>
           <div className="accordion-item__inner">
             <div
               className={`accordion-item__content ${this.props.displayName ===
                 'Coffee' && 'bounce'}`}
             >
-              <div>
-                <RemoteControlButton
-                  enabled={true}
-                  active={this.props.mode}
-                  handleClick={event =>
-                    this.props.handleOnOffClick(event, true)
-                  }
-                  size="medium"
-                >
-                  On
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={true}
-                  active={!this.props.mode}
-                  handleClick={event =>
-                    this.props.handleOnOffClick(event, false)
-                  }
-                  // TODO ******* see one above
-                  size="medium"
-                >
-                  Off
-                </RemoteControlButton>
-              </div>
               <div>
                 <RemoteControlButton
                   enabled={this.props.time > 0}

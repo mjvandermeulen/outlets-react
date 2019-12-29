@@ -1,0 +1,9 @@
+.accordion-item .accordion-item__title {
+  float: left;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+
+.accordion-item .accordion-item__line-buttons {
+  text-align: right;
+}
