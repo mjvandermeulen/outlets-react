@@ -1,5 +1,4 @@
 import React from 'react'
-import './App.css'
 import OutletGroups from './components/OutletGroups'
 
 const App: React.FC = () => {

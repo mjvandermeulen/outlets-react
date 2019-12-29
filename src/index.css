@@ -1,10 +1,16 @@
 body {
+  /* see https://www.w3schools.com/css/css_font.asp search: "combination of percent and em" */
+  font-size: 150%;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   /* from create react app */
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* END from create react app */
+}
+
+h3 {
+  margin: 10px 0;
 }
 
 button {
