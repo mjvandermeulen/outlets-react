@@ -143,7 +143,6 @@ class OutletGroups extends React.Component<
       }
     }
     this.setState({
-      ...this.state,
       outletData: newOutletData,
     })
   }
@@ -159,7 +158,6 @@ class OutletGroups extends React.Component<
       }
     }
     this.setState({
-      ...this.state, // for other keys (e.g.: userSettings)
       outletData: {
         ...this.state.outletData,
         ...mergedOutletGoupsData,
@@ -203,7 +201,6 @@ class OutletGroups extends React.Component<
       }
     }
     this.setState({
-      ...this.state, // for other keys (e.g.: userSettings)
       outletData: {
         ...this.state.outletData,
         ...mergedOutletGoupsData,
@@ -260,7 +257,6 @@ class OutletGroups extends React.Component<
   private toggleTimerDisplay(group: string) {
     const currentShowTimer: boolean = this.state.userSettings[group].showTimer
     this.setState({
-      ...this.state, // **** TODO test if this is needed or not. clean other code up as well!
       userSettings: {
         ...this.state.userSettings,
         [group]: {
@@ -313,7 +309,6 @@ class OutletGroups extends React.Component<
     const currentExpandGroup: boolean = this.state.userSettings[group]
       .expandGroup
     this.setState({
-      ...this.state, // **** TODO test if this is needed or not. clean other code up as well!
       userSettings: {
         ...this.state.userSettings,
         [group]: {
