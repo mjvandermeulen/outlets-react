@@ -1,9 +1,78 @@
-.accordion-item .accordion-item__title {
-  float: left;
-  font-weight: bold;
-  font-size: 1.3em;
+.accordion-item__line-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.accordion-item .accordion-item__line-buttons {
-  text-align: right;
+.accordion-item__line-buttons {
+  display: flex;
+  flex-basis: 100%;
+}
+
+.accordion-item__line-buttons .button__caret {
+  flex: 0.5;
+}
+
+.accordion-item__line-buttons button {
+  flex: 1;
+}
+.accordion-item .accordion-item__title {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin: 14px 4px;
+}
+
+i.caret {
+  border: solid black;
+  border-width: 0 1px 1px 0;
+  display: inline-block;
+  padding: 3px; /* check this **** */
+  transform: rotate(45deg);
+}
+
+.accordion-item__line-content .button__caret {
+  transform: rotate(-180deg);
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: transform;
+  position: relative;
+}
+.accordion-item__line-content .button__caret--bounce {
+  transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
+  transition-duration: 1s;
+}
+
+.accordion-item__line-content .button__caret--down {
+  transform: rotate(0deg);
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: transform;
+  position: relative;
+}
+
+.accordion-item__content .timer .timer__line {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.accordion-item__content .timer .timer__line button {
+  flex: 1;
+}
+
+.accordion-item__content .timer .timer__line .timer-display {
+  flex-basis: 100%;
+  text-align: center;
+  align-self: center;
+  margin: 14px;
+}
+
+@media screen and (min-width: 376px) {
+  .accordion-item__line-buttons {
+    display: block;
+    flex-basis: auto;
+  }
+  .accordion-item__content .timer .timer__line .timer-display {
+    flex: 10;
+  }
 }

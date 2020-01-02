@@ -1,4 +1,6 @@
-.timer {
+/* TODO this is not super related to the functioning of the timer...
+well... the courier New kind of is. *** */
+.timer-display {
   font-family: 'Courier New', Courier, monospace;
   font-size: 1em;
   font-weight: bold;

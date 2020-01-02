@@ -2,16 +2,16 @@
   list-style: none;
   overflow: hidden;
   margin: 0;
-  padding: 10px;
+  padding: 2px;
 }
 
 .accordion-list .accordion-list__item {
   background-color: white;
   color: black;
-  border-radius: 20px;
+  border-radius: 10px;
   border: 2px solid #e7e7e7;
   margin: 10px;
-  padding: 10px;
+  padding: 5px;
 }
 
 .accordion-item .accordion-item__inner {

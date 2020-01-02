@@ -99,6 +99,6 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
       // Show set time
       display = this.readableSetTime(this.props.time, this.props.isTimerRunning)
     }
-    return <span className="timer">{display}</span>
+    return <div className="timer-display">{display}</div>
   }
 }

@@ -91,7 +91,6 @@ class OutletGroups extends React.Component<
     this.socket = null
     const outletData: OutletData = {}
     const userSettings: UserSettings = {}
-    let firstGroup = true
     groupsSettings.forEach((groupSetting, index) => {
       if (groupSetting.enabled) {
         outletData[groupSetting.group] = {
@@ -100,10 +99,9 @@ class OutletGroups extends React.Component<
           isTimerRunning: false, // TODO
         }
         userSettings[groupSetting.group] = {
-          expandGroup: firstGroup,
+          expandGroup: false,
           showTimer: true,
         }
-        firstGroup = false
       }
     })
     this.state = {
@@ -384,6 +382,7 @@ class OutletGroups extends React.Component<
           />
         )
       })
+
     return (
       <div className="wrapper">
         <ul className="accordion-list">{groups}</ul>

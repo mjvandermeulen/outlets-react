@@ -39,7 +39,7 @@ export const groupsSettings: GroupsSettings = [
   },
   {
     group: 'officelight',
-    displayName: 'Office Light',
+    displayName: 'Office',
     defaultTimer: 0,
     enabled: true,
   },
@@ -63,8 +63,8 @@ export const groupsSettings: GroupsSettings = [
   },
   {
     group: 'redlight',
-    displayName: 'Guest Night Light',
+    displayName: 'Night Light',
     defaultTimer: 0,
-    enabled: false,
+    enabled: true,
   },
 ]

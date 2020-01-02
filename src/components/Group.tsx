@@ -45,30 +45,47 @@ export class Group extends React.Component<GroupProps, {}> {
               <div className="accordion-item__title">
                 {this.props.displayName}
               </div>
+              {/* <div className="flex-media-small-break" /> */}
               <div className="accordion-item__line-buttons">
-                <span>
-                  <RemoteControlButton
-                    enabled={true}
-                    active={this.props.mode}
-                    handleClick={event =>
-                      this.props.handleOnOffClick(event, true)
-                    }
-                    size="medium"
-                  >
-                    On
-                  </RemoteControlButton>
-                  <RemoteControlButton
-                    enabled={true}
-                    active={!this.props.mode}
-                    handleClick={event =>
-                      this.props.handleOnOffClick(event, false)
-                    }
-                    // TODO ******* see one above
-                    size="medium"
-                  >
-                    Off
-                  </RemoteControlButton>
-                </span>
+                <RemoteControlButton
+                  enabled={true}
+                  active={this.props.mode}
+                  handleClick={event =>
+                    this.props.handleOnOffClick(event, true)
+                  }
+                  size="medium"
+                >
+                  On
+                </RemoteControlButton>
+                <RemoteControlButton
+                  enabled={true}
+                  active={!this.props.mode}
+                  handleClick={event =>
+                    this.props.handleOnOffClick(event, false)
+                  }
+                  // TODO ******* see one above
+                  size="medium"
+                >
+                  Off
+                </RemoteControlButton>
+                <RemoteControlButton
+                  className={
+                    `
+                    button__caret
+                    ${this.props.expandGroup ? '' : ' button__caret--down'}` +
+                    `${
+                      this.props.displayName === 'Coffee'
+                        ? ' button__caret--bounce'
+                        : ''
+                    }`
+                  }
+                  enabled={true}
+                  active={this.props.expandGroup}
+                  handleClick={() => {}}
+                  size="medium"
+                >
+                  <i className="caret" />
+                </RemoteControlButton>
               </div>
             </div>
           </div>
@@ -77,72 +94,78 @@ export class Group extends React.Component<GroupProps, {}> {
               className={`accordion-item__content ${this.props.displayName ===
                 'Coffee' && 'bounce'}`}
             >
-              <div>
-                <RemoteControlButton
-                  enabled={this.props.time > 0}
-                  active={false}
-                  handleClick={event => this.props.handleTimerClick(MINUSMINUS)}
-                  size="medium"
-                >
-                  --
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={this.props.time > 0}
-                  active={false}
-                  handleClick={event => this.props.handleTimerClick(MINUS)}
-                  size="medium"
-                >
-                  -
-                </RemoteControlButton>
-                <TimerDisplay
-                  time={this.props.time}
-                  isTimerRunning={this.props.isTimerRunning}
-                  showTimer={this.props.showTimer}
-                />
-                <RemoteControlButton
-                  enabled={true}
-                  active={false}
-                  handleClick={event => this.props.handleTimerClick(PLUS)}
-                  size="medium"
-                >
-                  +
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={true}
-                  active={false}
-                  handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
-                  size="medium"
-                >
-                  ++
-                </RemoteControlButton>
-              </div>
-              <div>
-                <RemoteControlButton
-                  enabled={this.props.isTimerRunning || this.props.time > 0}
-                  active={false}
-                  handleClick={event => this.props.handleTimerClick(STARTPAUSE)}
-                  size="medium"
-                >
-                  {this.props.isTimerRunning ? 'pause' : 'start'}
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={this.props.time !== 0}
-                  active={false}
-                  handleClick={event => this.props.handleTimerClick(CANCEL)}
-                  size="medium"
-                >
-                  cancel
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={true}
-                  active={false}
-                  handleClick={event =>
-                    this.props.handleTimerClick(TOGGLEDISPLAY)
-                  }
-                  size="medium"
-                >
-                  {this.props.showTimer ? 'show set time' : 'show timer'}
-                </RemoteControlButton>
+              <div className="timer">
+                <div className="timer__line">
+                  <RemoteControlButton
+                    enabled={this.props.time > 0}
+                    active={false}
+                    handleClick={event =>
+                      this.props.handleTimerClick(MINUSMINUS)
+                    }
+                    size="medium"
+                  >
+                    --
+                  </RemoteControlButton>
+                  <RemoteControlButton
+                    enabled={this.props.time > 0}
+                    active={false}
+                    handleClick={event => this.props.handleTimerClick(MINUS)}
+                    size="medium"
+                  >
+                    -
+                  </RemoteControlButton>
+                  <TimerDisplay
+                    time={this.props.time}
+                    isTimerRunning={this.props.isTimerRunning}
+                    showTimer={this.props.showTimer}
+                  />
+                  <RemoteControlButton
+                    enabled={true}
+                    active={false}
+                    handleClick={event => this.props.handleTimerClick(PLUS)}
+                    size="medium"
+                  >
+                    +
+                  </RemoteControlButton>
+                  <RemoteControlButton
+                    enabled={true}
+                    active={false}
+                    handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
+                    size="medium"
+                  >
+                    ++
+                  </RemoteControlButton>
+                </div>
+                <div className="timer__line">
+                  <RemoteControlButton
+                    enabled={this.props.isTimerRunning || this.props.time > 0}
+                    active={false}
+                    handleClick={event =>
+                      this.props.handleTimerClick(STARTPAUSE)
+                    }
+                    size="medium"
+                  >
+                    {this.props.isTimerRunning ? 'pause' : 'start'}
+                  </RemoteControlButton>
+                  <RemoteControlButton
+                    enabled={this.props.time !== 0}
+                    active={false}
+                    handleClick={event => this.props.handleTimerClick(CANCEL)}
+                    size="medium"
+                  >
+                    cancel
+                  </RemoteControlButton>
+                  <RemoteControlButton
+                    enabled={true}
+                    active={false}
+                    handleClick={event =>
+                      this.props.handleTimerClick(TOGGLEDISPLAY)
+                    }
+                    size="medium"
+                  >
+                    {this.props.showTimer ? 'show set time' : 'show timer'}
+                  </RemoteControlButton>
+                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 body {
   /* see https://www.w3schools.com/css/css_font.asp search: "combination of percent and em" */
-  font-size: 150%;
+  font-size: 100%;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   /* from create react app */
   margin: 0;
@@ -15,13 +15,13 @@ h3 {
 
 button {
   background-color: white;
-  border-radius: 20px;
+  border-radius: 10px;
   border: 2px solid #e7e7e7;
   color: black;
   cursor: pointer;
   font-size: 0.8em;
-  margin: 6px 6px;
-  padding: 15px 15px;
+  margin: 4px;
+  padding: 10px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
@@ -49,3 +49,28 @@ code {
   background-color: hotpink;
 }
 */
+
+div {
+  /* user-select: none; /* supported by Chrome and Opera */
+  /* -webkit-user-select: none; /* Safari */
+  /* -khtml-user-select: none; /* Konqueror HTML */
+  /* -moz-user-select: none; /* Firefox */
+  /* -ms-user-select: none; /* Internet Explorer/Edge */
+  /* -webkit-tap-highlight-color: red; */
+  -webkit-tap-highlight-color: transparent; /* for removing the tapped element highlight on android */
+}
+
+/* TODO **** use variables in Sass for min-width */
+
+@media screen and (min-width: 376px) {
+  body {
+    background-color: #f5f1f1;
+    max-width: 450px;
+    margin: 0px auto;
+  }
+
+  div.flex-media-small-break {
+    flex-basis: 100%;
+    height: 0;
+  }
+}

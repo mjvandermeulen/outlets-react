@@ -1,6 +1,7 @@
 import * as React from 'react'
 import './RemoteControlButton.css'
 interface RemoteControlButtonProps {
+  className?: string
   active: boolean
   enabled: boolean
   handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -16,7 +17,8 @@ export const RemoteControlButton: React.FunctionComponent<RemoteControlButtonPro
       // console.log('button disabled')
     }
   }
-  let btnClass = 'medium-button'
+  let btnClass = props.className !== undefined ? props.className : ''
+  btnClass += ' remote-control-button medium-button' // No CSS for this yet *** TODO
   if (props.active) {
     btnClass += ' activeButton'
   }
