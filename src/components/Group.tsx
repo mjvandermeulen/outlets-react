@@ -46,7 +46,25 @@ export class Group extends React.Component<GroupProps, {}> {
                 {this.props.displayName}
               </div>
               {/* <div className="flex-media-small-break" /> */}
-              <div className="accordion-item__line-buttons">
+              <RemoteControlButton
+                className={
+                  `
+                    button__caret
+                    ${this.props.expandGroup ? '' : ' button__caret--down'}` +
+                  `${
+                    this.props.displayName === 'Coffee'
+                      ? ' button__caret--bounce'
+                      : ''
+                  }`
+                }
+                enabled={true}
+                active={this.props.expandGroup}
+                handleClick={() => {}}
+                size="medium"
+              >
+                <i className="caret" />
+              </RemoteControlButton>
+              <div className="accordion-item__line-on-off-buttons">
                 <RemoteControlButton
                   enabled={true}
                   active={this.props.mode}
@@ -68,24 +86,6 @@ export class Group extends React.Component<GroupProps, {}> {
                 >
                   Off
                 </RemoteControlButton>
-                <RemoteControlButton
-                  className={
-                    `
-                    button__caret
-                    ${this.props.expandGroup ? '' : ' button__caret--down'}` +
-                    `${
-                      this.props.displayName === 'Coffee'
-                        ? ' button__caret--bounce'
-                        : ''
-                    }`
-                  }
-                  enabled={true}
-                  active={this.props.expandGroup}
-                  handleClick={() => {}}
-                  size="medium"
-                >
-                  <i className="caret" />
-                </RemoteControlButton>
               </div>
             </div>
           </div>
@@ -95,7 +95,28 @@ export class Group extends React.Component<GroupProps, {}> {
                 'Coffee' && 'bounce'}`}
             >
               <div className="timer">
-                <div className="timer__line">
+                <div className="timer__line timer__display-line">
+                  <RemoteControlButton
+                    enabled={true}
+                    active={false}
+                    handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
+                    size="medium"
+                  >
+                    ++
+                  </RemoteControlButton>
+                  <RemoteControlButton
+                    enabled={true}
+                    active={false}
+                    handleClick={event => this.props.handleTimerClick(PLUS)}
+                    size="medium"
+                  >
+                    +
+                  </RemoteControlButton>
+                  <TimerDisplay
+                    time={this.props.time}
+                    isTimerRunning={this.props.isTimerRunning}
+                    showTimer={this.props.showTimer}
+                  />
                   <RemoteControlButton
                     enabled={this.props.time > 0}
                     active={false}
@@ -113,27 +134,6 @@ export class Group extends React.Component<GroupProps, {}> {
                     size="medium"
                   >
                     -
-                  </RemoteControlButton>
-                  <TimerDisplay
-                    time={this.props.time}
-                    isTimerRunning={this.props.isTimerRunning}
-                    showTimer={this.props.showTimer}
-                  />
-                  <RemoteControlButton
-                    enabled={true}
-                    active={false}
-                    handleClick={event => this.props.handleTimerClick(PLUS)}
-                    size="medium"
-                  >
-                    +
-                  </RemoteControlButton>
-                  <RemoteControlButton
-                    enabled={true}
-                    active={false}
-                    handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
-                    size="medium"
-                  >
-                    ++
                   </RemoteControlButton>
                 </div>
                 <div className="timer__line">

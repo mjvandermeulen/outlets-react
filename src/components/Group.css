@@ -2,25 +2,27 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
-.accordion-item__line-buttons {
+.accordion-item__line-on-off-buttons {
   display: flex;
   flex-basis: 100%;
+  flex-wrap: wrap;
 }
-
-.accordion-item__line-buttons .button__caret {
+.accordion-item__line-on-off-buttons .button__caret {
   flex: 0.5;
 }
 
-.accordion-item__line-buttons button {
+.accordion-item__line-on-off-buttons button {
   flex: 1;
 }
 .accordion-item .accordion-item__title {
   font-weight: bold;
   font-size: 1.3em;
   margin: 14px 4px;
+  margin-right: auto; /* to auto fill the whole space to the next div */
+  /* alternative margin:  14px auto 14px 4px */
 }
 
 i.caret {
@@ -40,7 +42,7 @@ i.caret {
 }
 .accordion-item__line-content .button__caret--bounce {
   transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
-  transition-duration: 1s;
+  transition-duration: 0.7s;
 }
 
 .accordion-item__line-content .button__caret--down {
@@ -67,12 +69,35 @@ i.caret {
   margin: 14px;
 }
 
-@media screen and (min-width: 376px) {
-  .accordion-item__line-buttons {
+@media screen and (min-width: 351px) {
+  .accordion-item__line-on-off-buttons {
     display: block;
     flex-basis: auto;
   }
+  .accordion-item__line-on-off-buttons {
+    order: 2;
+  }
+  .accordion-item__line-content .button__caret {
+    order: 3;
+  }
+}
+@media screen and (min-width: 401px) {
   .accordion-item__content .timer .timer__line .timer-display {
-    flex: 10;
+    flex: 5;
+  }
+  .accordion-item__content .timer .timer__display-line :nth-child(1) {
+    order: 5;
+  }
+  .accordion-item__content .timer .timer__display-line :nth-child(2) {
+    order: 4;
+  }
+  .accordion-item__content .timer .timer__display-line :nth-child(3) {
+    order: 3;
+  }
+  .accordion-item__content .timer .timer__display-line :nth-child(4) {
+    order: 1;
+  }
+  .accordion-item__content .timer .timer__display-line :nth-child(5) {
+    order: 2;
   }
 }
