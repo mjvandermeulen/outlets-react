@@ -22,6 +22,7 @@ import {
 } from '../settings/timer-settings'
 
 import '../css/accordion.css' // TODO **** Move to Sass @use rule
+import { UserSettings } from '../redux/userSettings/types'
 
 // TODO *** move
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
@@ -67,13 +68,6 @@ type OutletData = {
 
 interface OutletGroupsProps {}
 
-interface UserSettings {
-  [group: string]: {
-    expandGroup: boolean
-    showTimer: boolean
-  }
-}
-
 interface OutletGroupsState {
   outletData: OutletData
   userSettings: UserSettings
@@ -81,13 +75,11 @@ interface OutletGroupsState {
 
 class OutletGroups extends React.Component<
   OutletGroupsProps,
-  OutletGroupsState
+  OutletGroupsState // To be removed after local state fully replaced by redux ****
 > {
   private socket: SocketIOClient.Socket | null
   constructor(props: OutletGroupsProps) {
     super(props)
-    this.handleOnOffClick = this.handleOnOffClick.bind(this)
-    // this.setModeState = this.setModeState.bind(this) // (I don't think this is needed ***** check)
     this.socket = null
     const outletData: OutletData = {}
     const userSettings: UserSettings = {}
@@ -121,7 +113,6 @@ class OutletGroups extends React.Component<
       this.setTimerState(timerData)
     })
     this.socket.on(OUTLET_SYNC_CHANNEL, (syncData: OutletData) => {
-      console.log(`OUTLET_SYNC_CHANNEL ${JSON.stringify(syncData)}`)
       this.syncTimerState(syncData)
     })
 
@@ -170,7 +161,6 @@ class OutletGroups extends React.Component<
     group: string,
     mode: Mode
   ) {
-    console.log('clicked')
     event.stopPropagation()
     const switchData: SwitchData = {
       [group]: { mode },
@@ -179,7 +169,6 @@ class OutletGroups extends React.Component<
       this.socket.emit(OUTLET_SWITCH_CHANNEL, switchData) // or broadcast?
     }
     this.setModeState(switchData)
-    // console.log(`Button clicked: ${group} - ${mode}`)
   }
 
   private broadcastTimer(timerData: TimerData) {
@@ -254,6 +243,8 @@ class OutletGroups extends React.Component<
   }
 
   // TODO: MOVE DOWN to just above render
+  // TODO: **** no longer needed cleanup after changing to redux, but leave here
+  // because we may bring it back to OutletGroups
   private toggleTimerDisplay(group: string) {
     const currentShowTimer: boolean = this.state.userSettings[group].showTimer
     this.setState({
@@ -305,7 +296,6 @@ class OutletGroups extends React.Component<
   }
 
   private handleExpandGroup(group: string) {
-    console.log('expanding')
     const currentExpandGroup: boolean = this.state.userSettings[group]
       .expandGroup
     this.setState({
@@ -358,6 +348,7 @@ class OutletGroups extends React.Component<
         return (
           <Group
             key={groupSetting.group}
+            group={groupSetting.group}
             displayName={groupSetting.displayName}
             mode={outletData.mode}
             defaultTimer={outletData.time}
@@ -365,12 +356,8 @@ class OutletGroups extends React.Component<
               this.handleOnOffClick(event, groupSetting.group, mode)
             }
             time={outletData.time}
-            expandGroup={
-              this.state.userSettings[groupSetting.group].expandGroup
-            }
             handleExpandGroup={() => this.handleExpandGroup(groupSetting.group)}
             isTimerRunning={outletData.isTimerRunning}
-            showTimer={this.state.userSettings[groupSetting.group].showTimer}
             handleTimerClick={(action: TimerButtonAction) =>
               this.handleTimerClick(groupSetting.group, action)
             }

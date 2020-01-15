@@ -14,8 +14,29 @@ import {
 } from '../settings/timer-settings'
 
 import './Group.css'
+import { RootState } from '../redux/rootReducer'
+import { UserSettingsActionTypes } from '../redux/userSettings/types'
+import {
+  toggleExpandAction,
+  toggleShowTimerAction,
+} from '../redux/userSettings/actions'
+import { connect } from 'react-redux'
 
-export interface GroupProps {
+// interface StateProps {
+//   expandGroup: boolean
+//   showTimer: boolean
+// }
+
+// interface DispatchProps {
+//   toggleExpand: UserSettingsActionTypes
+//   toggleShowTimer: UserSettingsActionTypes
+// }
+
+type StateProps = ReturnType<typeof mapState>
+type DispatchProps = typeof mapDispatch
+
+interface OwnProps {
+  group: string
   displayName: string
   mode: boolean
   defaultTimer: number // in milliseconds
@@ -23,13 +44,23 @@ export interface GroupProps {
   handleExpandGroup: () => void
   time: number
   isTimerRunning: boolean
-  expandGroup: boolean
-  showTimer: boolean
   handleTimerClick: (action: TimerButtonAction) => void
 }
 
-// TODO: why not change to functional component?
-export class Group extends React.Component<GroupProps, {}> {
+type Props = StateProps & DispatchProps & OwnProps
+
+// LEARN: Use OwnProps to dig in and only use current Groups state
+const mapState = (state: RootState, ownProps: OwnProps) => ({
+  expandGroup: state.userSettings[ownProps.group].expandGroup,
+  showTimer: state.userSettings[ownProps.group].showTimer,
+})
+
+const mapDispatch = {
+  toggleExpand: toggleExpandAction,
+  toggleShowTimer: toggleShowTimerAction,
+}
+
+class GroupComponent extends React.Component<Props> {
   render() {
     return (
       <li className="accordion-list__item">
@@ -39,7 +70,7 @@ export class Group extends React.Component<GroupProps, {}> {
         >
           <div
             className="accordion-item__line"
-            onClick={this.props.handleExpandGroup}
+            onClick={() => this.props.toggleExpand(this.props.group)}
           >
             <div className="accordion-item__line-content">
               <div className="accordion-item__title">
@@ -81,7 +112,6 @@ export class Group extends React.Component<GroupProps, {}> {
                   handleClick={event =>
                     this.props.handleOnOffClick(event, false)
                   }
-                  // TODO ******* see one above
                   size="medium"
                 >
                   Off
@@ -159,7 +189,8 @@ export class Group extends React.Component<GroupProps, {}> {
                     enabled={true}
                     active={false}
                     handleClick={event =>
-                      this.props.handleTimerClick(TOGGLEDISPLAY)
+                      // this.props.handleTimerClick(TOGGLEDISPLAY)
+                      this.props.toggleShowTimer(this.props.group)
                     }
                     size="medium"
                   >
@@ -174,3 +205,5 @@ export class Group extends React.Component<GroupProps, {}> {
     )
   }
 }
+
+export const Group = connect(mapState, mapDispatch)(GroupComponent)
