@@ -8,11 +8,11 @@ export interface UserSettings {
 }
 
 // actions
-export const TOGGLE_EXPAND = 'TOGGLE_EXPAND'
+export const TOGGLE_EXPAND_GROUP = 'TOGGLE_EXPAND_GROUP'
 export const TOGGLE_SHOW_TIMER = 'TOGGLE_SHOW_TIMER'
 
 interface ToggleExpandAction {
-  type: typeof TOGGLE_EXPAND
+  type: typeof TOGGLE_EXPAND_GROUP
   payload: {
     group: string
   }

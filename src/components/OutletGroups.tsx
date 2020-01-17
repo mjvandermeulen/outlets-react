@@ -22,138 +22,94 @@ import {
 } from '../settings/timer-settings'
 
 import '../css/accordion.css' // TODO **** Move to Sass @use rule
-import { UserSettings } from '../redux/userSettings/types'
+import { RootState } from '../redux/rootReducer'
+import { switchAction } from '../redux/outlets/actions'
+import {
+  SwitchData,
+  OutletData,
+  TimerData,
+  OutletDataValues,
+} from '../redux/outlets/types'
+import { connect } from 'react-redux'
 
 // TODO *** move
 const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
 const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
 const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'
 
-interface SwitchDataValues {
-  mode: boolean
+interface OwnProps {}
+
+type StateProps = ReturnType<typeof mapState>
+
+type DispatchProps = typeof mapDispatch
+
+type Props = StateProps & DispatchProps & OwnProps
+
+const mapState = (state: RootState, ownProps: OwnProps) => ({
+  outletData: state.outletData,
+})
+
+const mapDispatch = {
+  switch: switchAction,
 }
 
-// The switch data can have multiple outletgroups
-interface SwitchData {
-  [group: string]: SwitchDataValues
-}
-
-// The timer data can have multiple outletgroups
-interface TimerDataValues {
-  time: number
-  isTimerRunning: boolean
-}
-
-interface TimerData {
-  [group: string]: TimerDataValues
-}
-
-type SyncRequestData = string[] // array of groups
-
-interface OutletDataValues extends SwitchDataValues, TimerDataValues {}
-// OR
-// type OutletDataValues = SwitchDataValues & TimerDataValues // **** LEARN
-
-// https://stackoverflow.com/questions/44983560/how-to-exclude-a-key-from-an-interface-in-typescript
-// LEARN ***
-// type OmitGroup<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-// type SocketData = OmitGroup<GroupSocketData, 'group'>
-
-// https://www.educba.com/typescript-type-vs-interface/
-// type used here, because it's easier to read than interface
-// interface OutletData extends Array<OutletDataValues> {}
-type OutletData = {
-  [group: string]: OutletDataValues
-}
-
-interface OutletGroupsProps {}
-
-interface OutletGroupsState {
-  outletData: OutletData
-  userSettings: UserSettings
-}
-
-class OutletGroups extends React.Component<
-  OutletGroupsProps,
-  OutletGroupsState // To be removed after local state fully replaced by redux ****
-> {
+class OutletGroupsComponent extends React.Component<Props> {
   private socket: SocketIOClient.Socket | null
-  constructor(props: OutletGroupsProps) {
+  constructor(props: Props) {
     super(props)
     this.socket = null
-    const outletData: OutletData = {}
-    const userSettings: UserSettings = {}
-    groupsSettings.forEach((groupSetting, index) => {
-      if (groupSetting.enabled) {
-        outletData[groupSetting.group] = {
-          mode: false,
-          time: groupSetting.defaultTimer,
-          isTimerRunning: false, // TODO
-        }
-        userSettings[groupSetting.group] = {
-          expandGroup: false,
-          showTimer: true,
-        }
-      }
-    })
-    this.state = {
-      outletData,
-      userSettings,
-    }
   }
 
   public componentDidMount() {
-    // TODO: Move socket/io('htt..... out of component: always have this connection?
-    // then pass it into the props...?  ****
-    this.socket = io('http://localhost:3000') // TODO stop hardcoding.
-    this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
-      this.setModeState(switchData)
-    })
-    this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
-      this.setTimerState(timerData)
-    })
-    this.socket.on(OUTLET_SYNC_CHANNEL, (syncData: OutletData) => {
-      this.syncTimerState(syncData)
-    })
-
-    let groups: SyncRequestData = []
-    for (const group in this.state.outletData) {
-      groups.push(group)
-    }
-    this.socket.emit(OUTLET_SYNC_CHANNEL, groups)
+    // // TODO: Move socket/io('htt..... out of component: always have this connection?
+    // // then pass it into the props...?  ****
+    // this.socket = io('http://localhost:3000') // TODO stop hardcoding.
+    // this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
+    //   this.setModeState(switchData)
+    // })
+    // this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
+    //   this.setTimerState(timerData)
+    // })
+    // this.socket.on(OUTLET_SYNC_CHANNEL, (syncData: OutletData) => {
+    //   this.syncTimerState(syncData)
+    // })
+    // let groups: SyncRequestData = []
+    // for (const group in this.props.outletData) {
+    //   groups.push(group)
+    // }
+    // this.socket.emit(OUTLET_SYNC_CHANNEL, groups)
   }
 
   private syncTimerState(syncData: OutletData): void {
-    const newOutletData: OutletData = this.state.outletData
-
-    // only sync the groups that are currently in the state
-    for (const stateGroup in this.state.outletData) {
-      // *** optional chaining would be sweet here:
-      if (stateGroup in syncData) {
-        newOutletData[stateGroup] = syncData[stateGroup]
-      }
-    }
-    this.setState({
-      outletData: newOutletData,
-    })
+    // const newOutletData: OutletData = this.state.outletData
+    // // only sync the groups that are currently in the state
+    // for (const stateGroup in this.state.outletData) {
+    //   // *** optional chaining would be sweet here:
+    //   if (stateGroup in syncData) {
+    //     newOutletData[stateGroup] = syncData[stateGroup]
+    //   }
+    // }
+    // this.setState({
+    //   outletData: newOutletData,
+    // })
   }
 
   private setModeState(switchData: SwitchData): void {
-    const mergedOutletGoupsData: OutletData = {}
-    for (const group in switchData) {
-      if (group in this.state.outletData) {
-        mergedOutletGoupsData[group] = {
-          ...this.state.outletData[group],
-          mode: switchData[group].mode,
-        }
-      }
-    }
-    this.setState({
-      outletData: {
-        ...this.state.outletData,
-        ...mergedOutletGoupsData,
-      },
-    })
+    // const mergedOutletGoupsData: OutletData = {}
+    // for (const group in switchData) {
+    //   if (group in this.state.outletData) {
+    //     mergedOutletGoupsData[group] = {
+    //       ...this.state.outletData[group],
+    //       mode: switchData[group].mode,
+    //     }
+    //   }
+    // }
+    // this.setState({
+    //   outletData: {
+    //     ...this.state.outletData,
+    //     ...mergedOutletGoupsData,
+    //   },
+    // })
   }
 
   private handleOnOffClick(
@@ -161,14 +117,15 @@ class OutletGroups extends React.Component<
     group: string,
     mode: Mode
   ) {
-    event.stopPropagation()
-    const switchData: SwitchData = {
-      [group]: { mode },
-    }
-    if (this.socket) {
-      this.socket.emit(OUTLET_SWITCH_CHANNEL, switchData) // or broadcast?
-    }
-    this.setModeState(switchData)
+    event.stopPropagation() // so you don't toggle expand group by clicking on parent div
+    // const switchData: SwitchData = {
+    //   [group]: { mode },
+    // }
+    // if (this.socket) {
+    //   this.socket.emit(OUTLET_SWITCH_CHANNEL, switchData) // or broadcast?
+    // }
+    // this.setModeState(switchData)
+    this.props.switch(group, mode)
   }
 
   private broadcastTimer(timerData: TimerData) {
@@ -179,104 +136,101 @@ class OutletGroups extends React.Component<
   }
 
   private setTimerState(timerData: TimerData) {
-    const mergedOutletGoupsData: OutletData = {}
-    for (const group in timerData) {
-      if (group in this.state.outletData) {
-        mergedOutletGoupsData[group] = {
-          ...this.state.outletData[group],
-          time: timerData[group].time,
-          isTimerRunning: timerData[group].isTimerRunning,
-        }
-      }
-    }
-    this.setState({
-      outletData: {
-        ...this.state.outletData,
-        ...mergedOutletGoupsData,
-      },
-    })
+    // const mergedOutletGoupsData: OutletData = {}
+    // for (const group in timerData) {
+    //   if (group in this.state.outletData) {
+    //     mergedOutletGoupsData[group] = {
+    //       ...this.state.outletData[group],
+    //       time: timerData[group].time,
+    //       isTimerRunning: timerData[group].isTimerRunning,
+    //     }
+    //   }
+    // }
+    // this.setState({
+    //   outletData: {
+    //     ...this.state.outletData,
+    //     ...mergedOutletGoupsData,
+    //   },
+    // })
     // console.log(`setTimerState END JSON state: ${JSON.stringify(this.state)}`)
   }
   private changeTimer(group: string, milliseconds: number) {
-    let newTime = this.state.outletData[group].time + milliseconds
-    const isTimerRunning = this.state.outletData[group].isTimerRunning
-    const showTimer = this.state.userSettings[group].showTimer
-    const increment = timerAdjustments.plus
-
-    if (!isTimerRunning && newTime < 0) {
-      newTime = 0
-    }
-    // BEFORE ROUNDING
-    // running AND showTimer => SUBTRACT Date.now()
-    // running AND !showTimer => nothing
-    // !running AND showTimer => nothing
-    // ! running AND !showTimer => ADD Date.now()
-
-    if (isTimerRunning && showTimer) {
-      newTime -= Date.now()
-    } else if (!isTimerRunning && !showTimer) {
-      newTime += Date.now()
-    }
-    if (milliseconds > 0) {
-      newTime = Math.floor(newTime / increment) * increment
-    } else {
-      newTime = Math.ceil((newTime - 999) / increment) * increment
-    }
-    if (isTimerRunning && showTimer) {
-      newTime += Date.now()
-    } else if (!isTimerRunning && !showTimer) {
-      newTime -= Date.now()
-    }
-    if (showTimer) {
-      // Time for user to mentally process what just happened
-      newTime += 999
-    }
-
-    const timerData: TimerData = {
-      [group]: {
-        time: newTime,
-        isTimerRunning,
-      },
-    }
-    this.broadcastTimer(timerData)
-    this.setTimerState(timerData)
+    // let newTime = this.state.outletData[group].time + milliseconds
+    // const isTimerRunning = this.state.outletData[group].isTimerRunning
+    // const showTimer = this.state.userSettings[group].showTimer
+    // const increment = timerAdjustments.plus
+    // if (!isTimerRunning && newTime < 0) {
+    //   newTime = 0
+    // }
+    // // BEFORE ROUNDING
+    // // running AND showTimer => SUBTRACT Date.now()
+    // // running AND !showTimer => nothing
+    // // !running AND showTimer => nothing
+    // // ! running AND !showTimer => ADD Date.now()
+    // if (isTimerRunning && showTimer) {
+    //   newTime -= Date.now()
+    // } else if (!isTimerRunning && !showTimer) {
+    //   newTime += Date.now()
+    // }
+    // if (milliseconds > 0) {
+    //   newTime = Math.floor(newTime / increment) * increment
+    // } else {
+    //   newTime = Math.ceil((newTime - 999) / increment) * increment
+    // }
+    // if (isTimerRunning && showTimer) {
+    //   newTime += Date.now()
+    // } else if (!isTimerRunning && !showTimer) {
+    //   newTime -= Date.now()
+    // }
+    // if (showTimer) {
+    //   // Time for user to mentally process what just happened
+    //   newTime += 999
+    // }
+    // const timerData: TimerData = {
+    //   [group]: {
+    //     time: newTime,
+    //     isTimerRunning,
+    //   },
+    // }
+    // this.broadcastTimer(timerData)
+    // this.setTimerState(timerData)
   }
 
   // TODO: MOVE DOWN to just above render
   // TODO: **** no longer needed cleanup after changing to redux, but leave here
   // because we may bring it back to OutletGroups
   private toggleTimerDisplay(group: string) {
-    const currentShowTimer: boolean = this.state.userSettings[group].showTimer
-    this.setState({
-      userSettings: {
-        ...this.state.userSettings,
-        [group]: {
-          ...this.state.userSettings[group],
-          showTimer: !currentShowTimer,
-        },
-      },
-    })
+    // const currentShowTimer: boolean = this.state.userSettings[group].showTimer
+    // this.setState({
+    //   userSettings: {
+    //     ...this.state.userSettings,
+    //     [group]: {
+    //       ...this.state.userSettings[group],
+    //       showTimer: !currentShowTimer,
+    //     },
+    //   },
+    // })
   }
   private toggleStartPauseTimer(group: string) {
-    const outletData: OutletDataValues = this.state.outletData[group]
-    let timerData: TimerData
-    if (!outletData.isTimerRunning) {
-      timerData = {
-        [group]: {
-          time: Date.now() + outletData.time,
-          isTimerRunning: true,
-        },
-      }
-    } else {
-      timerData = {
-        [group]: {
-          time: outletData.time - Date.now(), // time left
-          isTimerRunning: false,
-        },
-      }
-    }
-    this.broadcastTimer(timerData)
-    this.setTimerState(timerData)
+    // const outletData: OutletDataValues = this.state.outletData[group]
+    // let timerData: TimerData
+    // if (!outletData.isTimerRunning) {
+    //   timerData = {
+    //     [group]: {
+    //       time: Date.now() + outletData.time,
+    //       isTimerRunning: true,
+    //     },
+    //   }
+    // } else {
+    //   timerData = {
+    //     [group]: {
+    //       time: outletData.time - Date.now(), // time left
+    //       isTimerRunning: false,
+    //     },
+    //   }
+    // }
+    // this.broadcastTimer(timerData)
+    // this.setTimerState(timerData)
   }
 
   private cancelTimer(group: string) {
@@ -296,17 +250,17 @@ class OutletGroups extends React.Component<
   }
 
   private handleExpandGroup(group: string) {
-    const currentExpandGroup: boolean = this.state.userSettings[group]
-      .expandGroup
-    this.setState({
-      userSettings: {
-        ...this.state.userSettings,
-        [group]: {
-          ...this.state.userSettings[group],
-          expandGroup: !currentExpandGroup,
-        },
-      },
-    })
+    // const currentExpandGroup: boolean = this.state.userSettings[group]
+    //   .expandGroup
+    // this.setState({
+    //   userSettings: {
+    //     ...this.state.userSettings,
+    //     [group]: {
+    //       ...this.state.userSettings[group],
+    //       expandGroup: !currentExpandGroup,
+    //     },
+    //   },
+    // })
   }
 
   private handleTimerClick(group: string, action: TimerButtonAction) {
@@ -342,7 +296,7 @@ class OutletGroups extends React.Component<
     const groups = groupsSettings
       .filter(groupSetting => groupSetting.enabled)
       .map((groupSetting: GroupSetting): any => {
-        const outletData: OutletDataValues = this.state.outletData[
+        const outletData: OutletDataValues = this.props.outletData[
           groupSetting.group
         ]
         return (
@@ -373,4 +327,7 @@ class OutletGroups extends React.Component<
   }
 }
 
-export default OutletGroups
+export const OutletGroups = connect(
+  mapState,
+  mapDispatch
+)(OutletGroupsComponent)
