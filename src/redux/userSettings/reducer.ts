@@ -17,7 +17,7 @@ groupsSettings.forEach((groupSetting, index) => {
   }
 })
 
-export function UserSettingsReducer(
+export function userSettingsReducer(
   state = initialState,
   action: UserSettingsActionTypes
 ): UserSettings {

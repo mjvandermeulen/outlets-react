@@ -44,9 +44,11 @@ export const TIMER_MINUSMINUS = 'TIMER_MINUSMINUS'
 export const TIMER_STARTPAUSE = 'TIMER_STARTPAUSE'
 export const TIMER_CANCEL = 'TIMER_CANCEL'
 
-export const SYNC_GROUP = 'SYNC_GROUP' // TODO implement
+export const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
+export const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
+export const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'
 
-// export type AppThunk<ReturnType=void> = ThunkAction
+export const SYNC_GROUP = 'SYNC_GROUP' // TODO implement
 
 interface SwitchAction {
   type: typeof SWITCH

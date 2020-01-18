@@ -29,13 +29,12 @@ import {
   OutletData,
   TimerData,
   OutletDataValues,
+  OUTLET_TIMER_CHANNEL,
+  OUTLET_SWITCH_CHANNEL,
 } from '../redux/outlets/types'
 import { connect } from 'react-redux'
 
 // TODO *** move
-const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
-const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
-const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'
 
 interface OwnProps {}
 
@@ -62,11 +61,11 @@ class OutletGroupsComponent extends React.Component<Props> {
 
   public componentDidMount() {
     // // TODO: Move socket/io('htt..... out of component: always have this connection?
-    // // then pass it into the props...?  ****
-    // this.socket = io('http://localhost:3000') // TODO stop hardcoding.
-    // this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
-    //   this.setModeState(switchData)
-    // })
+    // then pass it into the props...?  ****
+    this.socket = io('http://localhost:3000') // TODO stop hardcoding. ****
+    this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
+      this.setModeState(switchData)
+    })
     // this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
     //   this.setTimerState(timerData)
     // })
@@ -117,15 +116,10 @@ class OutletGroupsComponent extends React.Component<Props> {
     group: string,
     mode: Mode
   ) {
-    event.stopPropagation() // so you don't toggle expand group by clicking on parent div
-    // const switchData: SwitchData = {
-    //   [group]: { mode },
-    // }
-    // if (this.socket) {
-    //   this.socket.emit(OUTLET_SWITCH_CHANNEL, switchData) // or broadcast?
-    // }
-    // this.setModeState(switchData)
-    this.props.switch(group, mode)
+    event.stopPropagation() // Try commenting out and it will expand the group
+    if (this.socket) {
+      this.props.switch(this.socket, group, mode)
+    }
   }
 
   private broadcastTimer(timerData: TimerData) {
