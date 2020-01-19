@@ -23,7 +23,7 @@ import {
 
 import '../css/accordion.css' // TODO **** Move to Sass @use rule
 import { RootState } from '../redux/rootReducer'
-import { switchAction } from '../redux/outlets/actions'
+import { switchAction, socketListenAction } from '../redux/outlets/actions'
 import {
   SwitchData,
   OutletData,
@@ -33,6 +33,7 @@ import {
   OUTLET_SWITCH_CHANNEL,
 } from '../redux/outlets/types'
 import { connect } from 'react-redux'
+import { storeSocketAction } from '../redux/sockets/actions'
 
 // TODO *** move
 
@@ -50,6 +51,8 @@ const mapState = (state: RootState, ownProps: OwnProps) => ({
 
 const mapDispatch = {
   switch: switchAction,
+  storeSocket: storeSocketAction,
+  socketListen: socketListenAction,
 }
 
 class OutletGroupsComponent extends React.Component<Props> {
@@ -62,10 +65,10 @@ class OutletGroupsComponent extends React.Component<Props> {
   public componentDidMount() {
     // // TODO: Move socket/io('htt..... out of component: always have this connection?
     // then pass it into the props...?  ****
-    this.socket = io('http://localhost:3000') // TODO stop hardcoding. ****
-    this.socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
-      this.setModeState(switchData)
-    })
+    const socket = io('http://localhost:3000') // TODO stop hardcoding. ****
+    this.props.storeSocket(socket)
+    this.props.socketListen()
+
     // this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
     //   this.setTimerState(timerData)
     // })
@@ -117,9 +120,7 @@ class OutletGroupsComponent extends React.Component<Props> {
     mode: Mode
   ) {
     event.stopPropagation() // Try commenting out and it will expand the group
-    if (this.socket) {
-      this.props.switch(this.socket, group, mode)
-    }
+    this.props.switch(group, mode)
   }
 
   private broadcastTimer(timerData: TimerData) {

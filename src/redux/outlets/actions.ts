@@ -9,28 +9,36 @@ import {
   TIMER_STARTPAUSE,
   SwitchData,
   OUTLET_SWITCH_CHANNEL,
+  SET_SWITCH_DATA,
   // TIMER_CANCEL,
 } from './types'
 import { Dispatch } from 'redux'
-import { AppThunk } from '../rootReducer'
+import { AppThunk, RootState } from '../rootReducer'
 
-export const socketListenAction = (socket: SocketIOClient.Socket): any => {
-  return (dispatch: Dispatch) => {
-    socket.on(OUTLET_SWITCH_CHANNEL, (switchData: SwitchData) => {
-      dispatch
-    }
-
+export const socketListenAction = (): any => {
+  console.log('here ******* 19')
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    // listen to OUTLET_SWITCH_CHANNEL
+    getState().sockets.socket.on(
+      OUTLET_SWITCH_CHANNEL,
+      (switchData: SwitchData) => {
+        console.log('received*******')
+        dispatch({
+          type: SET_SWITCH_DATA,
+          payload: {
+            switchData,
+          },
+        })
+      }
+    )
+    // TODO: LISTEN TO OTHER CHANNELS *****
   }
 }
 
 // TODO ****** fix any to AppThunk with:
 // https://react-redux.js.org/using-react-redux/static-typing#recommendations
-export const switchAction = (
-  socket: SocketIOClient.Socket,
-  group: string,
-  mode: boolean
-): any => {
-  return (dispatch: Dispatch) => {
+export const switchAction = (group: string, mode: boolean): any => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
     // immediately dispatch for user feedback. (Don't wait for server)
     dispatch({
       type: SWITCH,
@@ -42,13 +50,11 @@ export const switchAction = (
     const switchData: SwitchData = {
       [group]: { mode },
     }
-    socket.emit(OUTLET_SWITCH_CHANNEL, switchData)
+    getState().sockets.socket.emit(OUTLET_SWITCH_CHANNEL, switchData)
   }
 }
 
-export const setModeAction = {
-  
-}
+export const setModeAction = {}
 
 // export const timerPlusAction = (group: string) : OutletActionTypes => ({
 //     type: TIMER_PLUS,

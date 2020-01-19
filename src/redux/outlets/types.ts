@@ -36,6 +36,7 @@ export type OutletData = {
 }
 
 // actions
+export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
 export const SWITCH = 'SWITCH'
 export const TIMER_PLUS = 'TIMER_PLUS'
 export const TIMER_PLUSPLUS = 'TIMER_PLUSPLUS'
@@ -49,6 +50,13 @@ export const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
 export const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'
 
 export const SYNC_GROUP = 'SYNC_GROUP' // TODO implement
+
+interface SetSwitchAction {
+  type: typeof SET_SWITCH_DATA
+  payload: {
+    switchData: SwitchData
+  }
+}
 
 interface SwitchAction {
   type: typeof SWITCH
@@ -96,6 +104,7 @@ interface TimerCancelAction {
 }
 
 export type OutletActionTypes =
+  | SetSwitchAction
   | SwitchAction
   | TimerPlusAction
   | TimerlusPlusAction

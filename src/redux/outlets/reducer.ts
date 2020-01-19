@@ -8,6 +8,7 @@ import {
   TIMER_MINUS,
   TIMER_STARTPAUSE,
   TIMER_CANCEL,
+  SET_SWITCH_DATA,
 } from './types'
 import { groupsSettings } from '../../settings/group-settings'
 
@@ -23,7 +24,7 @@ groupsSettings.forEach((groupSetting, index) => {
   }
 })
 
-export function OutletsReducer(
+export function outletsReducer(
   state = initialState,
   action: OutletActionTypes
 ): OutletData {
@@ -36,6 +37,20 @@ export function OutletsReducer(
           mode: action.payload.mode,
         },
       }
+    case SET_SWITCH_DATA:
+      console.log('SET_SWITCH_DATA')
+      const returnState = { ...state }
+      for (const group in action.payload.switchData) {
+        if (group in state) {
+          returnState[group] = {
+            time: state[group].time,
+            isTimerRunning: state[group].isTimerRunning,
+            ...action.payload.switchData[group],
+          }
+        }
+      }
+      return returnState
+
     case TIMER_PLUS:
       return {
         ...state,
