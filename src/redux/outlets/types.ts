@@ -17,7 +17,7 @@ export interface TimerData {
   [group: string]: TimerDataValues
 }
 
-type SyncRequestData = string[] // array of groups
+export type SyncRequestData = string[] // array of groups
 
 export interface OutletDataValues extends SwitchDataValues, TimerDataValues {}
 // OR
@@ -37,6 +37,7 @@ export type OutletData = {
 
 // actions
 export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
+export const SET_SYNC_DATA = 'SET_SYNC_DATA'
 export const SWITCH = 'SWITCH'
 export const TIMER_PLUS = 'TIMER_PLUS'
 export const TIMER_PLUSPLUS = 'TIMER_PLUSPLUS'
@@ -58,6 +59,12 @@ interface SetSwitchAction {
   }
 }
 
+interface RequestSyncAction {
+  type: typeof SET_SYNC_DATA
+  payload: {
+    syncData: OutletData
+  }
+}
 interface SwitchAction {
   type: typeof SWITCH
   payload: {
@@ -105,6 +112,7 @@ interface TimerCancelAction {
 
 export type OutletActionTypes =
   | SetSwitchAction
+  | RequestSyncAction
   | SwitchAction
   | TimerPlusAction
   | TimerlusPlusAction

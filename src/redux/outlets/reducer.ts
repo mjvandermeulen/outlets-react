@@ -9,6 +9,7 @@ import {
   TIMER_STARTPAUSE,
   TIMER_CANCEL,
   SET_SWITCH_DATA,
+  SET_SYNC_DATA,
 } from './types'
 import { groupsSettings } from '../../settings/group-settings'
 
@@ -38,18 +39,24 @@ export function outletsReducer(
         },
       }
     case SET_SWITCH_DATA:
-      console.log('SET_SWITCH_DATA')
-      const returnState = { ...state }
       for (const group in action.payload.switchData) {
         if (group in state) {
-          returnState[group] = {
+          state[group] = {
             time: state[group].time,
             isTimerRunning: state[group].isTimerRunning,
             ...action.payload.switchData[group],
           }
         }
       }
-      return returnState
+      return { ...state } // TODO **** trying something new, but never change the parameters...
+    case SET_SYNC_DATA:
+      const setSyncDataState = { ...state } // just in case not all groups got returned by server
+      for (const stateGroup in state) {
+        if (stateGroup in action.payload.syncData) {
+          setSyncDataState[stateGroup] = action.payload.syncData[stateGroup]
+        }
+      }
+      return setSyncDataState
 
     case TIMER_PLUS:
       return {

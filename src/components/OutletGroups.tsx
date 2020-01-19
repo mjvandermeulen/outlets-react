@@ -23,7 +23,11 @@ import {
 
 import '../css/accordion.css' // TODO **** Move to Sass @use rule
 import { RootState } from '../redux/rootReducer'
-import { switchAction, socketListenAction } from '../redux/outlets/actions'
+import {
+  switchAction,
+  socketListenAction,
+  requestSyncAction,
+} from '../redux/outlets/actions'
 import {
   SwitchData,
   OutletData,
@@ -50,9 +54,10 @@ const mapState = (state: RootState, ownProps: OwnProps) => ({
 })
 
 const mapDispatch = {
-  switch: switchAction,
   storeSocket: storeSocketAction,
   socketListen: socketListenAction,
+  requestSync: requestSyncAction,
+  switch: switchAction,
 }
 
 class OutletGroupsComponent extends React.Component<Props> {
@@ -68,6 +73,7 @@ class OutletGroupsComponent extends React.Component<Props> {
     const socket = io('http://localhost:3000') // TODO stop hardcoding. ****
     this.props.storeSocket(socket)
     this.props.socketListen()
+    this.props.requestSync()
 
     // this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
     //   this.setTimerState(timerData)

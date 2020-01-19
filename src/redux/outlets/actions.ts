@@ -8,21 +8,23 @@ import {
   TIMER_MINUS,
   TIMER_STARTPAUSE,
   SwitchData,
+  SyncRequestData,
   OUTLET_SWITCH_CHANNEL,
   SET_SWITCH_DATA,
+  OUTLET_SYNC_CHANNEL,
+  OutletData,
+  SET_SYNC_DATA,
   // TIMER_CANCEL,
 } from './types'
 import { Dispatch } from 'redux'
 import { AppThunk, RootState } from '../rootReducer'
 
 export const socketListenAction = (): any => {
-  console.log('here ******* 19')
   return (dispatch: Dispatch, getState: () => RootState) => {
     // listen to OUTLET_SWITCH_CHANNEL
     getState().sockets.socket.on(
       OUTLET_SWITCH_CHANNEL,
       (switchData: SwitchData) => {
-        console.log('received*******')
         dispatch({
           type: SET_SWITCH_DATA,
           payload: {
@@ -31,7 +33,28 @@ export const socketListenAction = (): any => {
         })
       }
     )
+    getState().sockets.socket.on(
+      OUTLET_SYNC_CHANNEL,
+      (syncData: OutletData) => {
+        dispatch({
+          type: SET_SYNC_DATA,
+          payload: {
+            syncData,
+          },
+        })
+      }
+    )
     // TODO: LISTEN TO OTHER CHANNELS *****
+  }
+}
+
+export const requestSyncAction = (): any => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const groups: SyncRequestData = []
+    for (const group in getState().outletData) {
+      groups.push(group)
+    }
+    getState().sockets.socket.emit(OUTLET_SYNC_CHANNEL, groups)
   }
 }
 
