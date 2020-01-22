@@ -1,5 +1,5 @@
-const smallAdjustment: number = 0.5 * 60 * 1000
-const largeAdjustment: number = 10 * 60 * 1000
+const smallAdjustment: number = 5 * 60 * 1000
+const largeAdjustment: number = 30 * 60 * 1000
 export const timerAdjustments: { [key: string]: number } = {
   plus: smallAdjustment,
   plusplus: largeAdjustment,
@@ -7,19 +7,17 @@ export const timerAdjustments: { [key: string]: number } = {
   minusminus: -largeAdjustment,
 }
 
-export type TimerButtonAction =
+export type TimerButtonTask =
   | 'PLUS'
   | 'PLUSPLUS'
   | 'MINUS'
   | 'MINUSMINUS'
   | 'STARTPAUSE'
   | 'CANCEL'
-  | 'TOGGLEDISPLAY'
 
-export const MINUSMINUS: TimerButtonAction = 'MINUSMINUS'
-export const PLUSPLUS: TimerButtonAction = 'PLUSPLUS'
-export const PLUS: TimerButtonAction = 'PLUS'
-export const MINUS: TimerButtonAction = 'MINUS'
-export const STARTPAUSE: TimerButtonAction = 'STARTPAUSE'
-export const CANCEL: TimerButtonAction = 'CANCEL'
-export const TOGGLEDISPLAY: TimerButtonAction = 'TOGGLEDISPLAY'
+export const MINUSMINUS: TimerButtonTask = 'MINUSMINUS'
+export const PLUSPLUS: TimerButtonTask = 'PLUSPLUS'
+export const PLUS: TimerButtonTask = 'PLUS'
+export const MINUS: TimerButtonTask = 'MINUS'
+export const STARTPAUSE: TimerButtonTask = 'STARTPAUSE'
+export const CANCEL: TimerButtonTask = 'CANCEL'

@@ -4,7 +4,10 @@ export interface UserSetting {
   showTimer: boolean
 }
 export interface UserSettings {
-  [group: string]: UserSetting
+  groups: {
+    [group: string]: UserSetting
+  }
+  showCodes: boolean
 }
 
 // actions

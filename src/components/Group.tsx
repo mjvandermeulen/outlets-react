@@ -3,19 +3,17 @@ import { TimerDisplay } from './TimerDisplay'
 import { RemoteControlButton } from './RemoteControlButton'
 import { Mode } from '../settings/group-settings'
 import {
-  TimerButtonAction,
+  TimerButtonTask,
   MINUSMINUS,
   PLUSPLUS,
   PLUS,
   MINUS,
   STARTPAUSE,
   CANCEL,
-  TOGGLEDISPLAY,
 } from '../settings/timer-settings'
 
 import './Group.css'
 import { RootState } from '../redux/rootReducer'
-import { UserSettingsActionTypes } from '../redux/userSettings/types'
 import {
   toggleExpandAction,
   toggleShowTimerAction,
@@ -41,18 +39,17 @@ interface OwnProps {
   mode: boolean
   defaultTimer: number // in milliseconds
   handleOnOffClick: (event: React.MouseEvent, mode: Mode) => void
-  handleExpandGroup: () => void
   time: number
   isTimerRunning: boolean
-  handleTimerClick: (action: TimerButtonAction) => void
+  handleTimerClick: (action: TimerButtonTask) => void
 }
 
 type Props = StateProps & DispatchProps & OwnProps
 
 // LEARN: Use OwnProps to dig in and only use current Groups state
 const mapState = (state: RootState, ownProps: OwnProps) => ({
-  expandGroup: state.userSettings[ownProps.group].expandGroup,
-  showTimer: state.userSettings[ownProps.group].showTimer,
+  expandGroup: state.userSettings.groups[ownProps.group].expandGroup,
+  showTimer: state.userSettings.groups[ownProps.group].showTimer,
 })
 
 const mapDispatch = {
@@ -178,7 +175,7 @@ class GroupComponent extends React.Component<Props> {
                     {this.props.isTimerRunning ? 'pause' : 'start'}
                   </RemoteControlButton>
                   <RemoteControlButton
-                    enabled={this.props.time !== 0}
+                    enabled={this.props.time !== this.props.defaultTimer}
                     active={false}
                     handleClick={event => this.props.handleTimerClick(CANCEL)}
                     size="medium"

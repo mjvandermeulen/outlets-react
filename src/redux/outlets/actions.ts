@@ -1,23 +1,34 @@
 import {
   // OutletData,
-  OutletActionTypes,
   SWITCH,
-  TIMER_PLUS,
-  TIMER_PLUSPLUS,
-  TIMER_MINUSMINUS,
-  TIMER_MINUS,
-  TIMER_STARTPAUSE,
   SwitchData,
   SyncRequestData,
   OUTLET_SWITCH_CHANNEL,
+  TIMER_ADJUST,
   SET_SWITCH_DATA,
   OUTLET_SYNC_CHANNEL,
-  OutletData,
   SET_SYNC_DATA,
+  OutletDataValues,
+  GroupsData,
+  TimerData,
+  OUTLET_TIMER_CHANNEL,
+  SET_TIMER_DATA,
+  TimerDataValues,
   // TIMER_CANCEL,
 } from './types'
 import { Dispatch } from 'redux'
-import { AppThunk, RootState } from '../rootReducer'
+import { RootState } from '../rootReducer'
+import {
+  timerAdjustments,
+  TimerButtonTask,
+  MINUSMINUS,
+  MINUS,
+  PLUS,
+  PLUSPLUS,
+  STARTPAUSE,
+  CANCEL,
+} from '../../settings/timer-settings'
+import { getGroupSettingValues } from '../../settings/group-settings'
 
 export const socketListenAction = (): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
@@ -25,51 +36,68 @@ export const socketListenAction = (): any => {
     getState().sockets.socket.on(
       OUTLET_SWITCH_CHANNEL,
       (switchData: SwitchData) => {
-        dispatch({
-          type: SET_SWITCH_DATA,
-          payload: {
-            switchData,
-          },
-        })
+        dispatch(setSwitchDataAction(switchData))
       }
     )
     getState().sockets.socket.on(
       OUTLET_SYNC_CHANNEL,
-      (syncData: OutletData) => {
-        dispatch({
-          type: SET_SYNC_DATA,
-          payload: {
-            syncData,
-          },
-        })
+      (syncData: GroupsData) => {
+        dispatch(setSyncData(syncData))
       }
     )
-    // TODO: LISTEN TO OTHER CHANNELS *****
+    getState().sockets.socket.on(
+      OUTLET_TIMER_CHANNEL,
+      (timerData: TimerData) => {
+        dispatch(setTimerDataAction(timerData))
+      }
+    )
   }
 }
+
+export const setSwitchDataAction = (switchData: SwitchData): any => {
+  return {
+    type: SET_SWITCH_DATA,
+    payload: {
+      switchData,
+    },
+  }
+}
+
+export const setTimerDataAction = (timerData: TimerData): any => {
+  return {
+    type: SET_TIMER_DATA,
+    payload: {
+      timerData,
+    },
+  }
+}
+
+export const setSyncData = (syncData: {
+  [group: string]: OutletDataValues
+}) => ({
+  type: SET_SYNC_DATA,
+  payload: {
+    syncData,
+  },
+})
 
 export const requestSyncAction = (): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
     const groups: SyncRequestData = []
-    for (const group in getState().outletData) {
+    for (const group in getState().outletData.groups) {
       groups.push(group)
     }
     getState().sockets.socket.emit(OUTLET_SYNC_CHANNEL, groups)
   }
 }
 
-// TODO ****** fix any to AppThunk with:
+// TODO **** fix 'any' to AppThunk with:
 // https://react-redux.js.org/using-react-redux/static-typing#recommendations
-export const switchAction = (group: string, mode: boolean): any => {
+// // import { AppThunk, RootState } from '../rootReducer'
+export const switchRequestAction = (group: string, mode: boolean): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
     // immediately dispatch for user feedback. (Don't wait for server)
-    dispatch({
-      type: SWITCH,
-      payload: {
-        group,
-        mode,
-      },
-    })
+    dispatch(switchAction(group, mode))
     const switchData: SwitchData = {
       [group]: { mode },
     }
@@ -77,46 +105,155 @@ export const switchAction = (group: string, mode: boolean): any => {
   }
 }
 
-export const setModeAction = {}
+export const switchAction = (group: string, mode: boolean): any => ({
+  type: SWITCH,
+  payload: {
+    group,
+    mode,
+  },
+})
 
-// export const timerPlusAction = (group: string) : OutletActionTypes => ({
-//     type: TIMER_PLUS,
-//     payload: {
-//         group,
-//     }
-// })
+function toggleStartPauseTimer(timerDataValues: TimerDataValues) {
+  if (timerDataValues.isTimerRunning) {
+    return {
+      time: timerDataValues.time - Date.now(), // time left
+      isTimerRunning: false,
+    }
+  } else {
+    return {
+      time: Date.now() + timerDataValues.time, // now + time left
+      isTimerRunning: true,
+    }
+  }
+}
 
-// export const Action = (group: string) : OutletActionTypes => ({
-//     type: TIMER_PLUSPLUS,
-//     payload: {
-//         group,
-//     }
-// })
+function cancelTimer(timerDataValues: TimerDataValues, group: string) {
+  let defaultTimer = 0
+  const values = getGroupSettingValues(group)
+  if (values) {
+    defaultTimer = values.defaultTimer
+  }
+  return {
+    time: defaultTimer,
+    isTimerRunning: false,
+  }
+}
 
-// export const Action = (group: string) : OutletActionTypes => ({
-//     type: TIMER_MINUSMINUS,
-//     payload: {
-//         group,
-//     }
-// })
+function calcNewTime(
+  state: RootState,
+  timerDataValues: TimerDataValues,
+  group: string,
+  msAdjustment: number
+): TimerDataValues {
+  let newTime = state.outletData.groups[group].time + msAdjustment
+  const isTimerRunning = state.outletData.groups[group].isTimerRunning
+  const showTimer = state.userSettings.groups[group].showTimer
+  const increment = timerAdjustments.plus
+  if (!isTimerRunning && newTime < 0) {
+    newTime = 0
+  }
+  // // BEFORE ROUNDING
+  // // running AND showTimer => SUBTRACT Date.now()
+  // // running AND !showTimer => nothing
+  // // !running AND showTimer => nothing
+  // // !running AND !showTimer => ADD Date.now()
+  if (isTimerRunning && showTimer) {
+    newTime -= Date.now()
+  } else if (!isTimerRunning && !showTimer) {
+    newTime += Date.now()
+  }
+  // NOTE: You don't have to distinguish between showTimer or not showTimer
+  if (msAdjustment > 0) {
+    newTime = Math.floor(newTime / increment) * increment
+  } else {
+    newTime = Math.ceil((newTime - 999) / increment) * increment
+  }
+  if (isTimerRunning && showTimer) {
+    newTime += Date.now()
+  } else if (!isTimerRunning && !showTimer) {
+    newTime -= Date.now()
+  }
+  if (isTimerRunning && showTimer) {
+    // Time for user to mentally process what just happened
+    newTime += 999
+  }
+  return {
+    ...timerDataValues,
+    time: newTime,
+  }
+}
 
-// export const Action = (group: string) : OutletActionTypes => ({
-//     type: TIMER_MINUS,
-//     payload: {
-//         group,
-//     }
-// })
+export const timerAdjustRequestAction = (
+  task: TimerButtonTask,
+  group: string
+): any => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const state = getState()
+    let timerDataValues: TimerDataValues = {
+      time: state.outletData.groups[group].time,
+      isTimerRunning: state.outletData.groups[group].isTimerRunning,
+    }
+    switch (task) {
+      case MINUSMINUS:
+        timerDataValues = calcNewTime(
+          state,
+          timerDataValues,
+          group,
+          timerAdjustments.minusminus
+        )
+        break
+      case MINUS:
+        timerDataValues = calcNewTime(
+          state,
+          timerDataValues,
+          group,
+          timerAdjustments.minus
+        )
+        break
+      case PLUS:
+        timerDataValues = calcNewTime(
+          state,
+          timerDataValues,
+          group,
+          timerAdjustments.plus
+        )
+        break
+      case PLUSPLUS:
+        timerDataValues = calcNewTime(
+          state,
+          timerDataValues,
+          group,
+          timerAdjustments.plusplus
+        )
+        break
+      case STARTPAUSE:
+        timerDataValues = toggleStartPauseTimer(timerDataValues)
+        break
+      case CANCEL:
+        timerDataValues = cancelTimer(timerDataValues, group)
+        break
 
-// export const Action = (group: string) : OutletActionTypes => ({
-//     type: TIMER_STARTPAUSE,
-//     payload: {
-//         group,
-//     }
-// })
+      default:
+        break
+    }
 
-// export const Action = (group: string) : OutletActionTypes => ({
-//     type: TIMER_CANCE,,
-//     payload: {
-//         group,
-//     }
-// })
+    dispatch(timerAdjustAction(group, timerDataValues))
+    const timerData: TimerData = {
+      [group]: {
+        ...timerDataValues,
+      },
+    }
+    state.sockets.socket.emit(OUTLET_TIMER_CHANNEL, timerData)
+  }
+}
+
+export const timerAdjustAction = (
+  group: string,
+  timerDataValues: TimerDataValues
+): any => ({
+  type: TIMER_ADJUST,
+  payload: {
+    group,
+    timerDataValues,
+  },
+})

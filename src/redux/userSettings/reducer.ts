@@ -6,11 +6,11 @@ import {
 } from './types'
 import { groupsSettings } from '../../settings/group-settings'
 
-const initialState: UserSettings = {}
+const initialState: UserSettings = { groups: {}, showCodes: false }
 
 groupsSettings.forEach((groupSetting, index) => {
   if (groupSetting.enabled) {
-    initialState[groupSetting.group] = {
+    initialState.groups[groupSetting.group] = {
       expandGroup: false,
       showTimer: true,
     }
@@ -25,17 +25,23 @@ export function userSettingsReducer(
     case TOGGLE_EXPAND_GROUP:
       return {
         ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-          expandGroup: !state[action.payload.group].expandGroup,
+        groups: {
+          ...state.groups,
+          [action.payload.group]: {
+            ...state.groups[action.payload.group],
+            expandGroup: !state.groups[action.payload.group].expandGroup,
+          },
         },
       }
     case TOGGLE_SHOW_TIMER:
       return {
         ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-          showTimer: !state[action.payload.group].showTimer,
+        groups: {
+          ...state.groups,
+          [action.payload.group]: {
+            ...state.groups[action.payload.group],
+            showTimer: !state.groups[action.payload.group].showTimer,
+          },
         },
       }
 

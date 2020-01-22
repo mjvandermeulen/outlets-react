@@ -8,7 +8,7 @@ import {
 // Open the Command Palette (view menu → command palette)
 // Enter TypeScript: Restart TS server.
 
-// LEARN ****
+// LEARN ***
 // FAT ARROW
 export const toggleExpandAction = (group: string): UserSettingsActionTypes => ({
   type: TOGGLE_EXPAND_GROUP,

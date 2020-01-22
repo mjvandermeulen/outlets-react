@@ -2,28 +2,27 @@ import {
   OutletData,
   OutletActionTypes,
   SWITCH,
-  TIMER_PLUS,
-  TIMER_PLUSPLUS,
-  TIMER_MINUSMINUS,
-  TIMER_MINUS,
-  TIMER_STARTPAUSE,
-  TIMER_CANCEL,
   SET_SWITCH_DATA,
   SET_SYNC_DATA,
+  GroupsData,
+  TIMER_ADJUST,
+  SET_TIMER_DATA,
 } from './types'
 import { groupsSettings } from '../../settings/group-settings'
 
-const initialState: OutletData = {}
+const groups: GroupsData = {}
 
 groupsSettings.forEach((groupSetting, index) => {
   if (groupSetting.enabled) {
-    initialState[groupSetting.group] = {
+    groups[groupSetting.group] = {
       mode: false,
       time: groupSetting.defaultTimer,
       isTimerRunning: false,
     }
   }
 })
+
+const initialState: OutletData = { groups }
 
 export function outletsReducer(
   state = initialState,
@@ -33,71 +32,65 @@ export function outletsReducer(
     case SWITCH:
       return {
         ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-          mode: action.payload.mode,
+        groups: {
+          ...state.groups,
+          [action.payload.group]: {
+            ...state.groups[action.payload.group],
+            mode: action.payload.mode,
+          },
         },
       }
     case SET_SWITCH_DATA:
       for (const group in action.payload.switchData) {
-        if (group in state) {
-          state[group] = {
-            time: state[group].time,
-            isTimerRunning: state[group].isTimerRunning,
+        if (group in state.groups) {
+          // modifying state here, but returning a new object. UGLY-ish
+          // I think I prefer: const setSwitchDataState = {...state}
+          // ...
+          // return setSwitchDataState
+          state.groups[group] = {
+            time: state.groups[group].time,
+            isTimerRunning: state.groups[group].isTimerRunning,
             ...action.payload.switchData[group],
           }
         }
       }
-      return { ...state } // TODO **** trying something new, but never change the parameters...
-    case SET_SYNC_DATA:
-      const setSyncDataState = { ...state } // just in case not all groups got returned by server
-      for (const stateGroup in state) {
-        if (stateGroup in action.payload.syncData) {
-          setSyncDataState[stateGroup] = action.payload.syncData[stateGroup]
+      return { ...state } // LEARN and TODO **** trying something new, but never change the parameters...see notes above
+    case SET_TIMER_DATA:
+      const setTimerDataGroupsState: GroupsData = { ...state.groups }
+      for (const stateGroup in setTimerDataGroupsState) {
+        if (stateGroup in action.payload.timerData) {
+          setTimerDataGroupsState[stateGroup] = {
+            ...setTimerDataGroupsState[stateGroup],
+            ...action.payload.timerData[stateGroup],
+          }
         }
       }
-      return setSyncDataState
+      return {
+        ...state,
+        groups: setTimerDataGroupsState,
+      }
+    case SET_SYNC_DATA:
+      const setSyncDataGroupsState: GroupsData = { ...state.groups } // just in case not all groups got returned by server
+      for (const stateGroup in state.groups) {
+        if (stateGroup in action.payload.syncData) {
+          setSyncDataGroupsState[stateGroup] =
+            action.payload.syncData[stateGroup] //action.payload.syncData[stateGroup]
+        }
+      }
+      return {
+        ...state,
+        groups: setSyncDataGroupsState,
+      }
 
-    case TIMER_PLUS:
+    case TIMER_ADJUST:
       return {
         ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-        },
-      }
-    case TIMER_PLUSPLUS:
-      return {
-        ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-        },
-      }
-    case TIMER_MINUS:
-      return {
-        ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-        },
-      }
-    case TIMER_MINUSMINUS:
-      return {
-        ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-        },
-      }
-    case TIMER_STARTPAUSE:
-      return {
-        ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
-        },
-      }
-    case TIMER_CANCEL:
-      return {
-        ...state,
-        [action.payload.group]: {
-          ...state[action.payload.group],
+        groups: {
+          ...state.groups,
+          [action.payload.group]: {
+            ...state.groups[action.payload.group],
+            ...action.payload.timerDataValues,
+          },
         },
       }
     default:
