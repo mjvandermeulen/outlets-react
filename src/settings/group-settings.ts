@@ -2,6 +2,7 @@ export interface GroupSettingValues {
   displayName: string
   defaultTimer: number
   enabled: boolean
+  codes?: string[]
 }
 
 export type GroupSetting = GroupSettingValues & {
@@ -48,6 +49,7 @@ export const groupsSettings: GroupsSettings = [
     displayName: 'Coffee',
     defaultTimer: 45 * 60 * 1000,
     enabled: true,
+    codes: ['bogus 1', 'bogus2'],
   },
   {
     group: 'fan',

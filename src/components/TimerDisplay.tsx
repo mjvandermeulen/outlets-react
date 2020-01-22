@@ -1,7 +1,9 @@
 import * as React from 'react'
 import moment from 'moment'
+// tools
+import { bothTrueOrBothFalse } from '../tools/calculations'
+// css
 import './TimerDisplay.css'
-import { exclusiveOr } from '../tools/calculations'
 
 export interface TimerDisplayProps {
   time: number // milliseconds since epoch OR if paused: time left in ms
@@ -19,7 +21,9 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
 
   componentDidMount() {
     this.displayInterval = setInterval(() => {
-      if (exclusiveOr(!this.props.isTimerRunning, this.props.showTimer)) {
+      if (
+        bothTrueOrBothFalse(this.props.showTimer, this.props.isTimerRunning)
+      ) {
         this.forceUpdate()
       }
     }, 1000)
@@ -87,13 +91,11 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
   render() {
     let display = ''
     if (this.props.showTimer) {
-      // Show timer
       display = this.readableTimeRemaining(
         this.props.time,
         this.props.isTimerRunning
       )
     } else {
-      // Show set time
       display = this.readableSetTime(this.props.time, this.props.isTimerRunning)
     }
     return <div className="timer-display">{display}</div>

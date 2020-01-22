@@ -42,7 +42,7 @@ export const socketListenAction = (): any => {
     getState().sockets.socket.on(
       OUTLET_SYNC_CHANNEL,
       (syncData: GroupsData) => {
-        dispatch(setSyncData(syncData))
+        dispatch(setSyncDataAction(syncData))
       }
     )
     getState().sockets.socket.on(
@@ -63,7 +63,7 @@ export const setSwitchDataAction = (switchData: SwitchData): any => {
   }
 }
 
-export const setTimerDataAction = (timerData: TimerData): any => {
+const setTimerDataAction = (timerData: TimerData): any => {
   return {
     type: SET_TIMER_DATA,
     payload: {
@@ -72,7 +72,7 @@ export const setTimerDataAction = (timerData: TimerData): any => {
   }
 }
 
-export const setSyncData = (syncData: {
+const setSyncDataAction = (syncData: {
   [group: string]: OutletDataValues
 }) => ({
   type: SET_SYNC_DATA,
@@ -105,7 +105,7 @@ export const switchRequestAction = (group: string, mode: boolean): any => {
   }
 }
 
-export const switchAction = (group: string, mode: boolean): any => ({
+const switchAction = (group: string, mode: boolean): any => ({
   type: SWITCH,
   payload: {
     group,
@@ -247,7 +247,7 @@ export const timerAdjustRequestAction = (
   }
 }
 
-export const timerAdjustAction = (
+const timerAdjustAction = (
   group: string,
   timerDataValues: TimerDataValues
 ): any => ({

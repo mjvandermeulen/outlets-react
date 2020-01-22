@@ -41,6 +41,9 @@ export type OutletData = {
 }
 
 // actions
+// http://artsy.github.io/blog/2018/03/15/integrating-redux-and-socketio
+// LEARN and TODO****:
+//  use KeyMirror. see above
 export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
 export const SET_TIMER_DATA = 'SET_TIMER_DATA'
 export const SET_SYNC_DATA = 'SET_SYNC_DATA'

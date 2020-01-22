@@ -1,3 +1,5 @@
+// the only real settings here are the small- and largeAdjustment
+
 const smallAdjustment: number = 5 * 60 * 1000
 const largeAdjustment: number = 30 * 60 * 1000
 export const timerAdjustments: { [key: string]: number } = {

@@ -54,7 +54,9 @@ export function outletsReducer(
           }
         }
       }
-      return { ...state } // LEARN and TODO **** trying something new, but never change the parameters...see notes above
+      // LEARN and TODO **** trying something new
+      // BUT I DON"T LIKE IT MYSELF: never change the parameters...see notes above
+      return { ...state }
     case SET_TIMER_DATA:
       const setTimerDataGroupsState: GroupsData = { ...state.groups }
       for (const stateGroup in setTimerDataGroupsState) {

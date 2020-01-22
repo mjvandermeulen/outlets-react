@@ -1,24 +1,23 @@
 import * as React from 'react'
-
+import { connect } from 'react-redux'
 import io from 'socket.io-client'
-
-import { Group } from './Group'
+// Components and settings
 import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
+import { Group } from './Group'
 import { TimerButtonTask } from '../settings/timer-settings'
-
-import '../css/accordion.css' // TODO **** Move to Sass @use rule
-import { RootState } from '../redux/rootReducer'
+import { serverURL } from '../settings/server-settings'
+// types, actions and reducers
+import { OutletDataValues } from '../redux/outlets/types'
 import {
   switchRequestAction,
   socketListenAction,
   requestSyncAction,
   timerAdjustRequestAction,
 } from '../redux/outlets/actions'
-import { OutletDataValues } from '../redux/outlets/types'
-import { connect } from 'react-redux'
 import { storeSocketAction } from '../redux/sockets/actions'
-
-// TODO *** move
+import { RootState } from '../redux/rootReducer'
+// css
+import '../css/accordion.css' // TODO **** Move to Sass @use rule
 
 interface OwnProps {}
 
@@ -51,22 +50,10 @@ class OutletGroupsComponent extends React.Component<Props> {
   public componentDidMount() {
     // // TODO: Move socket/io('htt..... out of component: always have this connection?
     // then pass it into the props...?  ****
-    const socket = io('http://localhost:3000') // TODO stop hardcoding. ****
+    const socket = io(serverURL)
     this.props.storeSocket(socket)
     this.props.socketListen()
     this.props.requestSync()
-
-    // this.socket.on(OUTLET_TIMER_CHANNEL, (timerData: TimerData) => {
-    //   this.setTimerState(timerData)
-    // })
-    // this.socket.on(OUTLET_SYNC_CHANNEL, (syncData: OutletData) => {
-    //   this.syncTimerState(syncData)
-    // })
-    // let groups: SyncRequestData = []
-    // for (const group in this.props.outletData) {
-    //   groups.push(group)
-    // }
-    // this.socket.emit(OUTLET_SYNC_CHANNEL, groups)
   }
 
   private handleOnOffClick(
@@ -74,7 +61,7 @@ class OutletGroupsComponent extends React.Component<Props> {
     group: string,
     mode: Mode
   ) {
-    event.stopPropagation() // Try commenting out and it will expand the group
+    event.stopPropagation() // To prevent expanding the group.
     this.props.switch(group, mode)
   }
   render() {
@@ -88,6 +75,7 @@ class OutletGroupsComponent extends React.Component<Props> {
           <Group
             key={groupSetting.group}
             group={groupSetting.group}
+            codes={groupSetting.codes}
             displayName={groupSetting.displayName}
             mode={outletData.mode}
             defaultTimer={groupSetting.defaultTimer}

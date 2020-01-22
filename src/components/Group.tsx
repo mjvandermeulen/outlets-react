@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { TimerDisplay } from './TimerDisplay'
-import { RemoteControlButton } from './RemoteControlButton'
+import { connect } from 'react-redux'
+// settings
 import { Mode } from '../settings/group-settings'
 import {
   TimerButtonTask,
@@ -11,30 +11,24 @@ import {
   STARTPAUSE,
   CANCEL,
 } from '../settings/timer-settings'
-
-import './Group.css'
-import { RootState } from '../redux/rootReducer'
+// components
+import { TimerDisplay } from './TimerDisplay'
+import { RemoteControlButton } from './RemoteControlButton'
+// types, action and reducers
 import {
   toggleExpandAction,
   toggleShowTimerAction,
 } from '../redux/userSettings/actions'
-import { connect } from 'react-redux'
-
-// interface StateProps {
-//   expandGroup: boolean
-//   showTimer: boolean
-// }
-
-// interface DispatchProps {
-//   toggleExpand: UserSettingsActionTypes
-//   toggleShowTimer: UserSettingsActionTypes
-// }
+import { RootState } from '../redux/rootReducer'
+// css
+import './Group.css'
 
 type StateProps = ReturnType<typeof mapState>
 type DispatchProps = typeof mapDispatch
 
 interface OwnProps {
   group: string
+  codes: string[] | undefined
   displayName: string
   mode: boolean
   defaultTimer: number // in milliseconds
@@ -73,7 +67,6 @@ class GroupComponent extends React.Component<Props> {
               <div className="accordion-item__title">
                 {this.props.displayName}
               </div>
-              {/* <div className="flex-media-small-break" /> */}
               <RemoteControlButton
                 className={
                   `
@@ -85,7 +78,6 @@ class GroupComponent extends React.Component<Props> {
                       : ''
                   }`
                 }
-                enabled={true}
                 active={this.props.expandGroup}
                 handleClick={() => {}}
                 size="medium"
@@ -94,7 +86,6 @@ class GroupComponent extends React.Component<Props> {
               </RemoteControlButton>
               <div className="accordion-item__line-on-off-buttons">
                 <RemoteControlButton
-                  enabled={true}
                   active={this.props.mode}
                   handleClick={event =>
                     this.props.handleOnOffClick(event, true)
@@ -104,7 +95,6 @@ class GroupComponent extends React.Component<Props> {
                   On
                 </RemoteControlButton>
                 <RemoteControlButton
-                  enabled={true}
                   active={!this.props.mode}
                   handleClick={event =>
                     this.props.handleOnOffClick(event, false)
@@ -124,18 +114,12 @@ class GroupComponent extends React.Component<Props> {
               <div className="timer">
                 <div className="timer__line timer__display-line">
                   <RemoteControlButton
-                    enabled={true}
-                    active={false}
                     handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
-                    size="medium"
                   >
                     ++
                   </RemoteControlButton>
                   <RemoteControlButton
-                    enabled={true}
-                    active={false}
                     handleClick={event => this.props.handleTimerClick(PLUS)}
-                    size="medium"
                   >
                     +
                   </RemoteControlButton>
@@ -146,19 +130,15 @@ class GroupComponent extends React.Component<Props> {
                   />
                   <RemoteControlButton
                     enabled={this.props.time > 0}
-                    active={false}
                     handleClick={event =>
                       this.props.handleTimerClick(MINUSMINUS)
                     }
-                    size="medium"
                   >
                     --
                   </RemoteControlButton>
                   <RemoteControlButton
                     enabled={this.props.time > 0}
-                    active={false}
                     handleClick={event => this.props.handleTimerClick(MINUS)}
-                    size="medium"
                   >
                     -
                   </RemoteControlButton>
@@ -166,30 +146,22 @@ class GroupComponent extends React.Component<Props> {
                 <div className="timer__line">
                   <RemoteControlButton
                     enabled={this.props.isTimerRunning || this.props.time > 0}
-                    active={false}
                     handleClick={event =>
                       this.props.handleTimerClick(STARTPAUSE)
                     }
-                    size="medium"
                   >
                     {this.props.isTimerRunning ? 'pause' : 'start'}
                   </RemoteControlButton>
                   <RemoteControlButton
                     enabled={this.props.time !== this.props.defaultTimer}
-                    active={false}
                     handleClick={event => this.props.handleTimerClick(CANCEL)}
-                    size="medium"
                   >
                     cancel
                   </RemoteControlButton>
                   <RemoteControlButton
-                    enabled={true}
-                    active={false}
                     handleClick={event =>
-                      // this.props.handleTimerClick(TOGGLEDISPLAY)
                       this.props.toggleShowTimer(this.props.group)
                     }
-                    size="medium"
                   >
                     {this.props.showTimer ? 'show set time' : 'show timer'}
                   </RemoteControlButton>
