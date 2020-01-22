@@ -41,9 +41,7 @@ export type OutletData = {
 }
 
 // actions
-// http://artsy.github.io/blog/2018/03/15/integrating-redux-and-socketio
-// LEARN and TODO****:
-//  use KeyMirror. see above
+// TODO: switch to mirroredKeys... **
 export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
 export const SET_TIMER_DATA = 'SET_TIMER_DATA'
 export const SET_SYNC_DATA = 'SET_SYNC_DATA'
@@ -52,6 +50,7 @@ export const TIMER_ADJUST = 'TIMER_ADJUST'
 export const TIMER_STARTPAUSE = 'TIMER_STARTPAUSE'
 export const TIMER_CANCEL = 'TIMER_CANCEL'
 
+// Move to sockets somewhere... TODO ****
 export const OUTLET_SWITCH_CHANNEL = 'OUTLET_SWITCH_CHANNEL'
 export const OUTLET_TIMER_CHANNEL = 'OUTLET_TIMER_CHANNEL'
 export const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'

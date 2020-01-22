@@ -1,13 +1,9 @@
-import {
-  UserSettingsActionTypes,
-  TOGGLE_EXPAND_GROUP,
-  TOGGLE_SHOW_TIMER,
-} from './types'
+import { UserSettingsActionTypes, userSettingsActions } from './types'
 
 // LEARN ** typescript
 // FAT ARROW
 export const toggleExpandAction = (group: string): UserSettingsActionTypes => ({
-  type: TOGGLE_EXPAND_GROUP,
+  type: userSettingsActions.TOGGLE_EXPAND_GROUP,
   payload: {
     group,
   },
@@ -16,7 +12,7 @@ export const toggleExpandAction = (group: string): UserSettingsActionTypes => ({
 // FUNCTION
 export function toggleShowTimerAction(group: string): UserSettingsActionTypes {
   return {
-    type: TOGGLE_SHOW_TIMER,
+    type: userSettingsActions.TOGGLE_SHOW_TIMER,
     payload: {
       group,
     },

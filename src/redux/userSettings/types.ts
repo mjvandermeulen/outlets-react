@@ -1,3 +1,7 @@
+import { mirroredKeys } from '../../tools/mirroredKeys'
+
+// import keyMirror from 'keymirror' TODO remove and check package.jsdon
+
 // state slices
 export interface UserSetting {
   expandGroup: boolean
@@ -11,18 +15,20 @@ export interface UserSettings {
 }
 
 // actions
-export const TOGGLE_EXPAND_GROUP = 'TOGGLE_EXPAND_GROUP'
-export const TOGGLE_SHOW_TIMER = 'TOGGLE_SHOW_TIMER'
+export const userSettingsActions = mirroredKeys([
+  'TOGGLE_EXPAND_GROUP',
+  'TOGGLE_SHOW_TIMER',
+])
 
 interface ToggleExpandAction {
-  type: typeof TOGGLE_EXPAND_GROUP
+  type: typeof userSettingsActions.TOGGLE_EXPAND_GROUP
   payload: {
     group: string
   }
 }
 
 interface ToggleShowTimerAction {
-  type: typeof TOGGLE_SHOW_TIMER
+  type: typeof userSettingsActions.TOGGLE_SHOW_TIMER
   payload: {
     group: string
   }

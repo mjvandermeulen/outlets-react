@@ -1,8 +1,7 @@
 import {
   UserSettings,
   UserSettingsActionTypes,
-  TOGGLE_EXPAND_GROUP,
-  TOGGLE_SHOW_TIMER,
+  userSettingsActions,
 } from './types'
 import { groupsSettings } from '../../settings/group-settings'
 
@@ -22,7 +21,7 @@ export function userSettingsReducer(
   action: UserSettingsActionTypes
 ): UserSettings {
   switch (action.type) {
-    case TOGGLE_EXPAND_GROUP:
+    case userSettingsActions.TOGGLE_EXPAND_GROUP:
       return {
         ...state,
         groups: {
@@ -33,7 +32,7 @@ export function userSettingsReducer(
           },
         },
       }
-    case TOGGLE_SHOW_TIMER:
+    case userSettingsActions.TOGGLE_SHOW_TIMER:
       return {
         ...state,
         groups: {
