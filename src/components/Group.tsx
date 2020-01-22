@@ -22,6 +22,7 @@ import {
 import { RootState } from '../redux/rootReducer'
 // css
 import './Group.css'
+import classNames from 'classnames'
 
 type StateProps = ReturnType<typeof mapState>
 type DispatchProps = typeof mapDispatch
@@ -56,8 +57,9 @@ class GroupComponent extends React.Component<Props> {
     return (
       <li className="accordion-list__item">
         <div
-          className={`accordion-item ${!this.props.expandGroup &&
-            'accordion-item--closed'}`}
+          className={classNames(' accordion-item', {
+            'accordion-item--closed': !this.props.expandGroup,
+          })}
         >
           <div
             className="accordion-item__line"
@@ -78,7 +80,7 @@ class GroupComponent extends React.Component<Props> {
                       : ''
                   }`
                 }
-                active={this.props.expandGroup}
+                active={false} // animate: use button__caret--down class
                 handleClick={() => {}}
                 size="medium"
               >
@@ -108,8 +110,9 @@ class GroupComponent extends React.Component<Props> {
           </div>
           <div className="accordion-item__inner">
             <div
-              className={`accordion-item__content ${this.props.displayName ===
-                'Coffee' && 'bounce'}`}
+              className={classNames('accordion-item__content', {
+                bounce: this.props.displayName === 'Coffee',
+              })}
             >
               <div className="timer">
                 <div className="timer__line timer__display-line">

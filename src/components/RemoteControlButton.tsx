@@ -1,5 +1,6 @@
 import * as React from 'react'
 import './RemoteControlButton.css'
+import classNames from 'classnames'
 interface RemoteControlButtonProps {
   className?: string
   active?: boolean | undefined
@@ -16,17 +17,16 @@ export const RemoteControlButton: React.FunctionComponent<RemoteControlButtonPro
   } else {
     handleClick = () => {}
   }
-  let btnClass = props.className !== undefined ? props.className : ''
-  btnClass += ' remote-control-button medium-button' // No CSS for this yet *** TODO
-  if (props.active) {
-    btnClass += ' activeButton'
-  }
-  if (!enabled) {
-    btnClass += ' disabledButton'
-  }
+  const btnClasses = classNames(
+    props.className,
+    'remote-control-button',
+    'medium-button',
+    { activeButton: props.active },
+    { disabledButton: !enabled }
+  )
+
   return (
-    // see: https://github.com/JedWatson/classnames for nicer approach TODO ****
-    <button className={btnClass} onClick={handleClick}>
+    <button className={btnClasses} onClick={handleClick}>
       {props.children}
     </button>
   )

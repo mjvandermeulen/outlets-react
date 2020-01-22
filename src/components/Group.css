@@ -31,13 +31,30 @@ i.caret {
   display: inline-block;
   padding: 3px;
   transform: rotate(45deg);
-}
-
-.accordion-item__line-content .button__caret {
-  transform: rotate(-180deg);
   transition-timing-function: ease-in-out;
   transition-duration: 0.5s;
   transition-property: transform;
+}
+
+.accordion-item__line-content .button__caret--down i.caret {
+  transform: rotate(225deg); /* fun trick */
+  transform: rotate(45deg); /* NORMAL DEMO WORTHY*/
+  transform: rotate(-315deg); /* weird, but works */
+  transform: rotate(-135deg); /* fun stationary */
+  transform: rotate(405deg); /* My fancy favorite DEMO WORTHY*/
+}
+
+.accordion-item__line-content .button__caret--bounce i.caret {
+  transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
+  transition-duration: 1.4s;
+}
+
+.accordion-item__line-content .button__caret {
+  border: 2px solid #e7e7e7;
+  transform: rotate(-180deg);
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: border, transform;
   position: relative;
 }
 .accordion-item__line-content .button__caret--bounce {
@@ -46,10 +63,8 @@ i.caret {
 }
 
 .accordion-item__line-content .button__caret--down {
+  border: 2px solid #f44336;
   transform: rotate(0deg);
-  transition-timing-function: ease-in-out;
-  transition-duration: 0.5s;
-  transition-property: transform;
   position: relative;
 }
 
