@@ -4,11 +4,7 @@ import {
   TOGGLE_SHOW_TIMER,
 } from './types'
 
-// LEARN **
-// Open the Command Palette (view menu → command palette)
-// Enter TypeScript: Restart TS server.
-
-// LEARN ***
+// LEARN ** typescript
 // FAT ARROW
 export const toggleExpandAction = (group: string): UserSettingsActionTypes => ({
   type: TOGGLE_EXPAND_GROUP,

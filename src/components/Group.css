@@ -29,7 +29,7 @@ i.caret {
   border: solid black;
   border-width: 0 1px 1px 0;
   display: inline-block;
-  padding: 3px; /* check this **** */
+  padding: 3px;
   transform: rotate(45deg);
 }
 
