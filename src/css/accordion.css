@@ -37,7 +37,10 @@
 
 .accordion-item .bounce {
   transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
+  transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25); /* by vivi */
+
   transition-duration: 0.7s;
+  transition-duration: 1s; /* by vivi */
 }
 
 .accordion-item--closed .accordion-item__inner {
