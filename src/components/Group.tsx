@@ -57,7 +57,7 @@ class GroupComponent extends React.Component<Props> {
     return (
       <li className="accordion-list__item">
         <div
-          className={classNames(' accordion-item', {
+          className={classNames('accordion-item', {
             'accordion-item--closed': !this.props.expandGroup,
           })}
         >
@@ -70,16 +70,11 @@ class GroupComponent extends React.Component<Props> {
                 {this.props.displayName}
               </div>
               <RemoteControlButton
-                className={
-                  `
-                    button__caret
-                    ${this.props.expandGroup ? '' : ' button__caret--down'}` +
-                  `${
-                    this.props.displayName === 'Coffee'
-                      ? ' button__caret--bounce'
-                      : ''
-                  }`
-                }
+                className={classNames(
+                  'button__caret',
+                  { 'button__caret--down': !this.props.expandGroup },
+                  { 'button__caret--bounce': this.props.group === 'coffee' }
+                )}
                 active={false} // animate: use button__caret--down class
                 handleClick={() => {}}
                 size="medium"

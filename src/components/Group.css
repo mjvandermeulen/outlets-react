@@ -52,7 +52,7 @@ i.caret {
 }
 
 .accordion-item__line-content .button__caret {
-  border: 2px solid #e7e7e7;
+  border: 2px solid #f44336;
   transform: rotate(-180deg);
   transition-timing-function: ease-in-out;
   transition-duration: 0.5s;
@@ -66,10 +66,9 @@ i.caret {
   transition-duration: 1s; /* by vivi */
 }
 
-.accordion-item__line-content .button__caret--down {
-  border: 2px solid #f44336;
+.accordion-item__line-content .button__caret.button__caret--down {
+  border-color: #e7e7e7;
   transform: rotate(0deg);
-  position: relative;
 }
 
 .accordion-item__content .timer .timer__line {

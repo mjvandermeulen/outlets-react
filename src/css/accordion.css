@@ -16,7 +16,7 @@
 
 .accordion-item .accordion-item__inner {
   transform-origin: top left;
-  max-height: 25rem;
+  max-height: 35rem;
   transition-timing-function: ease-in;
   transition-duration: 0.3s;
   transition-property: max-height;
@@ -36,6 +36,7 @@
 }
 
 .accordion-item .bounce {
+  /* Abscissas must be in the [0, 1] range or the curve is not a function of time. */
   transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
   transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25); /* by vivi */
 
@@ -44,26 +45,13 @@
 }
 
 .accordion-item--closed .accordion-item__inner {
-  transform-origin: top left;
   max-height: 0rem;
-  /* transition-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22); ORIG from https://codepen.io/sedlukha/pen/WPeemb?editors=0100 */
-  /* transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75); FUN BOUNCE */
-  /* transition-timing-function: cubic-bezier(-0.11, 1.56, 0.33, 0.754); WHY NOT WORKING?
-  ****/
-  /* ***Abscissas must be in the [0, 1] range or 
-   the curve is not a function of time. */
-
-  /* transition-timing-function: cubic-bezier(0, 1.15, 0, 0.95); */
   transition-timing-function: ease-out;
-  transition-duration: 0.3s;
-  transition-property: max-height;
 }
 
 .accordion-item--closed .accordion-item__content {
   transform: rotate(-90deg);
   transition-timing-function: ease-in;
-  transition-duration: 0.3s;
-  transition-property: transform;
 }
 
 .accordion-item .accordion-item__line {
