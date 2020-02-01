@@ -18,6 +18,7 @@ import { storeSocketAction } from '../redux/sockets/actions'
 import { RootState } from '../redux/rootReducer'
 // css
 import '../css/accordion.css' // TODO **** Move to Sass @use rule
+import { Accordion } from './Accordion/Accordion'
 
 interface OwnProps {}
 
@@ -93,7 +94,7 @@ class OutletGroupsComponent extends React.Component<Props> {
 
     return (
       <div className="wrapper">
-        <ul className="accordion-list">{groups}</ul>
+        <Accordion>{groups}</Accordion>
       </div>
     )
   }

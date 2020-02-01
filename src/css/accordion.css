@@ -1,11 +1,11 @@
-.accordion-list {
+.Accordion {
   list-style: none;
   overflow: hidden;
   margin: 0;
   padding: 2px;
 }
 
-.accordion-list .accordion-list__item {
+.Accordion .Accordion__list-item {
   background-color: white;
   color: black;
   border-radius: 10px;
@@ -14,7 +14,7 @@
   padding: 5px;
 }
 
-.accordion-item .accordion-item__inner {
+.AccordionItem .AccordionItem__inner {
   transform-origin: top left;
   max-height: 35rem;
   transition-timing-function: ease-in;
@@ -24,7 +24,7 @@
   overflow: hidden;
 }
 
-.accordion-item .accordion-item__content {
+.AccordionItem .AccordionItem__content {
   transform: rotate(0deg);
   transform-origin: top left;
   transition-timing-function: cubic-bezier(1, 2.5, 1, 1);
@@ -35,7 +35,7 @@
   position: relative;
 }
 
-.accordion-item .bounce {
+.AccordionItem .bounce {
   /* Abscissas must be in the [0, 1] range or the curve is not a function of time. */
   transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
   transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25); /* by vivi */
@@ -44,16 +44,16 @@
   transition-duration: 1s; /* by vivi */
 }
 
-.accordion-item--closed .accordion-item__inner {
+.AccordionItem--closed .AccordionItem__inner {
   max-height: 0rem;
   transition-timing-function: ease-out;
 }
 
-.accordion-item--closed .accordion-item__content {
+.AccordionItem--closed .AccordionItem__content {
   transform: rotate(-90deg);
   transition-timing-function: ease-in;
 }
 
-.accordion-item .accordion-item__line {
+.AccordionItem .AccordionItem__line {
   cursor: pointer;
 }

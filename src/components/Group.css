@@ -1,23 +1,23 @@
-.accordion-item__line-content {
+.AccordionItem__line-content {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
 }
 
-.accordion-item__line-on-off-buttons {
+.AccordionItem__line-on-off-buttons {
   display: flex;
   flex-basis: 100%;
   flex-wrap: wrap;
 }
-.accordion-item__line-on-off-buttons .button__caret {
+.AccordionItem__line-on-off-buttons .button__caret {
   flex: 0.5;
 }
 
-.accordion-item__line-on-off-buttons button {
+.AccordionItem__line-on-off-buttons button {
   flex: 1;
 }
-.accordion-item .accordion-item__title {
+.AccordionItem .AccordionItem__title {
   font-weight: bold;
   font-size: 1.3em;
   margin: 14px 4px;
@@ -36,7 +36,7 @@ i.caret {
   transition-property: transform;
 }
 
-.accordion-item__line-content .button__caret--down i.caret {
+.AccordionItem__line-content .button__caret--down i.caret {
   transform: rotate(225deg); /* fun trick */
   transform: rotate(45deg); /* NORMAL DEMO WORTHY*/
   transform: rotate(-315deg); /* weird, but works */
@@ -44,14 +44,14 @@ i.caret {
   transform: rotate(405deg); /* My fancy favorite DEMO WORTHY*/
 }
 
-.accordion-item__line-content .button__caret--bounce i.caret {
+.AccordionItem__line-content .button__caret--bounce i.caret {
   transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
   transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25); /* by vivi */
 
   transition-duration: 1.4s;
 }
 
-.accordion-item__line-content .button__caret {
+.AccordionItem__line-content .button__caret {
   border: 2px solid #f44336;
   transform: rotate(-180deg);
   transition-timing-function: ease-in-out;
@@ -59,28 +59,28 @@ i.caret {
   transition-property: border, transform;
   position: relative;
 }
-.accordion-item__line-content .button__caret--bounce {
+.AccordionItem__line-content .button__caret--bounce {
   transition-timing-function: cubic-bezier(0.7, 1.6, 0, 0.75);
   transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25); /* by vivi */
   transition-duration: 0.7s;
   transition-duration: 1s; /* by vivi */
 }
 
-.accordion-item__line-content .button__caret.button__caret--down {
+.AccordionItem__line-content .button__caret.button__caret--down {
   border-color: #e7e7e7;
   transform: rotate(0deg);
 }
 
-.accordion-item__content .timer .timer__line {
+.AccordionItem__content .timer .timer__line {
   display: flex;
   flex-wrap: wrap;
 }
 
-.accordion-item__content .timer .timer__line button {
+.AccordionItem__content .timer .timer__line button {
   flex: 1;
 }
 
-.accordion-item__content .timer .timer__line .timer-display {
+.AccordionItem__content .timer .timer__line .timer-display {
   flex-basis: 100%;
   text-align: center;
   align-self: center;
@@ -88,34 +88,34 @@ i.caret {
 }
 
 @media screen and (min-width: 351px) {
-  .accordion-item__line-on-off-buttons {
+  .AccordionItem__line-on-off-buttons {
     display: block;
     flex-basis: auto;
   }
-  .accordion-item__line-on-off-buttons {
+  .AccordionItem__line-on-off-buttons {
     order: 2;
   }
-  .accordion-item__line-content .button__caret {
+  .AccordionItem__line-content .button__caret {
     order: 3;
   }
 }
 @media screen and (min-width: 401px) {
-  .accordion-item__content .timer .timer__line .timer-display {
+  .AccordionItem__content .timer .timer__line .timer-display {
     flex: 5;
   }
-  .accordion-item__content .timer .timer__display-line :nth-child(1) {
+  .AccordionItem__content .timer .timer__display-line :nth-child(1) {
     order: 5;
   }
-  .accordion-item__content .timer .timer__display-line :nth-child(2) {
+  .AccordionItem__content .timer .timer__display-line :nth-child(2) {
     order: 4;
   }
-  .accordion-item__content .timer .timer__display-line :nth-child(3) {
+  .AccordionItem__content .timer .timer__display-line :nth-child(3) {
     order: 3;
   }
-  .accordion-item__content .timer .timer__display-line :nth-child(4) {
+  .AccordionItem__content .timer .timer__display-line :nth-child(4) {
     order: 1;
   }
-  .accordion-item__content .timer .timer__display-line :nth-child(5) {
+  .AccordionItem__content .timer .timer__display-line :nth-child(5) {
     order: 2;
   }
 }
