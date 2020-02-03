@@ -6,6 +6,7 @@ interface AccordionItemProps {
 }
 
 export const AccordionItem: React.FunctionComponent<AccordionItemProps> = props => {
+  const { children } = props
   return (
     <li className="Accordion__list-item">
       <div
@@ -13,7 +14,7 @@ export const AccordionItem: React.FunctionComponent<AccordionItemProps> = props 
           'AccordionItem--closed': props.closed,
         })}
       >
-        {props.children}
+        {children}
       </div>
     </li>
   )

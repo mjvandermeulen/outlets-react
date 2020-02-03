@@ -66,35 +66,36 @@ class OutletGroupsComponent extends React.Component<Props> {
     this.props.switch(group, mode)
   }
   render() {
-    const groups = groupsSettings
-      .filter(groupSetting => groupSetting.enabled)
-      .map((groupSetting: GroupSetting): any => {
-        const outletData: OutletDataValues = this.props.outletData.groups[
-          groupSetting.group
-        ]
-        return (
-          <Group
-            key={groupSetting.group}
-            group={groupSetting.group}
-            codes={groupSetting.codes}
-            displayName={groupSetting.displayName}
-            mode={outletData.mode}
-            defaultTimer={groupSetting.defaultTimer}
-            handleOnOffClick={(event: React.MouseEvent, mode: Mode) =>
-              this.handleOnOffClick(event, groupSetting.group, mode)
-            }
-            time={outletData.time}
-            isTimerRunning={outletData.isTimerRunning}
-            handleTimerClick={(task: TimerButtonTask) =>
-              this.props.timerAdjustRequest(task, groupSetting.group)
-            }
-          />
-        )
-      })
-
     return (
       <div className="wrapper">
-        <Accordion>{groups}</Accordion>
+        <Accordion>
+          {(expand, expandAll) =>
+            groupsSettings
+              .filter(groupSetting => groupSetting.enabled)
+              .map((groupSetting: GroupSetting): any => {
+                const outletData: OutletDataValues = this.props.outletData
+                  .groups[groupSetting.group]
+                return (
+                  <Group
+                    key={groupSetting.group}
+                    group={groupSetting.group}
+                    codes={groupSetting.codes}
+                    displayName={groupSetting.displayName}
+                    mode={outletData.mode}
+                    defaultTimer={groupSetting.defaultTimer}
+                    handleOnOffClick={(event: React.MouseEvent, mode: Mode) =>
+                      this.handleOnOffClick(event, groupSetting.group, mode)
+                    }
+                    time={outletData.time}
+                    isTimerRunning={outletData.isTimerRunning}
+                    handleTimerClick={(task: TimerButtonTask) =>
+                      this.props.timerAdjustRequest(task, groupSetting.group)
+                    }
+                  />
+                )
+              })
+          }
+        </Accordion>
       </div>
     )
   }
