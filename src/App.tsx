@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { rootReducer } from './redux/rootReducer'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import { AccordionStore } from './components/Accordion/AccordionStore'
 
 const store = createStore(
   rootReducer,
@@ -14,9 +15,11 @@ const store = createStore(
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <div className="App">
-        <OutletGroups />
-      </div>
+      <AccordionStore>
+        <div className="App">
+          <OutletGroups />
+        </div>
+      </AccordionStore>
     </Provider>
   )
 }

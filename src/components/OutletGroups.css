@@ -23,10 +23,6 @@
 }
 
 .AccordionItemLine i.caret {
-  border: solid black;
-  border-width: 0 1px 1px 0;
-  display: inline-block;
-  padding: 3px;
   transform: rotate(45deg);
   transition-timing-function: ease-in-out;
   transition-duration: 0.5s;
@@ -51,7 +47,7 @@
   transition-duration: 1.4s;
 }
 
-.AccordionItemLine .button__caret {
+.AccordionItemLine .button__toggle-expand {
   border: 2px solid #f44336;
   transform: rotate(-180deg);
   transition-timing-function: ease-in-out;
@@ -59,7 +55,7 @@
   transition-property: border, transform;
   position: relative;
 }
-.AccordionItemInner.bounce .AccordionItemLine .button__caret {
+.AccordionItemInner.bounce .AccordionItemLine .button__toggle-expand {
   transition-timing-function: cubic-bezier(
     0.3,
     2.3,
@@ -69,7 +65,7 @@
   transition-duration: 1s; /* by vivi ORIG 0.7s*/
 }
 
-.AccordionItem--closed .AccordionItemLine .button__caret {
+.AccordionItem--closed .AccordionItemLine .button__toggle-expand {
   border-color: #e7e7e7;
   transform: rotate(0deg);
 }
@@ -98,7 +94,7 @@
   .AccordionItemLine__on-off-buttons {
     order: 2;
   }
-  .AccordionItemLine .button__caret {
+  .AccordionItemLine .button__toggle-expand {
     order: 3;
   }
 }
@@ -121,4 +117,14 @@
   .AccordionItemInner .timer .timer__display-line :nth-child(5) {
     order: 2;
   }
+}
+
+/* TINKERING */
+
+.button-toggle-expand-all .expand-all-text {
+  position: absolute;
+}
+
+.button-toggle-expand-all .caret-parent {
+  padding-left: 30px;
 }
