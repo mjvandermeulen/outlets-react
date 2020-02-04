@@ -1,0 +1,8 @@
+.AccordionItem {
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  border: 2px solid #e7e7e7;
+  margin: 10px;
+  padding: 5px;
+}

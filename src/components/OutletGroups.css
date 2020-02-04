@@ -1,0 +1,124 @@
+.AccordionItemLine__content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.AccordionItemLine__on-off-buttons {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+}
+
+.AccordionItemLine__on-off-buttons button {
+  flex: 1;
+}
+.AccordionItemLine__title {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin: 14px 4px;
+  margin-right: auto; /* to auto fill the whole space to the next div */
+  /* alternative margin:  14px auto 14px 4px */
+}
+
+.AccordionItemLine i.caret {
+  border: solid black;
+  border-width: 0 1px 1px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(45deg);
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: transform;
+}
+
+.AccordionItem--closed .AccordionItemLine i.caret {
+  transform: rotate(225deg); /* fun trick */
+  transform: rotate(45deg); /* NORMAL DEMO WORTHY*/
+  transform: rotate(-315deg); /* weird, but works */
+  transform: rotate(-135deg); /* fun stationary */
+  transform: rotate(405deg); /* My fancy favorite DEMO WORTHY*/
+}
+
+.AccordionItemInner.bounce .AccordionItemLine i.caret {
+  transition-timing-function: cubic-bezier(
+    0.3,
+    2.3,
+    0.1,
+    -0.25
+  ); /* by vivi ORIG: (0.7, 1.6, 0, 0.75)*/
+  transition-duration: 1.4s;
+}
+
+.AccordionItemLine .button__caret {
+  border: 2px solid #f44336;
+  transform: rotate(-180deg);
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: border, transform;
+  position: relative;
+}
+.AccordionItemInner.bounce .AccordionItemLine .button__caret {
+  transition-timing-function: cubic-bezier(
+    0.3,
+    2.3,
+    0.1,
+    -0.25
+  ); /* by vivi ORIG (0.7, 1.6, 0, 0.75)*/
+  transition-duration: 1s; /* by vivi ORIG 0.7s*/
+}
+
+.AccordionItem--closed .AccordionItemLine .button__caret {
+  border-color: #e7e7e7;
+  transform: rotate(0deg);
+}
+
+.AccordionItemInner .timer .timer__line {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.AccordionItemInner .timer .timer__line button {
+  flex: 1;
+}
+
+.AccordionItemInner .timer .timer__line .timer-display {
+  flex-basis: 100%;
+  text-align: center;
+  align-self: center;
+  margin: 14px;
+}
+
+@media screen and (min-width: 351px) {
+  .AccordionItemLine__on-off-buttons {
+    display: block;
+    flex-basis: auto;
+  }
+  .AccordionItemLine__on-off-buttons {
+    order: 2;
+  }
+  .AccordionItemLine .button__caret {
+    order: 3;
+  }
+}
+@media screen and (min-width: 401px) {
+  .AccordionItemInner .timer .timer__line .timer-display {
+    flex: 5;
+  }
+  .AccordionItemInner .timer .timer__display-line :nth-child(1) {
+    order: 5;
+  }
+  .AccordionItemInner .timer .timer__display-line :nth-child(2) {
+    order: 4;
+  }
+  .AccordionItemInner .timer .timer__display-line :nth-child(3) {
+    order: 3;
+  }
+  .AccordionItemInner .timer .timer__display-line :nth-child(4) {
+    order: 1;
+  }
+  .AccordionItemInner .timer .timer__display-line :nth-child(5) {
+    order: 2;
+  }
+}

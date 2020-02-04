@@ -1,3 +1,9 @@
+// TODO this needs documentation
+//   - what it's used for
+//   - how
+//     - input is either array or object
+// I think with my custom function I don't use the advantage of being able to minimize the string...
+
 interface CustomKeyMirroredObject {
   [key: string]: string
 }

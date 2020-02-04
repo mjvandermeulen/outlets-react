@@ -1,3 +1,6 @@
+// TODO **** This file is obsolete, but here to show what props are needed for
+//   the timer func component
+
 import * as React from 'react'
 import { connect } from 'react-redux'
 // settings
@@ -55,107 +58,31 @@ const mapDispatch = {
 
 class GroupComponent extends React.Component<Props> {
   render() {
-    return (
-      <AccordionItem closed={!this.props.expandGroup}>
-        <div
-          className="AccordionItem__line"
-          onClick={() => this.props.toggleExpand(this.props.group)}
-        >
-          <div className="AccordionItem__line-content">
-            <div className="AccordionItem__title">{this.props.displayName}</div>
-            <RemoteControlButton
-              className={classNames(
-                'button__caret',
-                { 'button__caret--down': !this.props.expandGroup },
-                { 'button__caret--bounce': this.props.group === 'coffee' }
-              )}
-              active={false} // animate: use button__caret--down class
-              handleClick={() => {}}
-              size="medium"
-            >
-              <i className="caret" />
-            </RemoteControlButton>
-            <div className="AccordionItem__line-on-off-buttons">
-              <RemoteControlButton
-                active={this.props.mode}
-                handleClick={event => this.props.handleOnOffClick(event, true)}
-                size="medium"
-              >
-                On
-              </RemoteControlButton>
-              <RemoteControlButton
-                active={!this.props.mode}
-                handleClick={event => this.props.handleOnOffClick(event, false)}
-                size="medium"
-              >
-                Off
-              </RemoteControlButton>
-            </div>
-          </div>
-        </div>
-        <div className="AccordionItem__inner">
-          <div
-            className={classNames('AccordionItem__content', {
-              bounce: this.props.displayName === 'Coffee',
-            })}
-          >
-            <div className="timer">
-              <div className="timer__line timer__display-line">
-                <RemoteControlButton
-                  handleClick={event => this.props.handleTimerClick(PLUSPLUS)}
-                >
-                  ++
-                </RemoteControlButton>
-                <RemoteControlButton
-                  handleClick={event => this.props.handleTimerClick(PLUS)}
-                >
-                  +
-                </RemoteControlButton>
-                <TimerDisplay
-                  time={this.props.time}
-                  isTimerRunning={this.props.isTimerRunning}
-                  showTimer={this.props.showTimer}
-                />
-                <RemoteControlButton
-                  enabled={this.props.time > 0}
-                  handleClick={event => this.props.handleTimerClick(MINUSMINUS)}
-                >
-                  --
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={this.props.time > 0}
-                  handleClick={event => this.props.handleTimerClick(MINUS)}
-                >
-                  -
-                </RemoteControlButton>
-              </div>
-              <div className="timer__line">
-                <RemoteControlButton
-                  enabled={this.props.isTimerRunning || this.props.time > 0}
-                  handleClick={event => this.props.handleTimerClick(STARTPAUSE)}
-                >
-                  {this.props.isTimerRunning ? 'pause' : 'start'}
-                </RemoteControlButton>
-                <RemoteControlButton
-                  enabled={this.props.time !== this.props.defaultTimer}
-                  handleClick={event => this.props.handleTimerClick(CANCEL)}
-                >
-                  cancel
-                </RemoteControlButton>
-                <RemoteControlButton
-                  handleClick={event =>
-                    this.props.toggleShowTimer(this.props.group)
-                  }
-                >
-                  {this.props.showTimer ? 'show set time' : 'show timer'}
-                </RemoteControlButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      </AccordionItem>
-    )
+    return <div></div>
   }
 }
 
 export const Group = connect(mapState, mapDispatch)(GroupComponent)
+
+//   < Group
+// key = { groupSetting.group }
+// group = { groupSetting.group }
+// codes = { groupSetting.codes }
+// displayName = { groupSetting.displayName }
+// mode = { outletData.mode }
+// defaultTimer = { groupSetting.defaultTimer }
+// handleOnOffClick = {(
+//   event: React.MouseEvent,
+//   mode: Mode
+// ) =>
+// this.handleOnOffClick(event, groupSetting.group, mode)
+//                         }
+// time = { outletData.time }
+// isTimerRunning = { outletData.isTimerRunning }
+// handleTimerClick = {(task: TimerButtonTask) =>
+// this.props.timerAdjustRequest(
+//   task,
+//   groupSetting.group
+// )
+//                         }
+// />

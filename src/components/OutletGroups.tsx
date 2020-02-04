@@ -1,13 +1,31 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import io from 'socket.io-client'
-// Components and settings
+// Components
+import { Accordion } from './Accordion/Accordion'
+import { AccordionItem } from './Accordion/AccordionItem'
+import { AccordionItemLine } from './Accordion/AccordionItemLine'
+import { AccordionItemInner } from './Accordion/AccordionItemInner'
+import { RemoteControlButton } from './RemoteControlButton'
+import { TimerDisplay } from './TimerDisplay'
+// Settings
 import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
-import { Group } from './Group'
-import { TimerButtonTask } from '../settings/timer-settings'
+import {
+  MINUSMINUS,
+  PLUSPLUS,
+  PLUS,
+  MINUS,
+  STARTPAUSE,
+  CANCEL,
+} from '../settings/timer-settings'
 import { serverURL } from '../settings/server-settings'
-// types, actions and reducers
+// types and actions
+import { UserSetting } from '../redux/userSettings/types'
 import { OutletDataValues } from '../redux/outlets/types'
+import {
+  toggleExpandAction,
+  toggleShowTimerAction,
+} from '../redux/userSettings/actions'
 import {
   switchRequestAction,
   socketListenAction,
@@ -17,8 +35,7 @@ import {
 import { storeSocketAction } from '../redux/sockets/actions'
 import { RootState } from '../redux/rootReducer'
 // css
-import '../css/accordion.css' // TODO **** Move to Sass @use rule
-import { Accordion } from './Accordion/Accordion'
+import './OutletGroups.css'
 
 interface OwnProps {}
 
@@ -28,7 +45,9 @@ type DispatchProps = typeof mapDispatch
 
 type Props = StateProps & DispatchProps & OwnProps
 
-const mapState = (state: RootState, ownProps: OwnProps) => ({
+const mapState = (state: RootState /* , ownProps: OwnProps */) => ({
+  // LEARN ***: I used to use ownProps here, to narrow down to the group, when this
+  //   was still part of <Group>
   outletData: state.outletData,
   userSettings: state.userSettings,
 })
@@ -39,6 +58,8 @@ const mapDispatch = {
   requestSync: requestSyncAction,
   switch: switchRequestAction,
   timerAdjustRequest: timerAdjustRequestAction,
+  toggleExpand: toggleExpandAction,
+  toggleShowTimer: toggleShowTimerAction,
 }
 
 class OutletGroupsComponent extends React.Component<Props> {
@@ -51,6 +72,7 @@ class OutletGroupsComponent extends React.Component<Props> {
   public componentDidMount() {
     // // TODO: Move socket/io('htt..... out of component: always have this connection?
     // then pass it into the props...?  ****
+    // Or better: Move to redux middleware???? ****
     const socket = io(serverURL)
     this.props.storeSocket(socket)
     this.props.socketListen()
@@ -69,29 +91,138 @@ class OutletGroupsComponent extends React.Component<Props> {
     return (
       <div className="wrapper">
         <Accordion>
-          {(expand, expandAll) =>
+          {(toggleExpand, expandAll) =>
             groupsSettings
               .filter(groupSetting => groupSetting.enabled)
               .map((groupSetting: GroupSetting): any => {
+                const group = groupSetting.group
                 const outletData: OutletDataValues = this.props.outletData
-                  .groups[groupSetting.group]
+                  .groups[group]
+                const userSetting: UserSetting = this.props.userSettings.groups[
+                  group
+                ]
                 return (
-                  <Group
-                    key={groupSetting.group}
-                    group={groupSetting.group}
-                    codes={groupSetting.codes}
-                    displayName={groupSetting.displayName}
-                    mode={outletData.mode}
-                    defaultTimer={groupSetting.defaultTimer}
-                    handleOnOffClick={(event: React.MouseEvent, mode: Mode) =>
-                      this.handleOnOffClick(event, groupSetting.group, mode)
-                    }
-                    time={outletData.time}
-                    isTimerRunning={outletData.isTimerRunning}
-                    handleTimerClick={(task: TimerButtonTask) =>
-                      this.props.timerAdjustRequest(task, groupSetting.group)
-                    }
-                  />
+                  <AccordionItem key={group} closed={!userSetting.expandGroup}>
+                    <AccordionItemLine
+                      onClick={() => {
+                        this.props.toggleExpand(group)
+                        toggleExpand(group)
+                      }}
+                    >
+                      <div className="AccordionItemLine__title">
+                        {groupSetting.displayName}
+                      </div>
+                      <RemoteControlButton
+                        className="button__caret"
+                        active={false} // animate instead using --closed class
+                        handleClick={() => {}}
+                        size="medium"
+                      >
+                        <i className="caret" />
+                      </RemoteControlButton>
+                      <div className="AccordionItemLine__on-off-buttons">
+                        <RemoteControlButton
+                          active={outletData.mode}
+                          handleClick={event => {
+                            this.handleOnOffClick(
+                              event,
+                              groupSetting.group,
+                              true
+                            )
+                          }}
+                          size="medium"
+                        >
+                          On
+                        </RemoteControlButton>
+                        <RemoteControlButton
+                          active={!outletData.mode}
+                          handleClick={event => {
+                            this.handleOnOffClick(
+                              event,
+                              groupSetting.group,
+                              false
+                            )
+                          }}
+                          size="medium"
+                        >
+                          Off
+                        </RemoteControlButton>
+                      </div>
+                    </AccordionItemLine>
+                    <AccordionItemInner bounce={group === 'coffee'}>
+                      {/* TODO **** Move timer div to own component */}
+                      <div className="timer">
+                        <div className="timer__line timer__display-line">
+                          <RemoteControlButton
+                            handleClick={event =>
+                              this.props.timerAdjustRequest(PLUSPLUS, group)
+                            }
+                          >
+                            ++
+                          </RemoteControlButton>
+                          <RemoteControlButton
+                            handleClick={event =>
+                              this.props.timerAdjustRequest(PLUS, group)
+                            }
+                          >
+                            +
+                          </RemoteControlButton>
+                          <TimerDisplay
+                            time={outletData.time}
+                            isTimerRunning={outletData.isTimerRunning}
+                            showTimer={userSetting.showTimer}
+                          />
+                          <RemoteControlButton
+                            enabled={outletData.time > 0}
+                            handleClick={event =>
+                              this.props.timerAdjustRequest(MINUSMINUS, group)
+                            }
+                          >
+                            --
+                          </RemoteControlButton>
+                          <RemoteControlButton
+                            enabled={outletData.time > 0}
+                            handleClick={event =>
+                              this.props.timerAdjustRequest(MINUS, group)
+                            }
+                          >
+                            -
+                          </RemoteControlButton>
+                        </div>
+                        <div className="timer__line">
+                          <RemoteControlButton
+                            enabled={
+                              outletData.isTimerRunning || outletData.time > 0
+                            }
+                            handleClick={event =>
+                              this.props.timerAdjustRequest(STARTPAUSE, group)
+                            }
+                          >
+                            {outletData.isTimerRunning ? 'pause' : 'start'}
+                          </RemoteControlButton>
+                          <RemoteControlButton
+                            enabled={
+                              outletData.time !== groupSetting.defaultTimer
+                            }
+                            handleClick={event =>
+                              this.props.timerAdjustRequest(CANCEL, group)
+                            }
+                          >
+                            cancel
+                          </RemoteControlButton>
+                          <RemoteControlButton
+                            handleClick={event =>
+                              this.props.toggleShowTimer(group)
+                            }
+                          >
+                            {userSetting.showTimer
+                              ? 'show set time'
+                              : 'show timer'}
+                          </RemoteControlButton>
+                        </div>
+                      </div>
+                    </AccordionItemInner>
+                  </AccordionItem>
                 )
               })
           }

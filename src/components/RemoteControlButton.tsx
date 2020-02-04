@@ -21,8 +21,8 @@ export const RemoteControlButton: React.FunctionComponent<RemoteControlButtonPro
     props.className,
     'remote-control-button',
     'medium-button',
-    { activeButton: props.active },
-    { disabledButton: !enabled }
+    { '--active': props.active },
+    { '--disabled': !enabled }
   )
 
   return (

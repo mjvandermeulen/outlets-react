@@ -1,0 +1,44 @@
+.AccordionItemInner {
+  transform-origin: top left;
+  max-height: 35rem;
+  transition-timing-function: ease-in;
+  transition-duration: 0.3s;
+  transition-property: max-height;
+  position: relative;
+  overflow: hidden;
+}
+
+.AccordionItemInner .AccordionItemInner__content {
+  transform: rotate(0deg);
+  transform-origin: top left;
+  transition-timing-function: cubic-bezier(1, 2.5, 1, 1);
+  transition-timing-function: ease-out;
+  transition-duration: 1s;
+  transition-duration: 0.3s;
+  transition-property: transform;
+  position: relative;
+}
+
+.AccordionItemInner.bounce .AccordionItemInner__content {
+  /* LEARN: Abscissas must be in the [0, 1] range or the curve is not a function of time. */
+  transition-timing-function: cubic-bezier(
+    0.3,
+    2.3,
+    0.1,
+    -0.25
+  ); /* by vivi ORIG: (0.7, 1.6, 0, 0.75)*/
+
+  transition-duration: 1s; /* by vivi ORIG: 0.7s*/
+}
+
+/* --closed */
+
+.AccordionItem--closed .AccordionItemInner {
+  max-height: 0rem;
+  transition-timing-function: ease-out;
+}
+
+.AccordionItem--closed .AccordionItemInner__content {
+  transform: rotate(-90deg);
+  transition-timing-function: ease-in;
+}

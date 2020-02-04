@@ -5,25 +5,24 @@ import { bothTrueOrBothFalse } from '../tools/calculations'
 // css
 import './TimerDisplay.css'
 
-export interface TimerDisplayProps {
+export interface OwnProps {
   time: number // milliseconds since epoch OR if paused: time left in ms
   isTimerRunning: boolean
   showTimer: boolean
 }
 
-export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
+export class TimerDisplay extends React.Component<OwnProps, {}> {
   private displayInterval: NodeJS.Timeout | null
 
-  constructor(props: TimerDisplayProps) {
+  constructor(props: OwnProps) {
     super(props)
     this.displayInterval = null
   }
 
   componentDidMount() {
+    const { showTimer, isTimerRunning } = this.props
     this.displayInterval = setInterval(() => {
-      if (
-        bothTrueOrBothFalse(this.props.showTimer, this.props.isTimerRunning)
-      ) {
+      if (bothTrueOrBothFalse(showTimer, isTimerRunning)) {
         this.forceUpdate()
       }
     }, 1000)
@@ -35,11 +34,9 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
     }
   }
 
-  private readableTimeRemaining(
-    milliseconds: number,
-    isTimerRunning: boolean
-  ): string {
+  private readableTimeRemaining(): string {
     let milliSecondsLeft = 0
+    const { time, isTimerRunning } = this.props
 
     // timers in the past are displayed as zeros
     // so a reset timer (= 0) is displayed as zeros as well
@@ -52,9 +49,9 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
     }
 
     if (!isTimerRunning) {
-      milliSecondsLeft = milliseconds
+      milliSecondsLeft = time
     } else {
-      milliSecondsLeft = milliseconds - Date.now()
+      milliSecondsLeft = time - Date.now()
       if (milliSecondsLeft < 0) {
         milliSecondsLeft = 0
       }
@@ -72,7 +69,8 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
     }
   }
 
-  private readableSetTime(time: number, isTimerRunning: boolean): string {
+  private readableSetTime(): string {
+    const { time, isTimerRunning } = this.props
     let displayTime = time
     if (!isTimerRunning) {
       if (time <= 0) {
@@ -89,14 +87,12 @@ export class TimerDisplay extends React.Component<TimerDisplayProps, {}> {
   }
 
   render() {
+    const { showTimer } = this.props
     let display = ''
-    if (this.props.showTimer) {
-      display = this.readableTimeRemaining(
-        this.props.time,
-        this.props.isTimerRunning
-      )
+    if (showTimer) {
+      display = this.readableTimeRemaining()
     } else {
-      display = this.readableSetTime(this.props.time, this.props.isTimerRunning)
+      display = this.readableSetTime()
     }
     return <div className="timer-display">{display}</div>
   }

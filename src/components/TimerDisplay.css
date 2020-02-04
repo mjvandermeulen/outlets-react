@@ -1,7 +1,7 @@
 /* TODO this is not super related to the functioning of the timer...
 well... the courier New kind of is.
 well #2: ... this class is only on this component!
-    not like a general .button-active class *** */
+    not like a general button.--active class *** */
 .timer-display {
   font-family: 'Courier New', Courier, monospace;
   font-size: 1em;

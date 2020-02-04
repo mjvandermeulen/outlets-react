@@ -1,10 +1,12 @@
 /* LEARN ** good example of css that should be in component (I disagree with myself Jan 21 2020)*/
-/*   --> although it could be in the index, since other button components could have the same...*/
-.activeButton {
+/*   --> although it could be in index.css, since other button components could have the same...*/
+
+/* MOVED TO index.css */
+/* button.--active {
   border: 2px solid #f44336;
 }
 
-.disabledButton {
+button.--disabled {
   color: #bfbfbf;
   border: 2px solid #f7f7f7;
-}
+} */

@@ -1,11 +1,13 @@
 import * as React from 'react'
+import './Accordion.css' // TODO **** Move to Sass @use rule
 
-type Expand = (key: string) => void
-type ExpandAll = () => void
+type ToggleExpand = (key: string) => void
+type ToggleExpandAll = () => void
 
+// LEARN: The func component does not have to be called with arguments for these params! ****
 type Children = (
-  expand: Expand,
-  expandAll?: ExpandAll
+  expand: ToggleExpand,
+  expandAll: ToggleExpandAll
 ) => React.ReactElement | any[]
 
 interface AccordionProps {
@@ -16,14 +18,13 @@ interface AccordionProps {
 export const Accordion: React.FunctionComponent<AccordionProps> = ({
   children,
 }) => {
-  const expand: Expand = (key: string) => {
+  const toggleExpand: ToggleExpand = (key: string) => {
     console.log(
-      `Expanding accordion. Parameter (key): ${key} ***** TODO Implement`
+      `Expanding accordion. Parameter (key): ${key} **** TODO Implement`
     )
   }
-  const expandAll: ExpandAll = () => {
-    console.log('Expanding All accordion. ***** TODO Implement ')
+  const togglExpandAll: ToggleExpandAll = () => {
+    console.log('Expanding All accordion. **** TODO Implement ')
   }
-  // const children = props.children as Children // Dangerously assume children is not a string *******
-  return <ul className="Accordion">{children(expand, expandAll)}</ul>
+  return <ul className="Accordion">{children(toggleExpand, togglExpandAll)}</ul>
 }

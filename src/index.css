@@ -39,6 +39,15 @@ button:focus {
   padding: 15px 30px;
 }
 
+button.--active {
+  border: 2px solid #f44336;
+}
+
+button.--disabled {
+  color: #bfbfbf;
+  border: 2px solid #f7f7f7;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
