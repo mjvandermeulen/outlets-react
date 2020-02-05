@@ -38,6 +38,7 @@ import { RootState } from '../redux/rootReducer'
 import './OutletGroups.css'
 import { AccordionStore } from './Accordion/AccordionStore'
 import { AccordionControls } from './Accordion/AccordionControls'
+import classNames from 'classnames'
 
 interface OwnProps {}
 
@@ -95,17 +96,22 @@ class OutletGroupsComponent extends React.Component<Props> {
       <AccordionControls>
         {accordionControls => (
           <div className="wrapper">
-            <div className="group-list-item">
-              <RemoteControlButton
-                className="button-toggle-expand-all"
-                active={false} // animate instead using css TODO *****
-                handleClick={() => accordionControls.toggleExpandAll()} // TODO and LEARN: change so you force the need of a" bind this"
-              >
-                <div className="expand-all-text">all</div>
-                <div className="caret-parent">
-                  <i className="caret" />
-                </div>
-              </RemoteControlButton>
+            <div className="group-line">
+              <div className="group-button">
+                <RemoteControlButton
+                  className={classNames('button-toggle-expand-all', {
+                    'button-toggle-expand-all--expanded':
+                      accordionControls.expandedAll,
+                  })}
+                  active={accordionControls.expandedAll} // TODO animate instead using css TODO *****
+                  handleClick={() => accordionControls.toggleExpandAll()} // TODO and LEARN: change so you force the need of a" bind this"
+                >
+                  <div className="expand-all-text">all</div>
+                  <div className="caret-parent">
+                    <i className="caret" />
+                  </div>
+                </RemoteControlButton>
+              </div>
             </div>
             <Accordion>
               {groupsSettings
