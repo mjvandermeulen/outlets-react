@@ -7,14 +7,14 @@ import { groupsSettings } from '../../settings/group-settings'
 
 const initialState: UserSettings = { groups: {}, showCodes: false }
 
-groupsSettings.forEach((groupSetting, index) => {
-  if (groupSetting.enabled) {
-    initialState.groups[groupSetting.group] = {
+for (const group in groupsSettings) {
+  if (groupsSettings[group].enabled) {
+    initialState.groups[group] = {
       expandGroup: false,
       showTimer: true,
     }
   }
-})
+}
 
 export function userSettingsReducer(
   state = initialState,

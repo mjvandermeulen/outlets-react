@@ -1,72 +1,72 @@
-export interface GroupSettingValues {
+export interface GroupSetting {
   displayName: string
   defaultTimer: number
   enabled: boolean
   codes?: string[]
 }
 
-export type GroupSetting = GroupSettingValues & {
-  group: string
-}
+export type GroupSettingWithGroup = { group: string } & GroupSetting
+type GroupSettingsArray = GroupSettingWithGroup[]
 
 export type Mode = boolean // 'on' | 'off' | 'unknown' TODO maybe?
 
-// LEARN ***
-// export interface GroupsSettings extends Array<GroupSetting> {}
-// OR
-export type GroupsSettings = GroupSetting[]
+export type GroupsSettings = { [group: string]: GroupSetting }
 
-export function getGroupSettingValues(
-  group: string
-): GroupSettingValues | null {
-  for (const groupSetting of groupsSettings) {
-    if (groupSetting.enabled && groupSetting.group === group) {
-      return {
-        displayName: groupSetting.displayName,
-        defaultTimer: groupSetting.defaultTimer,
-        enabled: groupSetting.enabled,
-      }
-    }
+export function getGroupSetting(group: string): GroupSetting | null {
+  if (groupsSettings[group] && groupsSettings[group].enabled) {
+    return groupsSettings[group]
   }
   return null
 }
 
-export const groupsSettings: GroupsSettings = [
-  {
-    group: 'livingroom',
+export const groupsSettings: GroupsSettings = {
+  livingroom: {
     displayName: 'Living Room',
     defaultTimer: 0,
     enabled: false,
   },
-  {
-    group: 'officelight',
+  officelight: {
     displayName: 'Office',
     defaultTimer: 0,
     enabled: true,
   },
-  {
-    group: 'coffee',
+  coffee: {
     displayName: 'Coffee',
     defaultTimer: 45 * 60 * 1000,
     enabled: true,
     codes: ['bogus 1', 'bogus2'],
   },
-  {
-    group: 'fan',
+  fan: {
     displayName: 'Office Fan',
     defaultTimer: 0,
     enabled: false,
   },
-  {
-    group: 'guestlight',
+  guestlight: {
     displayName: 'Guest Light',
     defaultTimer: 0,
     enabled: false,
   },
-  {
-    group: 'redlight',
+  redlight: {
     displayName: 'Night Light',
     defaultTimer: 0,
     enabled: true,
   },
-]
+}
+
+export const enabledGroupSettingsArray: GroupSettingsArray = []
+for (const group in groupsSettings) {
+  if (groupsSettings[group].enabled) {
+    const valueWithGroup: GroupSettingWithGroup = {
+      ...groupsSettings[group],
+      group,
+    }
+    enabledGroupSettingsArray.push(valueWithGroup)
+  }
+}
+
+export const enabledGroupKeys: string[] = []
+for (const group in groupsSettings) {
+  if (groupsSettings[group].enabled) {
+    enabledGroupKeys.push(group)
+  }
+}

@@ -12,15 +12,15 @@ import { groupsSettings } from '../../settings/group-settings'
 
 const groups: GroupsData = {}
 
-groupsSettings.forEach((groupSetting, index) => {
-  if (groupSetting.enabled) {
-    groups[groupSetting.group] = {
+for (const group in groupsSettings) {
+  if (groupsSettings[group].enabled) {
+    groups[group] = {
       mode: false,
-      time: groupSetting.defaultTimer,
+      time: groupsSettings[group].defaultTimer,
       isTimerRunning: false,
     }
   }
-})
+}
 
 const initialState: OutletData = { groups }
 

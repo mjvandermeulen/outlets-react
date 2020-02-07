@@ -6,6 +6,7 @@ import { rootReducer } from './redux/rootReducer'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { AccordionStore } from './components/Accordion/AccordionStore'
+import { enabledGroupKeys } from './settings/group-settings'
 
 const store = createStore(
   rootReducer,
@@ -15,7 +16,7 @@ const store = createStore(
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <AccordionStore>
+      <AccordionStore keys={enabledGroupKeys}>
         <div className="App">
           <OutletGroups />
         </div>

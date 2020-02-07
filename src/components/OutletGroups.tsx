@@ -9,7 +9,11 @@ import { AccordionItemInner } from './Accordion/AccordionItemInner'
 import { RemoteControlButton } from './RemoteControlButton'
 import { TimerDisplay } from './TimerDisplay'
 // Settings
-import { groupsSettings, GroupSetting, Mode } from '../settings/group-settings'
+import {
+  Mode,
+  enabledGroupSettingsArray,
+  GroupSettingWithGroup,
+} from '../settings/group-settings'
 import {
   MINUSMINUS,
   PLUSPLUS,
@@ -100,10 +104,9 @@ class OutletGroupsComponent extends React.Component<Props> {
               <div className="group-button">
                 <RemoteControlButton
                   className={classNames('button-toggle-expand-all', {
-                    'button-toggle-expand-all--expanded':
-                      accordionControls.expandedAll,
+                    'button-toggle-expand-all--expanded': accordionControls.expandedAll(),
                   })}
-                  active={accordionControls.expandedAll} // TODO animate instead using css TODO *****
+                  active={accordionControls.expandedAll()} // TODO animate instead using css TODO ****
                   handleClick={() => accordionControls.toggleExpandAll()} // TODO and LEARN: change so you force the need of a" bind this"
                 >
                   <div className="expand-all-text">all</div>
@@ -114,9 +117,8 @@ class OutletGroupsComponent extends React.Component<Props> {
               </div>
             </div>
             <Accordion>
-              {groupsSettings
-                .filter(groupSetting => groupSetting.enabled)
-                .map((groupSetting: GroupSetting): any => {
+              {enabledGroupSettingsArray.map(
+                (groupSetting: GroupSettingWithGroup): React.ReactElement => {
                   const group = groupSetting.group
                   const outletData: OutletDataValues = this.props.outletData
                     .groups[group]
@@ -125,14 +127,12 @@ class OutletGroupsComponent extends React.Component<Props> {
                   return (
                     <AccordionItem
                       key={group}
-                      closed={
-                        !userSetting.expandGroup &&
-                        !accordionControls.expandedAll
-                      }
+                      closed={!accordionControls.expanded(group)}
                     >
                       <AccordionItemLine
                         onClick={() => {
-                          this.props.toggleExpand(group)
+                          // this.props.toggleExpand(group) ******* cleanup
+                          accordionControls.toggleExpand(group)
                         }}
                       >
                         <div className="AccordionItemLine__title">
@@ -247,7 +247,8 @@ class OutletGroupsComponent extends React.Component<Props> {
                       </AccordionItemInner>
                     </AccordionItem>
                   )
-                })}
+                }
+              )}
             </Accordion>
           </div>
         )}

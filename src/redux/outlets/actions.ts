@@ -28,7 +28,7 @@ import {
   STARTPAUSE,
   CANCEL,
 } from '../../settings/timer-settings'
-import { getGroupSettingValues } from '../../settings/group-settings'
+import { getGroupSetting } from '../../settings/group-settings'
 
 export const socketListenAction = (): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
@@ -129,7 +129,7 @@ function toggleStartPauseTimer(timerDataValues: TimerDataValues) {
 
 function cancelTimer(timerDataValues: TimerDataValues, group: string) {
   let defaultTimer = 0
-  const values = getGroupSettingValues(group)
+  const values = getGroupSetting(group)
   if (values) {
     defaultTimer = values.defaultTimer
   }
