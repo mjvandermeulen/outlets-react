@@ -26,10 +26,7 @@ import { serverURL } from '../settings/server-settings'
 // types and actions
 import { UserSetting } from '../redux/userSettings/types'
 import { OutletDataValues } from '../redux/outlets/types'
-import {
-  toggleExpandAction,
-  toggleShowTimerAction,
-} from '../redux/userSettings/actions'
+import { toggleShowTimerAction } from '../redux/userSettings/actions'
 import {
   switchRequestAction,
   socketListenAction,
@@ -40,7 +37,6 @@ import { storeSocketAction } from '../redux/sockets/actions'
 import { RootState } from '../redux/rootReducer'
 // css
 import './OutletGroups.css'
-import { AccordionStore } from './Accordion/AccordionStore'
 import { AccordionControls } from './Accordion/AccordionControls'
 import classNames from 'classnames'
 
@@ -65,7 +61,6 @@ const mapDispatch = {
   requestSync: requestSyncAction,
   switch: switchRequestAction,
   timerAdjustRequest: timerAdjustRequestAction,
-  toggleExpand: toggleExpandAction,
   toggleShowTimer: toggleShowTimerAction,
 }
 

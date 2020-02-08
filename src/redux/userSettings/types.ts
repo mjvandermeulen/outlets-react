@@ -4,7 +4,6 @@ import { mirroredKeys } from '../../tools/mirroredKeys'
 
 // state slices
 export interface UserSetting {
-  expandGroup: boolean
   showTimer: boolean
 }
 export interface UserSettings {

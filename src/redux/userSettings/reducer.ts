@@ -10,7 +10,6 @@ const initialState: UserSettings = { groups: {}, showCodes: false }
 for (const group in groupsSettings) {
   if (groupsSettings[group].enabled) {
     initialState.groups[group] = {
-      expandGroup: false,
       showTimer: true,
     }
   }
@@ -21,17 +20,6 @@ export function userSettingsReducer(
   action: UserSettingsActionTypes
 ): UserSettings {
   switch (action.type) {
-    case userSettingsActions.TOGGLE_EXPAND_GROUP:
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          [action.payload.group]: {
-            ...state.groups[action.payload.group],
-            expandGroup: !state.groups[action.payload.group].expandGroup,
-          },
-        },
-      }
     case userSettingsActions.TOGGLE_SHOW_TIMER:
       return {
         ...state,
