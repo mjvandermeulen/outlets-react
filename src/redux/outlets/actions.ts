@@ -143,11 +143,11 @@ function calcNewTime(
   state: RootState,
   timerDataValues: TimerDataValues,
   group: string,
-  msAdjustment: number
+  msAdjustment: number,
+  showTimer: boolean
 ): TimerDataValues {
   let newTime = state.outletData.groups[group].time + msAdjustment
   const isTimerRunning = state.outletData.groups[group].isTimerRunning
-  const showTimer = state.userSettings.groups[group].showTimer
   const increment = timerAdjustments.plus
   if (!isTimerRunning && newTime < 0) {
     newTime = 0
@@ -185,7 +185,8 @@ function calcNewTime(
 
 export const timerAdjustRequestAction = (
   task: TimerButtonTask,
-  group: string
+  group: string,
+  showTimer: boolean
 ): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
     const state = getState()
@@ -199,7 +200,8 @@ export const timerAdjustRequestAction = (
           state,
           timerDataValues,
           group,
-          timerAdjustments.minusminus
+          timerAdjustments.minusminus,
+          showTimer
         )
         break
       case MINUS:
@@ -207,7 +209,8 @@ export const timerAdjustRequestAction = (
           state,
           timerDataValues,
           group,
-          timerAdjustments.minus
+          timerAdjustments.minus,
+          showTimer
         )
         break
       case PLUS:
@@ -215,7 +218,8 @@ export const timerAdjustRequestAction = (
           state,
           timerDataValues,
           group,
-          timerAdjustments.plus
+          timerAdjustments.plus,
+          showTimer
         )
         break
       case PLUSPLUS:
@@ -223,7 +227,8 @@ export const timerAdjustRequestAction = (
           state,
           timerDataValues,
           group,
-          timerAdjustments.plusplus
+          timerAdjustments.plusplus,
+          showTimer
         )
         break
       case STARTPAUSE:

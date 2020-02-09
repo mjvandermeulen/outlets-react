@@ -24,9 +24,7 @@ import {
 } from '../settings/timer-settings'
 import { serverURL } from '../settings/server-settings'
 // types and actions
-import { UserSetting } from '../redux/userSettings/types'
 import { OutletDataValues } from '../redux/outlets/types'
-import { toggleShowTimerAction } from '../redux/userSettings/actions'
 import {
   switchRequestAction,
   socketListenAction,
@@ -48,11 +46,14 @@ type DispatchProps = typeof mapDispatch
 
 type Props = StateProps & DispatchProps & OwnProps
 
+interface State {
+  showTimer: Set<string>
+}
+
 const mapState = (state: RootState /* , ownProps: OwnProps */) => ({
   // LEARN ***: I used to use ownProps here, to narrow down to the group, when this
   //   was still part of <Group>
   outletData: state.outletData,
-  userSettings: state.userSettings,
 })
 
 const mapDispatch = {
@@ -61,15 +62,17 @@ const mapDispatch = {
   requestSync: requestSyncAction,
   switch: switchRequestAction,
   timerAdjustRequest: timerAdjustRequestAction,
-  toggleShowTimer: toggleShowTimerAction,
 }
 
-class OutletGroupsComponent extends React.Component<Props> {
+class OutletGroupsComponent extends React.Component<Props, State> {
   // TODO cleanup *** unused  var socket
   private socket: SocketIOClient.Socket | null
   constructor(props: Props) {
     super(props)
     this.socket = null
+    this.state = {
+      showTimer: new Set(),
+    }
   }
 
   public componentDidMount() {
@@ -90,6 +93,23 @@ class OutletGroupsComponent extends React.Component<Props> {
     event.stopPropagation() // To prevent expanding the group.
     this.props.switch(group, mode)
   }
+
+  private toggleShowTimer(group: string) {
+    const newShowTimer = this.state.showTimer
+    if (newShowTimer.has(group)) {
+      newShowTimer.delete(group)
+    } else {
+      newShowTimer.add(group)
+    }
+    this.setState(state => ({
+      showTimer: newShowTimer,
+    }))
+  }
+
+  private showTimer(group: string) {
+    return this.state.showTimer.has(group)
+  }
+
   public render() {
     return (
       <AccordionControls>
@@ -116,8 +136,6 @@ class OutletGroupsComponent extends React.Component<Props> {
                 (groupSetting: GroupSettingWithGroup): React.ReactElement => {
                   const group = groupSetting.group
                   const outletData: OutletDataValues = this.props.outletData
-                    .groups[group]
-                  const userSetting: UserSetting = this.props.userSettings
                     .groups[group]
                   return (
                     <AccordionItem
@@ -173,14 +191,22 @@ class OutletGroupsComponent extends React.Component<Props> {
                           <div className="timer__line timer__display-line">
                             <RemoteControlButton
                               handleClick={event =>
-                                this.props.timerAdjustRequest(PLUSPLUS, group)
+                                this.props.timerAdjustRequest(
+                                  PLUSPLUS,
+                                  group,
+                                  this.showTimer(group)
+                                )
                               }
                             >
                               ++
                             </RemoteControlButton>
                             <RemoteControlButton
                               handleClick={event =>
-                                this.props.timerAdjustRequest(PLUS, group)
+                                this.props.timerAdjustRequest(
+                                  PLUS,
+                                  group,
+                                  this.showTimer(group)
+                                )
                               }
                             >
                               +
@@ -188,12 +214,16 @@ class OutletGroupsComponent extends React.Component<Props> {
                             <TimerDisplay
                               time={outletData.time}
                               isTimerRunning={outletData.isTimerRunning}
-                              showTimer={userSetting.showTimer}
+                              showTimer={this.showTimer(group)}
                             />
                             <RemoteControlButton
                               enabled={outletData.time > 0}
                               handleClick={event =>
-                                this.props.timerAdjustRequest(MINUSMINUS, group)
+                                this.props.timerAdjustRequest(
+                                  MINUSMINUS,
+                                  group,
+                                  this.showTimer(group)
+                                )
                               }
                             >
                               --
@@ -201,7 +231,11 @@ class OutletGroupsComponent extends React.Component<Props> {
                             <RemoteControlButton
                               enabled={outletData.time > 0}
                               handleClick={event =>
-                                this.props.timerAdjustRequest(MINUS, group)
+                                this.props.timerAdjustRequest(
+                                  MINUS,
+                                  group,
+                                  this.showTimer(group)
+                                )
                               }
                             >
                               -
@@ -213,7 +247,11 @@ class OutletGroupsComponent extends React.Component<Props> {
                                 outletData.isTimerRunning || outletData.time > 0
                               }
                               handleClick={event =>
-                                this.props.timerAdjustRequest(STARTPAUSE, group)
+                                this.props.timerAdjustRequest(
+                                  STARTPAUSE,
+                                  group,
+                                  this.showTimer(group)
+                                )
                               }
                             >
                               {outletData.isTimerRunning ? 'pause' : 'start'}
@@ -223,17 +261,19 @@ class OutletGroupsComponent extends React.Component<Props> {
                                 outletData.time !== groupSetting.defaultTimer
                               }
                               handleClick={event =>
-                                this.props.timerAdjustRequest(CANCEL, group)
+                                this.props.timerAdjustRequest(
+                                  CANCEL,
+                                  group,
+                                  this.showTimer(group)
+                                )
                               }
                             >
                               cancel
                             </RemoteControlButton>
                             <RemoteControlButton
-                              handleClick={event =>
-                                this.props.toggleShowTimer(group)
-                              }
+                              handleClick={event => this.toggleShowTimer(group)}
                             >
-                              {userSetting.showTimer
+                              {this.showTimer(group)
                                 ? 'show set time'
                                 : 'show timer'}
                             </RemoteControlButton>
