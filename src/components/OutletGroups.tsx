@@ -22,14 +22,14 @@ import {
   CANCEL,
 } from '../settings/timer-settings'
 // types and actions
-import { OutletDataValues } from '../redux/outlets/types'
+import { OutletDataValues, SwitchData } from '../redux/outlets/types'
 import {
-  switchRequestAction,
   requestSyncAction,
   timerAdjustRequestAction,
-  listenAndSetSwitchDataAction,
-  setSyncDataAction,
-  setTimerDataAction,
+  receiveSwitchDataAction,
+  receiveTimerDataAction,
+  receiveSyncDataAction,
+  sendSwitchDataAction,
 } from '../redux/outlets/actions'
 import { RootState } from '../redux/rootReducer'
 // css
@@ -56,11 +56,11 @@ const mapState = (state: RootState /* , ownProps: OwnProps */) => ({
 })
 
 const mapDispatch = {
-  listenAndSetSwitchData: listenAndSetSwitchDataAction,
-  setSyncData: setSyncDataAction,
-  setTimerData: setTimerDataAction,
+  receiveSwitchData: receiveSwitchDataAction,
+  receiveSyncData: receiveSyncDataAction,
+  receiveTimerData: receiveTimerDataAction,
+  sendSwitchData: sendSwitchDataAction,
   requestSync: requestSyncAction,
-  switch: switchRequestAction,
   timerAdjustRequest: timerAdjustRequestAction,
 }
 
@@ -82,9 +82,9 @@ class OutletGroupsComponent extends React.Component<Props, State> {
     // const socket = io(serverURL)
     // this.props.storeSocket(socket)
     // this.props.socketListen() // listening starts in middleware
-    this.props.listenAndSetSwitchData()
-    this.props.setSyncData()
-    this.props.setTimerData()
+    this.props.receiveSwitchData()
+    this.props.receiveTimerData()
+    this.props.receiveSyncData()
     this.props.requestSync() // move to middleware??? **** Nay
   }
 
@@ -94,7 +94,9 @@ class OutletGroupsComponent extends React.Component<Props, State> {
     mode: Mode
   ) {
     event.stopPropagation() // To prevent expanding the group.
-    this.props.switch(group, mode)
+    this.props.sendSwitchData({
+      [group]: { mode },
+    })
   }
 
   private toggleShowTimer(group: string) {

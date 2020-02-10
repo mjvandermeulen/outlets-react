@@ -1,6 +1,5 @@
 import {
   // OutletData,
-  SWITCH,
   SwitchData,
   SyncRequestData,
   OUTLET_SWITCH_CHANNEL,
@@ -8,8 +7,6 @@ import {
   SET_SWITCH_DATA,
   OUTLET_SYNC_CHANNEL,
   SET_SYNC_DATA,
-  OutletDataValues,
-  GroupsData,
   TimerData,
   OUTLET_TIMER_CHANNEL,
   SET_TIMER_DATA,
@@ -31,22 +28,22 @@ import {
 import { getGroupSetting } from '../../settings/group-settings'
 import { socket } from '../../App'
 
-// change awkwark naming ****
-export const listenAndSetSwitchDataAction = (): any => {
+export const receiveSwitchDataAction = (): any => {
   return {
     type: SET_SWITCH_DATA,
     socketChannel: OUTLET_SWITCH_CHANNEL,
   }
 }
 
-export const setTimerDataAction = (): any => {
+export const receiveTimerDataAction = (): any => {
   return {
     type: SET_TIMER_DATA,
     socketChannel: OUTLET_TIMER_CHANNEL,
   }
 }
 
-export const setSyncDataAction = () => ({
+// *** THOUGHTS This could be deleted, and only send this data over the other 2 channels...
+export const receiveSyncDataAction = () => ({
   type: SET_SYNC_DATA,
   socketChannel: OUTLET_SYNC_CHANNEL,
 })
@@ -64,22 +61,11 @@ export const requestSyncAction = (): any => {
 // TODO **** fix 'any' to AppThunk with:
 // https://react-redux.js.org/using-react-redux/static-typing#recommendations
 // // import { AppThunk, RootState } from '../rootReducer'
-export const switchRequestAction = (group: string, mode: boolean): any => {
-  return (dispatch: Dispatch, getState: () => RootState) => {
-    // immediately dispatch for user feedback. (Don't wait for server)
-    dispatch(switchAction(group, mode))
-    const switchData: SwitchData = {
-      [group]: { mode },
-    }
-    socket.emit(OUTLET_SWITCH_CHANNEL, switchData)
-  }
-}
-
-const switchAction = (group: string, mode: boolean): any => ({
-  type: SWITCH,
+export const sendSwitchDataAction = (data: SwitchData): any => ({
+  type: SET_SWITCH_DATA,
+  socketChannel: OUTLET_SWITCH_CHANNEL,
   payload: {
-    group,
-    mode,
+    data,
   },
 })
 

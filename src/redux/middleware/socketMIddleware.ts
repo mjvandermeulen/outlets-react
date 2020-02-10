@@ -14,6 +14,10 @@ interface SocketAction extends Action {
 const socketMiddleware = (socket: SocketIOClient.Socket) => {
   //   const socket = io(serverURL)
 
+  interface PayloadWithData {
+    data: {}
+  }
+
   return (store: MiddlewareAPI) => (next: any) => <A extends SocketAction>( // MiddlewareAPI is because of error, after using Store. kinda guess work... ***
     action: A
   ) => {
@@ -42,18 +46,25 @@ const socketMiddleware = (socket: SocketIOClient.Socket) => {
         (
           data: any // change to better data interface ****
         ) => {
-          console.log('dispatching.....')
           dispatch({
             type,
             payload: { data },
             ...rest,
           })
         }
-      ) // TODO **** change to action creater NO: it's the same action, but stripped from the channel.
+      ) // NOTE: do not change to action creator since we're just re-shaping the current one
     } else {
       // Emit
-      // ******* for now: don't do anything, handled elseware like in the days of old
-      return next(action)
+      resultFunction = (() => {
+        dispatch({
+          payload,
+          type,
+          ...rest,
+        })
+        socket.emit(socketChannel, (payload as PayloadWithData).data) // LEARN ****
+      })() // LEARN ****:
+      // compare this to return next(action)
+      // NOTE that you return a "called" function
     }
     return resultFunction
   }

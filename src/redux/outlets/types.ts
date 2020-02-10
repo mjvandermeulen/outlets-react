@@ -45,7 +45,6 @@ export type OutletData = {
 export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
 export const SET_TIMER_DATA = 'SET_TIMER_DATA'
 export const SET_SYNC_DATA = 'SET_SYNC_DATA'
-export const SWITCH = 'SWITCH'
 export const TIMER_ADJUST = 'TIMER_ADJUST'
 export const TIMER_STARTPAUSE = 'TIMER_STARTPAUSE'
 export const TIMER_CANCEL = 'TIMER_CANCEL'
@@ -69,26 +68,11 @@ interface SetTimerDataAction {
   }
 }
 
+// **** What does this do?
 interface SetSyncDataAction {
   type: typeof SET_SYNC_DATA
   payload: {
     data: GroupsData
-  }
-}
-
-// Duplicate of SET_SWITCH_DATA
-// interface SetSwitchesAction {
-//   type: typeof SET_SWITCH_DATA
-//   payload: {
-//     switchData: SwitchData
-//   }
-// }
-
-interface SwitchAction {
-  type: typeof SWITCH
-  payload: {
-    group: string
-    mode: boolean
   }
 }
 
@@ -116,8 +100,6 @@ export type OutletActionTypes =
   | SetSwitchDataAction
   | SetTimerDataAction
   | SetSyncDataAction
-  // | SetSwitchesAction **** cleanup
-  | SwitchAction
   | TimerAdjustAction
   | TimerStartPauseAction
   | TimerCancelAction

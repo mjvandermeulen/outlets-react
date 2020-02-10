@@ -1,7 +1,6 @@
 import {
   OutletData,
   OutletActionTypes,
-  SWITCH,
   SET_SWITCH_DATA,
   SET_SYNC_DATA,
   GroupsData,
@@ -29,19 +28,8 @@ export function outletsReducer(
   action: OutletActionTypes
 ): OutletData {
   switch (action.type) {
-    case SWITCH:
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          [action.payload.group]: {
-            ...state.groups[action.payload.group],
-            mode: action.payload.mode,
-          },
-        },
-      }
     case SET_SWITCH_DATA:
-      console.log('set switch data in reducer')
+      console.log('set switch data in reducer ****')
       for (const group in action.payload.data) {
         if (group in state.groups) {
           // modifying state here, but returning a new object. UGLY-ish
