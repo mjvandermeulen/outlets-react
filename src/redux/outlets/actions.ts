@@ -31,32 +31,7 @@ import {
 import { getGroupSetting } from '../../settings/group-settings'
 import { socket } from '../../App'
 
-export const socketListenAction = (): any => {
-  return (dispatch: Dispatch, getState: () => RootState) => {
-    // listen to OUTLET_SWITCH_CHANNEL
-    // const dispatchSetSwitchDataAction = (switchData: SwitchData) => {
-    //   dispatch(listenAndSetSwitchDataAction(switchData))
-    // }
-    // getState().sockets.socket.on(
-    //   OUTLET_SWITCH_CHANNEL,
-    //   dispatchSetSwitchDataAction
-    // )
-    // getState().sockets.socket.on(
-    //   OUTLET_SYNC_CHANNEL,
-    //   (syncData: GroupsData) => {
-    //     dispatch(setSyncDataAction(syncData))
-    //   }
-    // )
-    // getState().sockets.socket.on(
-    //   OUTLET_TIMER_CHANNEL,
-    //   (timerData: TimerData) => {
-    //     dispatch(setTimerDataAction(timerData))
-    //   }
-    // )
-  }
-}
-
-// change awkwark naming *****
+// change awkwark naming ****
 export const listenAndSetSwitchDataAction = (): any => {
   return {
     type: SET_SWITCH_DATA,

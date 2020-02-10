@@ -52,8 +52,6 @@ export class AccordionStore extends React.Component<Props, State> {
     const expandedKeys = keysSetToSameBoolean(props.keys, false)
     this.state = {
       expandedKeys,
-
-      // LEFT OFF *******
     }
   }
 

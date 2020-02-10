@@ -25,14 +25,12 @@ import {
 import { OutletDataValues } from '../redux/outlets/types'
 import {
   switchRequestAction,
-  socketListenAction,
   requestSyncAction,
   timerAdjustRequestAction,
   listenAndSetSwitchDataAction,
   setSyncDataAction,
   setTimerDataAction,
 } from '../redux/outlets/actions'
-import { storeSocketAction } from '../redux/sockets/actions'
 import { RootState } from '../redux/rootReducer'
 // css
 import './OutletGroups.css'
@@ -58,8 +56,6 @@ const mapState = (state: RootState /* , ownProps: OwnProps */) => ({
 })
 
 const mapDispatch = {
-  storeSocket: storeSocketAction,
-  socketListen: socketListenAction,
   listenAndSetSwitchData: listenAndSetSwitchDataAction,
   setSyncData: setSyncDataAction,
   setTimerData: setTimerDataAction,
@@ -151,7 +147,6 @@ class OutletGroupsComponent extends React.Component<Props, State> {
                     >
                       <AccordionItemLine
                         onClick={() => {
-                          // this.props.toggleExpand(group) ******* cleanup
                           accordionControls.toggleExpand(group)
                         }}
                       >

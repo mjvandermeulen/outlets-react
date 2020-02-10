@@ -116,7 +116,7 @@ export type OutletActionTypes =
   | SetSwitchDataAction
   | SetTimerDataAction
   | SetSyncDataAction
-  // | SetSwitchesAction
+  // | SetSwitchesAction **** cleanup
   | SwitchAction
   | TimerAdjustAction
   | TimerStartPauseAction
