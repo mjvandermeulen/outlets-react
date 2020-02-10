@@ -36,14 +36,19 @@ const socketMiddleware = (socket: SocketIOClient.Socket) => {
     let resultFunction: any
     if (!payload) {
       // Listen
-      resultFunction = socket.on(socketChannel, (
-        data: any // change to better data interface ****
-      ) =>
-        dispatch({
-          type,
-          payload: data,
-          ...rest,
-        })
+      console.log('listen without payload *****')
+      resultFunction = socket.on(
+        socketChannel,
+        (
+          data: any // change to better data interface ****
+        ) => {
+          console.log('dispatching.....')
+          dispatch({
+            type,
+            payload: { data },
+            ...rest,
+          })
+        }
       ) // TODO ***** change to action creator NO: it's the same action, but stripped from the channel.
     } else {
       // Emit

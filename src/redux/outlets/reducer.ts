@@ -41,7 +41,8 @@ export function outletsReducer(
         },
       }
     case SET_SWITCH_DATA:
-      for (const group in action.payload.switchData) {
+      console.log('set switch data in reducer')
+      for (const group in action.payload.data) {
         if (group in state.groups) {
           // modifying state here, but returning a new object. UGLY-ish
           // I think I prefer: const setSwitchDataState = {...state}
@@ -50,7 +51,7 @@ export function outletsReducer(
           state.groups[group] = {
             time: state.groups[group].time,
             isTimerRunning: state.groups[group].isTimerRunning,
-            ...action.payload.switchData[group],
+            ...action.payload.data[group],
           }
         }
       }
@@ -60,10 +61,10 @@ export function outletsReducer(
     case SET_TIMER_DATA:
       const setTimerDataGroupsState: GroupsData = { ...state.groups }
       for (const stateGroup in setTimerDataGroupsState) {
-        if (stateGroup in action.payload.timerData) {
+        if (stateGroup in action.payload.data) {
           setTimerDataGroupsState[stateGroup] = {
             ...setTimerDataGroupsState[stateGroup],
-            ...action.payload.timerData[stateGroup],
+            ...action.payload.data[stateGroup],
           }
         }
       }
@@ -74,9 +75,8 @@ export function outletsReducer(
     case SET_SYNC_DATA:
       const setSyncDataGroupsState: GroupsData = { ...state.groups } // just in case not all groups got returned by server
       for (const stateGroup in state.groups) {
-        if (stateGroup in action.payload.syncData) {
-          setSyncDataGroupsState[stateGroup] =
-            action.payload.syncData[stateGroup] //action.payload.syncData[stateGroup]
+        if (stateGroup in action.payload.data) {
+          setSyncDataGroupsState[stateGroup] = action.payload.data[stateGroup] //action.payload.syncData[stateGroup]
         }
       }
       return {

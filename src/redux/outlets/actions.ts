@@ -34,53 +34,46 @@ import { socket } from '../../App'
 export const socketListenAction = (): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
     // listen to OUTLET_SWITCH_CHANNEL
-    const dispatchSetSwitchDataAction = (switchData: SwitchData) => {
-      dispatch(setSwitchDataAction(switchData))
-    }
-    getState().sockets.socket.on(
-      OUTLET_SWITCH_CHANNEL,
-      dispatchSetSwitchDataAction
-    )
-    getState().sockets.socket.on(
-      OUTLET_SYNC_CHANNEL,
-      (syncData: GroupsData) => {
-        dispatch(setSyncDataAction(syncData))
-      }
-    )
-    getState().sockets.socket.on(
-      OUTLET_TIMER_CHANNEL,
-      (timerData: TimerData) => {
-        dispatch(setTimerDataAction(timerData))
-      }
-    )
+    // const dispatchSetSwitchDataAction = (switchData: SwitchData) => {
+    //   dispatch(listenAndSetSwitchDataAction(switchData))
+    // }
+    // getState().sockets.socket.on(
+    //   OUTLET_SWITCH_CHANNEL,
+    //   dispatchSetSwitchDataAction
+    // )
+    // getState().sockets.socket.on(
+    //   OUTLET_SYNC_CHANNEL,
+    //   (syncData: GroupsData) => {
+    //     dispatch(setSyncDataAction(syncData))
+    //   }
+    // )
+    // getState().sockets.socket.on(
+    //   OUTLET_TIMER_CHANNEL,
+    //   (timerData: TimerData) => {
+    //     dispatch(setTimerDataAction(timerData))
+    //   }
+    // )
   }
 }
 
-export const setSwitchDataAction = (switchData: SwitchData): any => {
+// change awkwark naming *****
+export const listenAndSetSwitchDataAction = (): any => {
   return {
     type: SET_SWITCH_DATA,
-    payload: {
-      switchData,
-    },
+    socketChannel: OUTLET_SWITCH_CHANNEL,
   }
 }
 
-const setTimerDataAction = (timerData: TimerData): any => {
+export const setTimerDataAction = (): any => {
   return {
     type: SET_TIMER_DATA,
-    payload: {
-      timerData,
-    },
+    socketChannel: OUTLET_TIMER_CHANNEL,
   }
 }
 
-const setSyncDataAction = (syncData: {
-  [group: string]: OutletDataValues
-}) => ({
+export const setSyncDataAction = () => ({
   type: SET_SYNC_DATA,
-  payload: {
-    syncData,
-  },
+  socketChannel: OUTLET_SYNC_CHANNEL,
 })
 
 export const requestSyncAction = (): any => {

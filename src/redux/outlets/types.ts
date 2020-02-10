@@ -58,30 +58,31 @@ export const OUTLET_SYNC_CHANNEL = 'OUTLET_SYNC_CHANNEL'
 interface SetSwitchDataAction {
   type: typeof SET_SWITCH_DATA
   payload: {
-    switchData: SwitchData
+    data: SwitchData
   }
 }
 
 interface SetTimerDataAction {
   type: typeof SET_TIMER_DATA
   payload: {
-    timerData: TimerData
+    data: TimerData
   }
 }
 
 interface SetSyncDataAction {
   type: typeof SET_SYNC_DATA
   payload: {
-    syncData: GroupsData
+    data: GroupsData
   }
 }
 
-interface SetSwitchesAction {
-  type: typeof SET_SWITCH_DATA
-  payload: {
-    switchData: SwitchData
-  }
-}
+// Duplicate of SET_SWITCH_DATA
+// interface SetSwitchesAction {
+//   type: typeof SET_SWITCH_DATA
+//   payload: {
+//     switchData: SwitchData
+//   }
+// }
 
 interface SwitchAction {
   type: typeof SWITCH
@@ -115,7 +116,7 @@ export type OutletActionTypes =
   | SetSwitchDataAction
   | SetTimerDataAction
   | SetSyncDataAction
-  | SetSwitchesAction
+  // | SetSwitchesAction
   | SwitchAction
   | TimerAdjustAction
   | TimerStartPauseAction

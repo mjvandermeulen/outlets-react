@@ -28,6 +28,9 @@ import {
   socketListenAction,
   requestSyncAction,
   timerAdjustRequestAction,
+  listenAndSetSwitchDataAction,
+  setSyncDataAction,
+  setTimerDataAction,
 } from '../redux/outlets/actions'
 import { storeSocketAction } from '../redux/sockets/actions'
 import { RootState } from '../redux/rootReducer'
@@ -57,6 +60,9 @@ const mapState = (state: RootState /* , ownProps: OwnProps */) => ({
 const mapDispatch = {
   storeSocket: storeSocketAction,
   socketListen: socketListenAction,
+  listenAndSetSwitchData: listenAndSetSwitchDataAction,
+  setSyncData: setSyncDataAction,
+  setTimerData: setTimerDataAction,
   requestSync: requestSyncAction,
   switch: switchRequestAction,
   timerAdjustRequest: timerAdjustRequestAction,
@@ -80,7 +86,10 @@ class OutletGroupsComponent extends React.Component<Props, State> {
     // const socket = io(serverURL)
     // this.props.storeSocket(socket)
     // this.props.socketListen() // listening starts in middleware
-    this.props.requestSync() // move to middleware??? ****
+    this.props.listenAndSetSwitchData()
+    this.props.setSyncData()
+    this.props.setTimerData()
+    this.props.requestSync() // move to middleware??? **** Nay
   }
 
   private handleOnOffClick(
