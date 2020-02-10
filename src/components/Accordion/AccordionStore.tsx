@@ -82,9 +82,6 @@ export class AccordionStore extends React.Component<Props, State> {
   }
 
   private toggleExpandAll: ToggleExpandAll = () => {
-    console.log(
-      'Expanding All accordion. ***** TODO implement depending on all key values. THE ACCORDION NEEDS TO BE GIVEN AN ARRAY OF KEYS! *******'
-    )
     const makeAllExpand = !this.expandedAll()
     this.setState(state => ({
       expandedKeys: keysSetToSameBoolean(this.props.keys, makeAllExpand),

@@ -29,15 +29,17 @@ import {
   CANCEL,
 } from '../../settings/timer-settings'
 import { getGroupSetting } from '../../settings/group-settings'
+import { socket } from '../../App'
 
 export const socketListenAction = (): any => {
   return (dispatch: Dispatch, getState: () => RootState) => {
     // listen to OUTLET_SWITCH_CHANNEL
+    const dispatchSetSwitchDataAction = (switchData: SwitchData) => {
+      dispatch(setSwitchDataAction(switchData))
+    }
     getState().sockets.socket.on(
       OUTLET_SWITCH_CHANNEL,
-      (switchData: SwitchData) => {
-        dispatch(setSwitchDataAction(switchData))
-      }
+      dispatchSetSwitchDataAction
     )
     getState().sockets.socket.on(
       OUTLET_SYNC_CHANNEL,
@@ -87,7 +89,7 @@ export const requestSyncAction = (): any => {
     for (const group in getState().outletData.groups) {
       groups.push(group)
     }
-    getState().sockets.socket.emit(OUTLET_SYNC_CHANNEL, groups)
+    socket.emit(OUTLET_SYNC_CHANNEL, groups)
   }
 }
 
@@ -101,7 +103,7 @@ export const switchRequestAction = (group: string, mode: boolean): any => {
     const switchData: SwitchData = {
       [group]: { mode },
     }
-    getState().sockets.socket.emit(OUTLET_SWITCH_CHANNEL, switchData)
+    socket.emit(OUTLET_SWITCH_CHANNEL, switchData)
   }
 }
 
@@ -248,7 +250,7 @@ export const timerAdjustRequestAction = (
         ...timerDataValues,
       },
     }
-    state.sockets.socket.emit(OUTLET_TIMER_CHANNEL, timerData)
+    socket.emit(OUTLET_TIMER_CHANNEL, timerData)
   }
 }
 

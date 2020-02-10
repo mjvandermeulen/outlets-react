@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import io from 'socket.io-client'
 // Components
 import { Accordion } from './Accordion/Accordion'
 import { AccordionItem } from './Accordion/AccordionItem'
@@ -22,7 +21,6 @@ import {
   STARTPAUSE,
   CANCEL,
 } from '../settings/timer-settings'
-import { serverURL } from '../settings/server-settings'
 // types and actions
 import { OutletDataValues } from '../redux/outlets/types'
 import {
@@ -79,10 +77,10 @@ class OutletGroupsComponent extends React.Component<Props, State> {
     // // TODO: Move socket/io('htt..... out of component: always have this connection?
     // then pass it into the props...?  ****
     // Or better: Move to redux middleware???? ****
-    const socket = io(serverURL)
-    this.props.storeSocket(socket)
-    this.props.socketListen()
-    this.props.requestSync()
+    // const socket = io(serverURL)
+    // this.props.storeSocket(socket)
+    // this.props.socketListen() // listening starts in middleware
+    this.props.requestSync() // move to middleware??? ****
   }
 
   private handleOnOffClick(
