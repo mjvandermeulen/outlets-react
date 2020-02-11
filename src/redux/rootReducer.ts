@@ -9,4 +9,4 @@ export const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>
 
-export type AppThunk = ThunkAction<void, RootState, null, Action<string>> // **** used???
+export type AppThunk = ThunkAction<void, RootState, null, Action<string>> // *** used???

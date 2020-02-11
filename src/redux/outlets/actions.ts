@@ -11,6 +11,7 @@ import {
   OUTLET_TIMER_CHANNEL,
   SET_TIMER_DATA,
   TimerDataValues,
+  PASS,
   // TIMER_CANCEL,
 } from './types'
 import { Dispatch } from 'redux'
@@ -48,22 +49,20 @@ export const receiveSyncDataAction = () => ({
   socketChannel: OUTLET_SYNC_CHANNEL,
 })
 
-export const requestSyncAction = (): any => {
-  return (dispatch: Dispatch, getState: () => RootState) => {
-    const groups: SyncRequestData = []
-    for (const group in getState().outletData.groups) {
-      groups.push(group)
-    }
-    socket.emit(OUTLET_SYNC_CHANNEL, groups)
-  }
-}
-
-// TODO **** fix 'any' to AppThunk with:
+// TODO *** fix 'any' to AppThunk with:
 // https://react-redux.js.org/using-react-redux/static-typing#recommendations
 // // import { AppThunk, RootState } from '../rootReducer'
 export const sendSwitchDataAction = (data: SwitchData): any => ({
   type: SET_SWITCH_DATA,
   socketChannel: OUTLET_SWITCH_CHANNEL,
+  payload: {
+    data,
+  },
+})
+
+export const sendSyncRequestAction = (data: SyncRequestData) => ({
+  type: PASS, // Don't do anything in reducer.
+  socketChannel: OUTLET_SYNC_CHANNEL,
   payload: {
     data,
   },

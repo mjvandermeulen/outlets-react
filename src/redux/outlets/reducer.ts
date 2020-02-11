@@ -6,6 +6,7 @@ import {
   GroupsData,
   TIMER_ADJUST,
   SET_TIMER_DATA,
+  PASS,
 } from './types'
 import { groupsSettings } from '../../settings/group-settings'
 
@@ -29,7 +30,6 @@ export function outletsReducer(
 ): OutletData {
   switch (action.type) {
     case SET_SWITCH_DATA:
-      console.log('set switch data in reducer ****')
       for (const group in action.payload.data) {
         if (group in state.groups) {
           // modifying state here, but returning a new object. UGLY-ish
@@ -43,7 +43,7 @@ export function outletsReducer(
           }
         }
       }
-      // LEARN and TODO **** trying something new
+      // LEARN and TODO *** trying something new
       // BUT I DON"T LIKE IT MYSELF: never change the parameters...see notes above
       return { ...state }
     case SET_TIMER_DATA:
@@ -83,6 +83,7 @@ export function outletsReducer(
           },
         },
       }
+    case PASS:
     default:
       return state
   }

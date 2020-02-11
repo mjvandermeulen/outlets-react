@@ -77,7 +77,7 @@ div {
   -webkit-tap-highlight-color: transparent; /* for removing the tapped element highlight on android */
 }
 
-/* TODO **** use variables in Sass for min-width */
+/* TODO *** use variables in Sass for min-width */
 
 @media screen and (min-width: 376px) {
   body {

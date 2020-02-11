@@ -138,7 +138,7 @@
 then transition is used to transition back.
 I ran into this issue: when the same animation is used for both classes, then
 there is not diff in classes and the animation is not performed. NOTE: the 
-animation is only performed the first time it is added to an element LEARN ****/
+animation is only performed the first time it is added to an element LEARN ***/
 .button-toggle-expand-all i.caret {
   transform: translateY(-3px) rotate(45deg);
   transition-property: transform;

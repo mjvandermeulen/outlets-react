@@ -21,7 +21,7 @@ export type SyncRequestData = string[] // array of groups
 
 export interface OutletDataValues extends SwitchDataValues, TimerDataValues {}
 // OR
-// type OutletDataValues = SwitchDataValues & TimerDataValues // **** LEARN
+// type OutletDataValues = SwitchDataValues & TimerDataValues // *** LEARN
 
 // https://stackoverflow.com/questions/44983560/how-to-exclude-a-key-from-an-interface-in-typescript
 // LEARN ***
@@ -42,6 +42,7 @@ export type OutletData = {
 
 // actions
 // TODO: switch to mirroredKeys... **
+export const PASS = 'PASS'
 export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
 export const SET_TIMER_DATA = 'SET_TIMER_DATA'
 export const SET_SYNC_DATA = 'SET_SYNC_DATA'
@@ -68,9 +69,14 @@ interface SetTimerDataAction {
   }
 }
 
-// **** What does this do?
+/**
+ * Dispatched by middle ware when processing either:
+ *   sendSyncRequestAction
+ *   receiveSyncDataAction
+ * PASS is used after sendSyncRequestAction (no further action is needed)
+ */
 interface SetSyncDataAction {
-  type: typeof SET_SYNC_DATA
+  type: typeof SET_SYNC_DATA | typeof PASS
   payload: {
     data: GroupsData
   }

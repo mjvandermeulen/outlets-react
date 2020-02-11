@@ -22,9 +22,13 @@ import {
   CANCEL,
 } from '../settings/timer-settings'
 // types and actions
-import { OutletDataValues, SwitchData } from '../redux/outlets/types'
 import {
-  requestSyncAction,
+  OutletDataValues,
+  SwitchData,
+  SyncRequestData,
+} from '../redux/outlets/types'
+import {
+  sendSyncRequestAction,
   timerAdjustRequestAction,
   receiveSwitchDataAction,
   receiveTimerDataAction,
@@ -60,7 +64,7 @@ const mapDispatch = {
   receiveSyncData: receiveSyncDataAction,
   receiveTimerData: receiveTimerDataAction,
   sendSwitchData: sendSwitchDataAction,
-  requestSync: requestSyncAction,
+  sendSyncRequest: sendSyncRequestAction,
   timerAdjustRequest: timerAdjustRequestAction,
 }
 
@@ -76,16 +80,15 @@ class OutletGroupsComponent extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    // // TODO: Move socket/io('htt..... out of component: always have this connection?
-    // then pass it into the props...?  ****
-    // Or better: Move to redux middleware???? ****
-    // const socket = io(serverURL)
-    // this.props.storeSocket(socket)
-    // this.props.socketListen() // listening starts in middleware
     this.props.receiveSwitchData()
     this.props.receiveTimerData()
     this.props.receiveSyncData()
-    this.props.requestSync() // move to middleware??? **** Nay
+
+    const groups: SyncRequestData = []
+    for (const group in this.props.outletData.groups) {
+      groups.push(group)
+    }
+    this.props.sendSyncRequest(groups) // move to middleware??? *** Nay: Too soon: not ready to listen yet
   }
 
   private handleOnOffClick(
@@ -190,7 +193,8 @@ class OutletGroupsComponent extends React.Component<Props, State> {
                         </div>
                       </AccordionItemLine>
                       <AccordionItemInner bounce={group === 'coffee'}>
-                        {/* TODO **** Move timer div to own component */}
+                        {/* TODO **** Move timer div to own component,
+                          OutletGroups is getting quite large */}
                         <div className="timer">
                           <div className="timer__line timer__display-line">
                             <RemoteControlButton

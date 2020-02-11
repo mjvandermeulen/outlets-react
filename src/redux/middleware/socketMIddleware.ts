@@ -11,6 +11,7 @@ interface SocketAction extends Action {
 
 // NOTE: **** returning a function by calling the function may no longer be needed (no longer a closure needed to "remember" the socket)
 // BUT needed so far to pass the socket in...
+// TODO ***** move the socket back in here. only pass the URL
 const socketMiddleware = (socket: SocketIOClient.Socket) => {
   //   const socket = io(serverURL)
 
@@ -23,50 +24,46 @@ const socketMiddleware = (socket: SocketIOClient.Socket) => {
   ) => {
     const { dispatch } = store
     if (typeof action === 'function') {
-      console.log('pass it on to next(action) ****')
-      // TODO: copied from https://nmajor.com/posts/using-socket-io-with-redux-websocket-redux-middleware
-      // I don't agree with his approach, to add a funcion under "handle" key.
-      // I prefer to keep the normal Redux approach: An action is either an Object with a type key, or a function.
-      // BUT:... How to distinguish between any thunk VS one that needs to be consumed here?
-      // NOTE: **** LEARN this needs to be implemented, it has to appear before thunk calling the middleware !!!!!
-      return next(action) // for now. TODO maybe allow functions later.
+      return next(action) // This should never happen if thunk is applied first. ***
     }
 
     const { type, socketChannel, payload, ...rest } = action
-    console.log('socketMiddleWare!!! YO ****')
     if (!socketChannel) {
       return next(action)
     }
-    let resultFunction: any
     if (!payload) {
       // Listen
-      console.log('listen without payload ****')
-      resultFunction = socket.on(
-        socketChannel,
-        (
-          data: any // change to better data interface ****
-        ) => {
-          dispatch({
-            type,
-            payload: { data },
-            ...rest,
-          })
-        }
-      ) // NOTE: do not change to action creator since we're just re-shaping the current one
-    } else {
-      // Emit
-      resultFunction = (() => {
+      return socket.on(socketChannel, (data: any) => {
         dispatch({
-          payload,
           type,
+          payload: { data },
           ...rest,
         })
-        socket.emit(socketChannel, (payload as PayloadWithData).data) // LEARN ****
-      })() // LEARN ****:
-      // compare this to return next(action)
-      // NOTE that you return a "called" function
+      }) // NOTE: do not change to action creator since we're just re-shaping the current one
     }
-    return resultFunction
+    // Emit
+    return (() => {
+      dispatch({
+        payload,
+        type,
+        ...rest,
+      })
+      socket.emit(socketChannel, (payload as PayloadWithData).data) // LEARN ****
+    })() // LEARN ****:
+    // compare this to return next(action)
+    // NOTE that you return a "called" function
+    // Alternative (Abramov) way to call: ****
+    // return function emit() {
+    //   dispatch({
+    //     payload,
+    //     type,
+    //     ...rest,
+    //   })
+    //   socket.emit(socketChannel, (payload as PayloadWithData).data) // LEARN ****
+    // }
+    // NOTE: ***** making the function anonymous does not work:
+    //   return function () {...}
+    // will not work
   }
 }
 

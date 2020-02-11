@@ -60,9 +60,6 @@ export class AccordionStore extends React.Component<Props, State> {
   }
 
   private toggleExpand: ToggleExpand = (key: string) => {
-    console.log(
-      `Expanding accordion. Parameter (key): ${key} **** TODO Implement`
-    )
     this.setState(state => ({
       expandedKeys: {
         ...state.expandedKeys,

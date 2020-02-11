@@ -14,7 +14,7 @@ import socketMiddleware from './redux/middleware/socketMiddleware'
 export const socket: SocketIOClient.Socket = io(serverURL) // TODO cleanup **** move to module/ middleware?????
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(socketMiddleware(socket), thunk))
+  composeWithDevTools(applyMiddleware(thunk, socketMiddleware(socket)))
 )
 
 const App: React.FC = () => {
