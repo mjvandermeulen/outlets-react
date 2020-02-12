@@ -30,18 +30,13 @@ export class Timer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      showTimer: false,
+      showTimer: true,
     }
   }
   private toggleShowTimer(): void {
     this.setState(state => {
       return { showTimer: !state.showTimer }
     })
-  }
-
-  // Make obsolete, too simple TODO *****
-  private showTimer() {
-    return this.state.showTimer
   }
 
   private toggleStartPauseTimer(): TimerDataValues {
@@ -104,7 +99,7 @@ export class Timer extends React.Component<Props, State> {
   }
 
   private handleTimerTask(task: TimerButtonTask): void {
-    const { time, isTimerRunning } = this.props
+    const { time, isTimerRunning, handleTimerDataValues } = this.props
     let timerDataValues: TimerDataValues = {
       time: time,
       isTimerRunning: isTimerRunning,
@@ -128,15 +123,13 @@ export class Timer extends React.Component<Props, State> {
       case CANCEL:
         timerDataValues = this.cancelTimer()
         break
-
-      default:
-        break
     }
-    this.props.handleTimerDataValues(timerDataValues)
+    handleTimerDataValues(timerDataValues)
   }
 
   public render() {
     const { time, isTimerRunning, defaultTimer } = this.props
+    const { showTimer } = this.state
     return (
       <div className="timer">
         <div className="timer__line timer__display-line">
@@ -151,7 +144,7 @@ export class Timer extends React.Component<Props, State> {
           <TimerDisplay
             time={time}
             isTimerRunning={isTimerRunning}
-            showTimer={this.showTimer()}
+            showTimer={this.state.showTimer}
           />
           <RemoteControlButton
             enabled={time > 0}
@@ -180,7 +173,7 @@ export class Timer extends React.Component<Props, State> {
             cancel
           </RemoteControlButton>
           <RemoteControlButton handleClick={() => this.toggleShowTimer()}>
-            {this.showTimer() ? 'show set time' : 'show timer'}
+            {showTimer ? 'show set time' : 'show timer'}
           </RemoteControlButton>
         </div>
       </div>

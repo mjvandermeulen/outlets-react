@@ -5,8 +5,7 @@ import { bothTrueOrBothFalse } from '../tools/calculations'
 // css
 import './TimerDisplay.css'
 
-// TODO remove export *****
-export interface OwnProps {
+interface OwnProps {
   time: number // milliseconds since epoch OR if paused: time left in ms
   isTimerRunning: boolean
   showTimer: boolean

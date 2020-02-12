@@ -11,7 +11,8 @@ import io from 'socket.io-client'
 import { serverURL } from './settings/server-settings'
 import socketMiddleware from './redux/middleware/socketMiddleware'
 
-export const socket: SocketIOClient.Socket = io(serverURL) // TODO cleanup **** move to module/ middleware?????
+// TODO cleanup **** move to middleware only leave URL here
+export const socket: SocketIOClient.Socket = io(serverURL)
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(thunk, socketMiddleware(socket)))

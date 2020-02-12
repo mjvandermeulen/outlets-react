@@ -2,8 +2,6 @@ interface SwitchDataValues {
   mode: boolean
 }
 
-// The switch data can have multiple outletgroups
-// Not for redux, but for syncing... ?
 export interface SwitchData {
   [group: string]: SwitchDataValues
 }
@@ -37,7 +35,7 @@ export type OutletData = {
 }
 
 // actions
-// TODO: switch to mirroredKeys... **
+// TODO: switch to mirroredKeys... ****
 export const PASS = 'PASS'
 export const SET_SWITCH_DATA = 'SET_SWITCH_DATA'
 export const SET_TIMER_DATA = 'SET_TIMER_DATA'
@@ -78,30 +76,7 @@ interface SetSyncDataAction {
   }
 }
 
-// interface TimerAdjustAction {
-//   type: typeof TIMER_ADJUST
-//   payload: {
-//     group: string
-//     timerDataValues: TimerDataValues
-//   }
-// }
-// interface TimerStartPauseAction {
-//   type: typeof TIMER_STARTPAUSE
-//   payload: {
-//     group: string
-//   }
-// }
-// interface TimerCancelAction {
-//   type: typeof TIMER_CANCEL
-//   payload: {
-//     group: string
-//   }
-// }
-
 export type OutletActionTypes =
   | SetSwitchDataAction
   | SetTimerDataAction
   | SetSyncDataAction
-// | TimerAdjustAction
-// | TimerStartPauseAction
-// | TimerCancelAction

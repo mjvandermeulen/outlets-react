@@ -1,16 +1,14 @@
 import {
-  // OutletData,
-  SwitchData,
-  SyncRequestData,
   OUTLET_SWITCH_CHANNEL,
-  SET_SWITCH_DATA,
-  OUTLET_SYNC_CHANNEL,
-  SET_SYNC_DATA,
-  TimerData,
   OUTLET_TIMER_CHANNEL,
+  OUTLET_SYNC_CHANNEL,
+  SET_SWITCH_DATA,
   SET_TIMER_DATA,
+  SET_SYNC_DATA,
   PASS,
-  // TIMER_CANCEL,
+  SwitchData,
+  TimerData,
+  SyncRequestData,
 } from './types'
 
 export const receiveSwitchDataAction = (): any => {

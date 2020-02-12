@@ -1,18 +1,21 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import classNames from 'classnames'
 // Components
 import { Accordion } from './Accordion/Accordion'
 import { AccordionItem } from './Accordion/AccordionItem'
 import { AccordionItemLine } from './Accordion/AccordionItemLine'
 import { AccordionItemInner } from './Accordion/AccordionItemInner'
+import { AccordionControls } from './Accordion/AccordionControls'
 import { RemoteControlButton } from './RemoteControlButton'
+import { Timer } from './Timer'
 // Settings
 import {
   Mode,
   enabledGroupSettingsArray,
   GroupSettingWithGroup,
 } from '../settings/group-settings'
-// types and actions
+// redux
 import {
   OutletDataValues,
   SyncRequestData,
@@ -29,9 +32,6 @@ import {
 import { RootState } from '../redux/rootReducer'
 // css
 import './OutletGroups.css'
-import { AccordionControls } from './Accordion/AccordionControls'
-import classNames from 'classnames'
-import { Timer } from './Timer'
 
 interface OwnProps {}
 
@@ -91,7 +91,7 @@ class OutletGroupsComponent extends React.Component<Props, {}> {
                   className={classNames('button-toggle-expand-all', {
                     'button-toggle-expand-all--expanded': accordionControls.expandedAll(),
                   })}
-                  active={accordionControls.expandedAll()} // TODO animate instead using css TODO ****
+                  active={accordionControls.expandedAll()} // TODO animate instead using css TODO *****
                   handleClick={() => accordionControls.toggleExpandAll()} // TODO and LEARN: change so you force the need of a" bind this"
                 >
                   <div className="expand-all-text">all</div>

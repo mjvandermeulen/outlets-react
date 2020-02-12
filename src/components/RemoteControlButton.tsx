@@ -11,23 +11,24 @@ interface RemoteControlButtonProps {
 
 export const RemoteControlButton: React.FunctionComponent<RemoteControlButtonProps> = props => {
   const enabled: boolean = props.enabled === undefined || props.enabled
-  let handleClick: any
+  const { active, className, handleClick, children } = props
+  let onClick: any
   if (enabled) {
-    handleClick = props.handleClick
+    onClick = handleClick
   } else {
-    handleClick = () => {}
+    onClick = () => {}
   }
   const btnClasses = classNames(
-    props.className,
+    className,
     'remote-control-button',
     'medium-button',
-    { '--active': props.active },
+    { '--active': active },
     { '--disabled': !enabled }
   )
 
   return (
-    <button className={btnClasses} onClick={handleClick}>
-      {props.children}
+    <button className={btnClasses} onClick={onClick}>
+      {children}
     </button>
   )
 }
