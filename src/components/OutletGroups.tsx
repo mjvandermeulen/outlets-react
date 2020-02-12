@@ -6,30 +6,21 @@ import { AccordionItem } from './Accordion/AccordionItem'
 import { AccordionItemLine } from './Accordion/AccordionItemLine'
 import { AccordionItemInner } from './Accordion/AccordionItemInner'
 import { RemoteControlButton } from './RemoteControlButton'
-import { TimerDisplay } from './TimerDisplay'
 // Settings
 import {
   Mode,
   enabledGroupSettingsArray,
   GroupSettingWithGroup,
 } from '../settings/group-settings'
-import {
-  MINUSMINUS,
-  PLUSPLUS,
-  PLUS,
-  MINUS,
-  STARTPAUSE,
-  CANCEL,
-} from '../settings/timer-settings'
 // types and actions
 import {
   OutletDataValues,
-  SwitchData,
   SyncRequestData,
+  TimerDataValues,
 } from '../redux/outlets/types'
 import {
   sendSyncRequestAction,
-  timerAdjustRequestAction,
+  sendTimerDataAction,
   receiveSwitchDataAction,
   receiveTimerDataAction,
   receiveSyncDataAction,
@@ -40,6 +31,7 @@ import { RootState } from '../redux/rootReducer'
 import './OutletGroups.css'
 import { AccordionControls } from './Accordion/AccordionControls'
 import classNames from 'classnames'
+import { Timer } from './Timer'
 
 interface OwnProps {}
 
@@ -48,10 +40,6 @@ type StateProps = ReturnType<typeof mapState>
 type DispatchProps = typeof mapDispatch
 
 type Props = StateProps & DispatchProps & OwnProps
-
-interface State {
-  showTimer: Set<string>
-}
 
 const mapState = (state: RootState /* , ownProps: OwnProps */) => ({
   // LEARN ***: I used to use ownProps here, to narrow down to the group, when this
@@ -64,21 +52,11 @@ const mapDispatch = {
   receiveSyncData: receiveSyncDataAction,
   receiveTimerData: receiveTimerDataAction,
   sendSwitchData: sendSwitchDataAction,
+  sendTimerData: sendTimerDataAction,
   sendSyncRequest: sendSyncRequestAction,
-  timerAdjustRequest: timerAdjustRequestAction,
 }
 
-class OutletGroupsComponent extends React.Component<Props, State> {
-  // TODO cleanup *** unused  var socket
-  private socket: SocketIOClient.Socket | null
-  constructor(props: Props) {
-    super(props)
-    this.socket = null
-    this.state = {
-      showTimer: new Set(),
-    }
-  }
-
+class OutletGroupsComponent extends React.Component<Props, {}> {
   public componentDidMount() {
     this.props.receiveSwitchData()
     this.props.receiveTimerData()
@@ -100,22 +78,6 @@ class OutletGroupsComponent extends React.Component<Props, State> {
     this.props.sendSwitchData({
       [group]: { mode },
     })
-  }
-
-  private toggleShowTimer(group: string) {
-    const newShowTimer = this.state.showTimer
-    if (newShowTimer.has(group)) {
-      newShowTimer.delete(group)
-    } else {
-      newShowTimer.add(group)
-    }
-    this.setState(state => ({
-      showTimer: newShowTimer,
-    }))
-  }
-
-  private showTimer(group: string) {
-    return this.state.showTimer.has(group)
   }
 
   public render() {
@@ -193,100 +155,18 @@ class OutletGroupsComponent extends React.Component<Props, State> {
                         </div>
                       </AccordionItemLine>
                       <AccordionItemInner bounce={group === 'coffee'}>
-                        {/* TODO **** Move timer div to own component,
-                          OutletGroups is getting quite large */}
-                        <div className="timer">
-                          <div className="timer__line timer__display-line">
-                            <RemoteControlButton
-                              handleClick={event =>
-                                this.props.timerAdjustRequest(
-                                  PLUSPLUS,
-                                  group,
-                                  this.showTimer(group)
-                                )
-                              }
-                            >
-                              ++
-                            </RemoteControlButton>
-                            <RemoteControlButton
-                              handleClick={event =>
-                                this.props.timerAdjustRequest(
-                                  PLUS,
-                                  group,
-                                  this.showTimer(group)
-                                )
-                              }
-                            >
-                              +
-                            </RemoteControlButton>
-                            <TimerDisplay
-                              time={outletData.time}
-                              isTimerRunning={outletData.isTimerRunning}
-                              showTimer={this.showTimer(group)}
-                            />
-                            <RemoteControlButton
-                              enabled={outletData.time > 0}
-                              handleClick={event =>
-                                this.props.timerAdjustRequest(
-                                  MINUSMINUS,
-                                  group,
-                                  this.showTimer(group)
-                                )
-                              }
-                            >
-                              --
-                            </RemoteControlButton>
-                            <RemoteControlButton
-                              enabled={outletData.time > 0}
-                              handleClick={event =>
-                                this.props.timerAdjustRequest(
-                                  MINUS,
-                                  group,
-                                  this.showTimer(group)
-                                )
-                              }
-                            >
-                              -
-                            </RemoteControlButton>
-                          </div>
-                          <div className="timer__line">
-                            <RemoteControlButton
-                              enabled={
-                                outletData.isTimerRunning || outletData.time > 0
-                              }
-                              handleClick={event =>
-                                this.props.timerAdjustRequest(
-                                  STARTPAUSE,
-                                  group,
-                                  this.showTimer(group)
-                                )
-                              }
-                            >
-                              {outletData.isTimerRunning ? 'pause' : 'start'}
-                            </RemoteControlButton>
-                            <RemoteControlButton
-                              enabled={
-                                outletData.time !== groupSetting.defaultTimer
-                              }
-                              handleClick={event =>
-                                this.props.timerAdjustRequest(
-                                  CANCEL,
-                                  group,
-                                  this.showTimer(group)
-                                )
-                              }
-                            >
-                              cancel
-                            </RemoteControlButton>
-                            <RemoteControlButton
-                              handleClick={event => this.toggleShowTimer(group)}
-                            >
-                              {this.showTimer(group)
-                                ? 'show set time'
-                                : 'show timer'}
-                            </RemoteControlButton>
-                          </div>
-                        </div>
+                        <Timer
+                          handleTimerDataValues={(
+                            timerDataValues: TimerDataValues
+                          ) => {
+                            this.props.sendTimerData({
+                              [group]: timerDataValues,
+                            })
+                          }}
+                          time={outletData.time}
+                          isTimerRunning={outletData.isTimerRunning}
+                          defaultTimer={groupSetting.defaultTimer}
+                        />
                       </AccordionItemInner>
                     </AccordionItem>
                   )

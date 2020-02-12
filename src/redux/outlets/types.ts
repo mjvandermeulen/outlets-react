@@ -28,10 +28,6 @@ export interface OutletDataValues extends SwitchDataValues, TimerDataValues {}
 // type OmitGroup<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 // type SocketData = OmitGroup<GroupSocketData, 'group'>
 
-// https://www.educba.com/typescript-type-vs-interface/
-// type used here, because it's easier to read than interface
-// interface OutletData extends Array<OutletDataValues> {}
-
 export interface GroupsData {
   [group: string]: OutletDataValues
 }
@@ -82,30 +78,30 @@ interface SetSyncDataAction {
   }
 }
 
-interface TimerAdjustAction {
-  type: typeof TIMER_ADJUST
-  payload: {
-    group: string
-    timerDataValues: TimerDataValues
-  }
-}
-interface TimerStartPauseAction {
-  type: typeof TIMER_STARTPAUSE
-  payload: {
-    group: string
-  }
-}
-interface TimerCancelAction {
-  type: typeof TIMER_CANCEL
-  payload: {
-    group: string
-  }
-}
+// interface TimerAdjustAction {
+//   type: typeof TIMER_ADJUST
+//   payload: {
+//     group: string
+//     timerDataValues: TimerDataValues
+//   }
+// }
+// interface TimerStartPauseAction {
+//   type: typeof TIMER_STARTPAUSE
+//   payload: {
+//     group: string
+//   }
+// }
+// interface TimerCancelAction {
+//   type: typeof TIMER_CANCEL
+//   payload: {
+//     group: string
+//   }
+// }
 
 export type OutletActionTypes =
   | SetSwitchDataAction
   | SetTimerDataAction
   | SetSyncDataAction
-  | TimerAdjustAction
-  | TimerStartPauseAction
-  | TimerCancelAction
+// | TimerAdjustAction
+// | TimerStartPauseAction
+// | TimerCancelAction

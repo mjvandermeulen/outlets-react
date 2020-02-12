@@ -27,6 +27,8 @@ const socketMiddleware = (socket: SocketIOClient.Socket) => {
       return next(action) // This should never happen if thunk is applied first. ***
     }
 
+    // TODO **** read this to destructure properly
+    // https://medium.com/@rileyhilliard/es6-destructuring-in-typescript-4c048a8e9e15
     const { type, socketChannel, payload, ...rest } = action
     if (!socketChannel) {
       return next(action)
@@ -42,6 +44,7 @@ const socketMiddleware = (socket: SocketIOClient.Socket) => {
       }) // NOTE: do not change to action creator since we're just re-shaping the current one
     }
     // Emit
+
     return (() => {
       dispatch({
         payload,

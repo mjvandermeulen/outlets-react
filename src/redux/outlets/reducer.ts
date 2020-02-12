@@ -4,7 +4,6 @@ import {
   SET_SWITCH_DATA,
   SET_SYNC_DATA,
   GroupsData,
-  TIMER_ADJUST,
   SET_TIMER_DATA,
   PASS,
 } from './types'
@@ -72,17 +71,6 @@ export function outletsReducer(
         groups: setSyncDataGroupsState,
       }
 
-    case TIMER_ADJUST:
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          [action.payload.group]: {
-            ...state.groups[action.payload.group],
-            ...action.payload.timerDataValues,
-          },
-        },
-      }
     case PASS:
     default:
       return state

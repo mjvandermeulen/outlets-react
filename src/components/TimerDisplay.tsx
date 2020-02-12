@@ -5,6 +5,7 @@ import { bothTrueOrBothFalse } from '../tools/calculations'
 // css
 import './TimerDisplay.css'
 
+// TODO remove export *****
 export interface OwnProps {
   time: number // milliseconds since epoch OR if paused: time left in ms
   isTimerRunning: boolean
@@ -86,7 +87,7 @@ export class TimerDisplay extends React.Component<OwnProps, {}> {
     return moment(displayTime).format('ddd hh:mm:ss a')
   }
 
-  render() {
+  public render() {
     const { showTimer } = this.props
     let display = ''
     if (showTimer) {
