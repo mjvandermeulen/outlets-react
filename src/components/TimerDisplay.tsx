@@ -20,8 +20,8 @@ export class TimerDisplay extends React.Component<OwnProps, {}> {
   }
 
   componentDidMount() {
-    const { showTimer, isTimerRunning } = this.props
     this.displayInterval = setInterval(() => {
+      const { showTimer, isTimerRunning } = this.props
       if (bothTrueOrBothFalse(showTimer, isTimerRunning)) {
         this.forceUpdate()
       }
