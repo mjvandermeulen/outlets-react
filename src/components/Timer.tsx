@@ -131,7 +131,7 @@ export class Timer extends React.Component<Props, State> {
     const { time, isTimerRunning, defaultTimer } = this.props
     const { showTimer } = this.state
     return (
-      <div className="timer">
+      <div className="Timer">
         <div className="timer__line timer__display-line">
           <RemoteControlButton
             handleClick={() => this.handleTimerTask(PLUSPLUS)}

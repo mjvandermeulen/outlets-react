@@ -2,28 +2,43 @@
 this CSS is truly linked to the accordion.
 Other CSS (like border color, padding, margin etc) may need to be moved to index / parentcomponent (OUtletgroups.css)*/
 
+/* transitions of "parent div" */
 .AccordionItemInner {
-  transform-origin: top left;
   max-height: 35rem;
-  transition-timing-function: ease-in;
-  transition-duration: 0.3s;
-  transition-property: max-height;
+  transition-timing-function: ease-in-out, ease-out;
+  transition-duration: 0.5s;
+  transition-property: max-height, opacity;
   position: relative;
   overflow: hidden;
+  perspective: 500px;
 }
+
+.AccordionItem.flip .AccordionItemInner,
+.AccordionItem.bounce .AccordionItemInner {
+  transition-duration: 1.4s;
+  overflow: visible;
+  opacity: 100;
+}
+.AccordionItem.flip .AccordionItemInner {
+  transition-duration: 0.8s;
+}
+
+/* LEARN example of "not()"
+.AccordionItem:not(.AccordionItem--closed).flip .AccordionItemInner,
+.AccordionItem:not(.AccordionItem--closed).bounce .AccordionItemInner {
+  opacity: 100;
+} */
 
 .AccordionItemInner .AccordionItemInner__content {
   transform: rotate(0deg);
   transform-origin: top left;
-  transition-timing-function: cubic-bezier(1, 2.5, 1, 1);
   transition-timing-function: ease-out;
-  transition-duration: 1s;
-  transition-duration: 0.3s;
+  transition-duration: 0.5s;
   transition-property: transform;
   position: relative;
 }
 
-.AccordionItemInner.bounce .AccordionItemInner__content {
+.AccordionItem.bounce .AccordionItemInner .AccordionItemInner__content {
   /* LEARN: Abscissas must be in the [0, 1] range or the curve is not a function of time. */
   transition-timing-function: cubic-bezier(
     0.3,
@@ -32,7 +47,13 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
     -0.25
   ); /* by vivi ORIG: (0.7, 1.6, 0, 0.75)*/
 
-  transition-duration: 1s; /* by vivi ORIG: 0.7s*/
+  transition-duration: 1.4s;
+}
+
+.AccordionItem.flip .AccordionItemInner .AccordionItemInner__content {
+  transform: rotateX(0deg);
+  transition-timing-function: linear;
+  transition-duration: 0.8s;
 }
 
 /* --closed */
@@ -45,4 +66,13 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
 .AccordionItem--closed .AccordionItemInner__content {
   transform: rotate(-90deg);
   transition-timing-function: ease-in;
+}
+
+.AccordionItem--closed.flip .AccordionItemInner .AccordionItemInner__content {
+  transform: rotateX(270deg);
+}
+
+.AccordionItem--closed.flip .AccordionItemInner,
+.AccordionItem--closed.bounce .AccordionItemInner {
+  opacity: 0;
 }

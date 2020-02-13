@@ -3,4 +3,5 @@
   overflow: hidden;
   margin: 0;
   /* padding: 2px; */
+  perspective: 500px;
 }

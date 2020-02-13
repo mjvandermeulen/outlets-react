@@ -44,12 +44,12 @@ export const groupsSettings: GroupsSettings = {
   guestlight: {
     displayName: 'Guest Light',
     defaultTimer: 0,
-    enabled: false,
+    enabled: true,
   },
   redlight: {
     displayName: 'Night Light',
     defaultTimer: 0,
-    enabled: true,
+    enabled: false,
   },
 }
 

@@ -91,7 +91,7 @@ class OutletGroupsComponent extends React.Component<Props, {}> {
                   className={classNames('button-toggle-expand-all', {
                     'button-toggle-expand-all--expanded': accordionControls.expandedAll(),
                   })}
-                  active={accordionControls.expandedAll()} // TODO animate instead using css TODO *****
+                  active={false} // animated instead
                   handleClick={() => accordionControls.toggleExpandAll()} // TODO and LEARN: change so you force the need of a" bind this"
                 >
                   <div className="expand-all-text">all</div>
@@ -111,6 +111,8 @@ class OutletGroupsComponent extends React.Component<Props, {}> {
                     <AccordionItem
                       key={group}
                       closed={!accordionControls.expanded(group)}
+                      bounce={group === 'coffee'}
+                      flip={group === 'guestlight'}
                     >
                       <AccordionItemLine
                         onClick={() => {
@@ -154,7 +156,7 @@ class OutletGroupsComponent extends React.Component<Props, {}> {
                           </RemoteControlButton>
                         </div>
                       </AccordionItemLine>
-                      <AccordionItemInner bounce={group === 'coffee'}>
+                      <AccordionItemInner>
                         <Timer
                           handleTimerDataValues={(
                             timerDataValues: TimerDataValues
