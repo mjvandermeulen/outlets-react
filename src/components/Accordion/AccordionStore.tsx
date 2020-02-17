@@ -14,6 +14,9 @@ export interface AccordionContextValue {
   toggleExpand: ToggleExpand
   expandedAll: ExpandedAll
   toggleExpandAll: () => void
+  // lastToggleWasAll: boolean no longer needed: lastToggledKey empty says it all
+  lastToggledKey: string
+  // TODO ***** turn into lastToggledKeys: string[]
 }
 
 const defaultValue: AccordionContextValue = {
@@ -21,6 +24,7 @@ const defaultValue: AccordionContextValue = {
   toggleExpand: (_: string) => {},
   expandedAll: () => false,
   toggleExpandAll: () => {},
+  lastToggledKey: '',
 }
 
 export const AccordionContext = React.createContext(defaultValue)
@@ -28,6 +32,7 @@ interface State {
   expandedKeys: {
     [key: string]: boolean
   }
+  lastToggledKey: string
 }
 
 interface Props {
@@ -52,6 +57,7 @@ export class AccordionStore extends React.Component<Props, State> {
     const expandedKeys = keysSetToSameBoolean(props.keys, false)
     this.state = {
       expandedKeys,
+      lastToggledKey: '',
     }
   }
 
@@ -61,6 +67,7 @@ export class AccordionStore extends React.Component<Props, State> {
 
   private toggleExpand: ToggleExpand = (key: string) => {
     this.setState(state => ({
+      lastToggledKey: key,
       expandedKeys: {
         ...state.expandedKeys,
         [key]: !state.expandedKeys[key],
@@ -79,12 +86,14 @@ export class AccordionStore extends React.Component<Props, State> {
   private toggleExpandAll: ToggleExpandAll = () => {
     const makeAllExpand = !this.expandedAll()
     this.setState(state => ({
+      lastToggledKey: '',
       expandedKeys: keysSetToSameBoolean(this.props.keys, makeAllExpand),
     }))
   }
 
   public render() {
     const { expanded, expandedAll, toggleExpand, toggleExpandAll } = this
+    const { lastToggledKey } = this.state
     return (
       <AccordionContext.Provider
         value={{
@@ -92,6 +101,7 @@ export class AccordionStore extends React.Component<Props, State> {
           toggleExpand,
           expandedAll,
           toggleExpandAll,
+          lastToggledKey,
         }}
       >
         {this.props.children}

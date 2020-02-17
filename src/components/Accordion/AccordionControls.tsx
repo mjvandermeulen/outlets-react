@@ -7,23 +7,27 @@ type Children = (
   accordionControls: AccordionContextValue
 ) => React.ReactElement | any[] // in case an array is given
 
-interface State {
-  expandAll: boolean
-}
-
 interface Props {
   children: Children
 }
 
+// LEARN ***** Refresh my own memory how to read this. Learning sake
 export const AccordionControls: React.FunctionComponent<Props> = props => {
   return (
     <AccordionContext.Consumer>
-      {({ expanded, toggleExpand, expandedAll, toggleExpandAll }) =>
+      {({
+        expanded,
+        toggleExpand,
+        expandedAll,
+        toggleExpandAll,
+        lastToggledKey,
+      }) =>
         props.children({
           expanded,
           expandedAll,
           toggleExpand,
           toggleExpandAll,
+          lastToggledKey,
         })
       }
     </AccordionContext.Consumer>

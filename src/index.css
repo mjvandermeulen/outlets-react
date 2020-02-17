@@ -55,7 +55,7 @@ i.caret {
   border-width: 0 1px 1px 0;
   display: inline-block;
   padding: 3px;
-  transform: translateY(-3px) rotate(45deg);
+  transform: translateY(-3px) rotate(45deg); /* needs to be -135: default pointing up, or border-w: 1px 0 0 1px*/
 }
 
 code {

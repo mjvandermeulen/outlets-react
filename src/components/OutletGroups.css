@@ -23,7 +23,7 @@
 }
 
 .AccordionItemLine i.caret {
-  transform: rotate(45deg); /* needed here! */
+  transform: rotate(45deg); /* needed here! for transitions */
   transition-timing-function: ease-in-out;
   transition-duration: 0.5s;
   transition-property: transform;
@@ -39,8 +39,8 @@
   transform: rotate(405deg); /* My fancy favorite DEMO WORTHY*/
 }
 
-.AccordionItem--closed.flip .AccordionItemLine i.caret {
-  transform: rotate(45deg);
+.AccordionItem.flip .AccordionItemLine i.caret {
+  transition-property: none;
 }
 
 .AccordionItem.bounce .AccordionItemLine i.caret {
@@ -70,10 +70,21 @@
     -0.25
   ); /* by vivi ORIG (0.7, 1.6, 0, 0.75)*/
   transition-duration: 1.4s; /* by vivi ORIG 0.7s*/
+  z-index: 3; /* so you can click the button, even when the bouncing div is fading . KEWL LEARN ***** */
 }
 
 .AccordionItem.flip .AccordionItemLine .button__toggle-expand {
-  transform: rotateX(180deg);
+  transition-property: none;
+  animation-name: flip-button-expanded;
+  animation-duration: 0.9s;
+  /* animation-delay: 0.3s; DOES NOT WORK: the next css style kicks in before the animation, so you'll go 
+  old style
+  next style
+  keyframe animation
+  next style
+  */
+  animation-timing-function: linear;
+  animation-fill-mode: none;
 }
 
 .AccordionItem--closed .AccordionItemLine .button__toggle-expand {
@@ -82,7 +93,11 @@
 }
 
 .AccordionItem--closed.flip .AccordionItemLine .button__toggle-expand {
-  transform: rotateX(0deg);
+  transition-property: none;
+  animation-name: flip-button-closed;
+  animation-duration: 0.6s;
+  animation-timing-function: linear;
+  animation-fill-mode: none;
 }
 
 /* Expand All Button*/
@@ -148,6 +163,7 @@ NOTE: the animation is only performed the first time it is added to an element L
   transition-timing-function: linear;
 }
 /* --expanded */
+/* THOUGHTS ***** the accordion's default css is expanded. inconsistent with the all button */
 .button-toggle-expand-all--expanded {
   transform: rotate(180deg);
   border: 2px solid #f44336;
@@ -177,11 +193,11 @@ TO NONE ON not--expanded, for the way back */
 
 @keyframes spinCaret {
   from {
-    transform: translateY(-3px) rotate(-3555deg); /* -10 spins */
+    /* transform: translateY(-3px) rotate(-3555deg); /* -10 spins */
     transform: translateY(-3px) rotate(-2115deg); /* -6 spins */
   }
   to {
-    transform: translateY(-3px) rotate(-1755deg); /* -5 spins */
+    /* transform: translateY(-3px) rotate(-1755deg); /* -5 spins */
     transform: translateY(-3px) rotate(-1035deg); /* -3 spins */
   }
 }
@@ -196,5 +212,41 @@ TO NONE ON not--expanded, for the way back */
   }
   .AccordionItemLine .button__toggle-expand {
     order: 3;
+  }
+}
+
+@keyframes flip-button-expanded {
+  /* delay does not work, see notes above */
+  from,
+  33.3% {
+    transform: rotateX(0deg);
+    border-color: #e7e7e7;
+  }
+  66.6% {
+    border-color: #e7e7e7;
+  }
+  66.7% {
+    border-color: #f44336;
+  }
+  to {
+    /* border-color: #f44336; NOT NEEDED *** */
+    transform: rotateX(-180deg);
+  }
+}
+
+@keyframes flip-button-closed {
+  from {
+    transform: rotateX(-180deg);
+    border-color: #f44336;
+  }
+  49.9% {
+    border-color: #f44336;
+  }
+  50% {
+    border-color: #e7e7e7;
+  }
+  to {
+    /* LEARN ***** transform: rotate interpolated between 0 and 100 */
+    transform: rotateX(0deg);
   }
 }

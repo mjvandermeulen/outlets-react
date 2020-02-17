@@ -65,6 +65,7 @@ const socketMiddleware = (socket: SocketIOClient.Socket) => {
     //   socket.emit(socketChannel, (payload as PayloadWithData).data) // LEARN ****
     // }
     // NOTE: ***** making the function anonymous does not work:
+    // ***** check how this is implemented in redux middleware!
     //   return function () {...}
     // will not work
   }

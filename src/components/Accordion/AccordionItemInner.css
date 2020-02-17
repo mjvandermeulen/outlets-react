@@ -4,75 +4,107 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
 
 /* transitions of "parent div" */
 .AccordionItemInner {
-  max-height: 35rem;
-  transition-timing-function: ease-in-out, ease-out;
-  transition-duration: 0.5s;
-  transition-property: max-height, opacity;
-  position: relative;
-  overflow: hidden;
   perspective: 500px;
+  position: relative;
+  max-height: 35rem;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: max-height;
+  overflow: hidden;
 }
-
-.AccordionItem.flip .AccordionItemInner,
-.AccordionItem.bounce .AccordionItemInner {
-  transition-duration: 1.4s;
-  overflow: visible;
-  opacity: 100;
-}
-.AccordionItem.flip .AccordionItemInner {
-  transition-duration: 0.8s;
-}
-
-/* LEARN example of "not()"
-.AccordionItem:not(.AccordionItem--closed).flip .AccordionItemInner,
-.AccordionItem:not(.AccordionItem--closed).bounce .AccordionItemInner {
-  opacity: 100;
-} */
 
 .AccordionItemInner .AccordionItemInner__content {
+  opacity: 100;
+  position: relative;
   transform: rotate(0deg);
   transform-origin: top left;
-  transition-timing-function: ease-out;
+  transition-timing-function: ease-in-out;
   transition-duration: 0.5s;
   transition-property: transform;
-  position: relative;
-}
-
-.AccordionItem.bounce .AccordionItemInner .AccordionItemInner__content {
-  /* LEARN: Abscissas must be in the [0, 1] range or the curve is not a function of time. */
-  transition-timing-function: cubic-bezier(
-    0.3,
-    2.3,
-    0.1,
-    -0.25
-  ); /* by vivi ORIG: (0.7, 1.6, 0, 0.75)*/
-
-  transition-duration: 1.4s;
-}
-
-.AccordionItem.flip .AccordionItemInner .AccordionItemInner__content {
-  transform: rotateX(0deg);
-  transition-timing-function: linear;
-  transition-duration: 0.8s;
 }
 
 /* --closed */
 
 .AccordionItem--closed .AccordionItemInner {
   max-height: 0rem;
-  transition-timing-function: ease-out;
 }
 
 .AccordionItem--closed .AccordionItemInner__content {
   transform: rotate(-90deg);
-  transition-timing-function: ease-in;
+}
+
+/* FANCY closings/expandings */
+
+/* the bounce should have keyframes as well! */
+/* currently the closed css of bounce has
+ - overflow: visible
+ - and opacity 0 */
+/* NEW THOUGHTS: 
+ - the overflow: visible will still need to be there.
+ - opacity is not in the default transformation, so it won't affect that.
+ */
+
+.AccordionItem.flip .AccordionItemInner,
+.AccordionItem.bounce .AccordionItemInner {
+  overflow: visible;
+}
+
+.AccordionItem.bounce .AccordionItemInner .AccordionItemInner__content {
+  transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25);
+  transition-duration: 1.4s;
+}
+
+.AccordionItem.flip .AccordionItemInner .AccordionItemInner__content {
+  transition-property: none;
+  animation-name: flip-expanded;
+  animation-duration: 0.9s;
+  animation-timing-function: linear;
+  animation-fill-mode: none;
+}
+
+/* FANCY --closed  */
+
+.AccordionItem--closed.flip .AccordionItemInner__content,
+.AccordionItem--closed.bounce .AccordionItemInner__content {
+  opacity: 0;
+}
+.AccordionItem--closed.bounce .AccordionItemInner__content {
+  transition-property: transform, opacity;
+  transition-duration: 1.4s, 0.1s;
+  transition-delay: 0s, 1.3s;
 }
 
 .AccordionItem--closed.flip .AccordionItemInner .AccordionItemInner__content {
-  transform: rotateX(270deg);
+  transition-property: none;
+  animation-name: flip-closed;
+  animation-duration: 0.9s;
+  animation-timing-function: linear;
+  animation-fill-mode: none;
 }
 
-.AccordionItem--closed.flip .AccordionItemInner,
-.AccordionItem--closed.bounce .AccordionItemInner {
-  opacity: 0;
+@keyframes flip-expanded {
+  from {
+    transform: rotateX(270deg);
+    opacity: 0;
+  }
+  33% {
+    opacity: 100;
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+@keyframes flip-closed {
+  from {
+    transform: rotateX(0deg);
+    opacity: 100;
+  }
+  66% {
+    opacity: 100;
+  }
+  to {
+    transform: rotateX(270deg);
+    opacity: 0;
+  }
 }
