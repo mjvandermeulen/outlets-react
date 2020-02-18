@@ -113,6 +113,7 @@ class OutletGroupsComponent extends React.Component<Props, {}> {
                       itemKey={group}
                       lastToggledKey={accordionControls.lastToggledKey}
                       closed={!accordionControls.expanded(group)}
+                      rotate={group === 'officelight'}
                       bounce={group === 'coffee'}
                       flip={group === 'guestlight'}
                     >

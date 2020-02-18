@@ -39,7 +39,7 @@ export const groupsSettings: GroupsSettings = {
   fan: {
     displayName: 'Office Fan',
     defaultTimer: 0,
-    enabled: false,
+    enabled: true,
   },
   guestlight: {
     displayName: 'Guest Light',

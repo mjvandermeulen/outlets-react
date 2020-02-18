@@ -16,7 +16,15 @@ interface OwnProps {
 }
 
 export const AccordionItem: React.FunctionComponent<OwnProps> = props => {
-  const { children, itemKey, closed, bounce, flip, lastToggledKey } = props
+  const {
+    children,
+    itemKey,
+    closed,
+    bounce,
+    flip,
+    lastToggledKey,
+    rotate,
+  } = props
   return (
     <li
       className={classNames('AccordionItem', {
@@ -24,6 +32,7 @@ export const AccordionItem: React.FunctionComponent<OwnProps> = props => {
         // bounce, // READ: 'bounce' : bounce, ( OLD line left here to LEARN *** )
         bounce: bounce && lastToggledKey === itemKey,
         flip: flip && lastToggledKey === itemKey,
+        rotate: rotate && lastToggledKey === itemKey,
       })}
     >
       <div className="AccordionItemContent">{children}</div>

@@ -6,7 +6,7 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
 .AccordionItemInner {
   perspective: 500px;
   position: relative;
-  max-height: 35rem;
+  max-height: 20rem;
   transition-timing-function: ease-in-out;
   transition-duration: 0.5s;
   transition-property: max-height;
@@ -16,11 +16,7 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
 .AccordionItemInner .AccordionItemInner__content {
   opacity: 100;
   position: relative;
-  transform: rotate(0deg);
   transform-origin: top left;
-  transition-timing-function: ease-in-out;
-  transition-duration: 0.5s;
-  transition-property: transform;
 }
 
 /* --closed */
@@ -29,57 +25,69 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
   max-height: 0rem;
 }
 
-.AccordionItem--closed .AccordionItemInner__content {
-  transform: rotate(-90deg);
-}
-
 /* FANCY closings/expandings */
-
-/* the bounce should have keyframes as well! */
-/* currently the closed css of bounce has
- - overflow: visible
- - and opacity 0 */
-/* NEW THOUGHTS: 
- - the overflow: visible will still need to be there.
- - opacity is not in the default transformation, so it won't affect that.
- */
 
 .AccordionItem.flip .AccordionItemInner,
 .AccordionItem.bounce .AccordionItemInner {
   overflow: visible;
 }
 
-.AccordionItem.bounce .AccordionItemInner .AccordionItemInner__content {
-  transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25);
-  transition-duration: 1.4s;
+.AccordionItem.rotate .AccordionItemInner__content {
+  transition-property: none; /* obsolete, since default does not use transition */
+  animation-name: rotate-expanded;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: none; /* is the default, but essential for understanding here */
 }
 
-.AccordionItem.flip .AccordionItemInner .AccordionItemInner__content {
-  transition-property: none;
+.AccordionItem.bounce .AccordionItemInner__content {
+  animation-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25), linear;
+  animation-duration: 1.4s;
+  animation-name: rotate-expanded, appear;
+}
+
+.AccordionItem.flip .AccordionItemInner__content {
   animation-name: flip-expanded;
   animation-duration: 0.9s;
   animation-timing-function: linear;
-  animation-fill-mode: none;
 }
 
 /* FANCY --closed  */
 
-.AccordionItem--closed.flip .AccordionItemInner__content,
-.AccordionItem--closed.bounce .AccordionItemInner__content {
-  opacity: 0;
-}
-.AccordionItem--closed.bounce .AccordionItemInner__content {
-  transition-property: transform, opacity;
-  transition-duration: 1.4s, 0.1s;
-  transition-delay: 0s, 1.3s;
+.AccordionItem--closed.rotate .AccordionItemInner__content {
+  animation-name: rotate-closed;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
 }
 
-.AccordionItem--closed.flip .AccordionItemInner .AccordionItemInner__content {
-  transition-property: none;
+.AccordionItem--closed.bounce .AccordionItemInner__content {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  animation-name: rotate-closed, disappear, shrink;
+}
+
+.AccordionItem--closed.flip .AccordionItemInner__content {
+  opacity: 0;
   animation-name: flip-closed;
-  animation-duration: 0.9s;
-  animation-timing-function: linear;
-  animation-fill-mode: none;
+}
+
+@keyframes rotate-expanded {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes rotate-closed {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-90deg);
+  }
 }
 
 @keyframes flip-expanded {
@@ -106,5 +114,35 @@ Other CSS (like border color, padding, margin etc) may need to be moved to index
   to {
     transform: rotateX(270deg);
     opacity: 0;
+  }
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  5% {
+    opacity: 100;
+  }
+}
+@keyframes disappear {
+  from {
+    opacity: 100;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/*  LEARN *** a bug in Chrome does not let me combine max-height with
+    apacity in one @keyframe */
+@keyframes shrink {
+  from {
+    max-height: 50rem;
+  }
+  99.9% {
+    max-height: 50rem;
+  }
+  to {
+    max-height: 0;
   }
 }

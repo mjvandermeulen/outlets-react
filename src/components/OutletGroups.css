@@ -30,26 +30,23 @@
 }
 
 .AccordionItem--closed .AccordionItemLine i.caret {
-  transform: rotate(225deg); /* fun trick */
-  transform: rotate(
-    45deg
-  ); /* NORMAL DEMO WORTHY. Same as removing this selector */
-  transform: rotate(-315deg); /* weird, but works */
-  transform: rotate(-135deg); /* fun stationary */
+  /* transform: rotate(225deg); /* fun trick */
+  /* transform: rotate(
+    /* 45deg
+  /* ); /* NORMAL DEMO WORTHY. Same as removing this selector */
+  /* transform: rotate(-315deg); /* weird, but works */
+  /* transform: rotate(-135deg); /* fun stationary */
   transform: rotate(405deg); /* My fancy favorite DEMO WORTHY*/
 }
 
+.AccordionItem.rotate .AccordionItemLine i.caret,
+.AccordionItem.bounce .AccordionItemLine i.caret,
 .AccordionItem.flip .AccordionItemLine i.caret {
-  transition-property: none;
+  transition-property: none; /* may not be needed */
 }
 
 .AccordionItem.bounce .AccordionItemLine i.caret {
-  transition-timing-function: cubic-bezier(
-    0.3,
-    2.3,
-    0.1,
-    -0.25
-  ); /* by vivi ORIG: (0.7, 1.6, 0, 0.75)*/
+  transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25);
   transition-duration: 1.4s;
 }
 
@@ -63,14 +60,10 @@
 }
 
 .AccordionItem.bounce .AccordionItemLine .button__toggle-expand {
-  transition-timing-function: cubic-bezier(
-    0.3,
-    2.3,
-    0.1,
-    -0.25
-  ); /* by vivi ORIG (0.7, 1.6, 0, 0.75)*/
-  transition-duration: 1.4s; /* by vivi ORIG 0.7s*/
-  z-index: 3; /* so you can click the button, even when the bouncing div is fading . KEWL LEARN ***** */
+  transition-timing-function: cubic-bezier(0.3, 2.3, 0.1, -0.25);
+  transition-duration: 1.4s;
+  /* KEWL LEARN *****: */
+  z-index: 3; /* make button clickable, even when the bouncing div is fading*/
 }
 
 .AccordionItem.flip .AccordionItemLine .button__toggle-expand {
@@ -193,25 +186,10 @@ TO NONE ON not--expanded, for the way back */
 
 @keyframes spinCaret {
   from {
-    /* transform: translateY(-3px) rotate(-3555deg); /* -10 spins */
     transform: translateY(-3px) rotate(-2115deg); /* -6 spins */
   }
   to {
-    /* transform: translateY(-3px) rotate(-1755deg); /* -5 spins */
     transform: translateY(-3px) rotate(-1035deg); /* -3 spins */
-  }
-}
-
-@media screen and (min-width: 351px) {
-  .AccordionItemLine__on-off-buttons {
-    display: block;
-    flex-basis: auto;
-  }
-  .AccordionItemLine__on-off-buttons {
-    order: 2;
-  }
-  .AccordionItemLine .button__toggle-expand {
-    order: 3;
   }
 }
 
@@ -239,14 +217,31 @@ TO NONE ON not--expanded, for the way back */
     transform: rotateX(-180deg);
     border-color: #f44336;
   }
-  49.9% {
+  49% {
     border-color: #f44336;
   }
-  50% {
+  51% {
     border-color: #e7e7e7;
   }
   to {
     /* LEARN ***** transform: rotate interpolated between 0 and 100 */
     transform: rotateX(0deg);
+  }
+}
+
+@media screen and (min-width: 351px) {
+  .AccordionItemInner {
+    /* should be narrowed down to parent of the timer */
+    max-height: 15rem;
+  }
+  .AccordionItemLine__on-off-buttons {
+    display: block;
+    flex-basis: auto;
+  }
+  .AccordionItemLine__on-off-buttons {
+    order: 2;
+  }
+  .AccordionItemLine .button__toggle-expand {
+    order: 3;
   }
 }
