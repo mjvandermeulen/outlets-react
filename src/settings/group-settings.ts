@@ -20,37 +20,78 @@ export function getGroupSetting(group: string): GroupSetting | null {
 }
 
 export const groupsSettings: GroupsSettings = {
-  livingroom: {
-    displayName: 'Living Room',
-    defaultTimer: 0,
-    enabled: false,
-  },
-  officelight: {
-    displayName: 'Office',
+  // TODO ** thought: only the key and enabled should be here. The other ones you can get from the socket server.
+  fireplacelights: {
+    displayName: 'Fire Place',
+    defaultTimer: 0, // TODO *** is this useless here? should only be on socket server.
+    enabled: true,
+  } ,
+  bigtree: {
+    displayName: 'Big Tree',
     defaultTimer: 0,
     enabled: true,
   },
-  coffee: {
-    displayName: 'Coffee',
-    defaultTimer: 45 * 60 * 1000,
-    enabled: true,
-    codes: ['bogus 1', 'bogus2'],
-  },
-  fan: {
-    displayName: 'Office Fan',
-    defaultTimer: 0,
-    enabled: false,
-  },
-  guestlight: {
-    displayName: 'Guest Light',
+  smalltree: {
+    displayName: 'Small Tree',
     defaultTimer: 0,
     enabled: true,
   },
-  redlight: {
-    displayName: 'Night Light',
+  outsidelights: {
+    displayName: 'Outside Lights',
     defaultTimer: 0,
-    enabled: false,
+    enabled: true,
   },
+  airfilter: {
+    displayName: 'Air Filter',
+    defaultTimer: 90,
+    enabled: true,
+  },
+  vivolights: {
+    displayName: 'Vivo Lights',
+    defaultTimer: 0,
+    enabled: true,
+  },
+  vivo5: {
+    displayName: 'Vivo 5',
+    defaultTimer: 0,
+    enabled: true,
+  },
+  // livingroom: {
+  //   displayName: 'Living Room',
+  //   defaultTimer: 0,
+  //   enabled: false,
+  // },
+  // officelight: {
+  //   displayName: 'Office',
+  //   defaultTimer: 0,
+  //   enabled: true,
+  // },
+  // coffee: {
+  //   displayName: 'Coffee',
+  //   defaultTimer: 45 * 60 * 1000,
+  //   enabled: true,
+  //   codes: ['bogus 1', 'bogus2'],
+  // },
+  // fan: {
+  //   displayName: 'Office Fan',
+  //   defaultTimer: 0,
+  //   enabled: false,
+  // },
+  // guestlight: {
+  //   displayName: 'Guest Light',
+  //   defaultTimer: 0,
+  //   enabled: true,
+  // },
+  // redlight: {
+  //   displayName: 'Night Light',
+  //   defaultTimer: 0,
+  //   enabled: false,
+  // },
+  // basement: {
+  //   displayName: 'Basement',
+  //   defaultTimer: 0,
+  //   enabled: true,
+  // },
 }
 
 export const enabledGroupSettingsArray: GroupSettingsArray = []
